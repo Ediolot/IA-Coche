@@ -8,10 +8,10 @@
 #include <cstdio>
 #include <iostream>
 
-#include "common.hpp"
-#include "fonts.hpp"
-#include "utility.hpp"
-#include "map.hpp"
+#include "../include/common.hpp"
+#include "../include/fonts.hpp"
+#include "../include/utility.hpp"
+#include "../include/map.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const double FPS      = 60;
@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
     ALLEGRO_DISPLAY     *display      = nullptr;
     ALLEGRO_EVENT_QUEUE *event_queue  = nullptr;
     ALLEGRO_TIMER       *redraw_timer = nullptr;
-    ALLEGRO_FONT        *caviar_font  = nullptr;
 
     bool redraw = true;
     bool quit   = false;

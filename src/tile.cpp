@@ -1,4 +1,4 @@
-#include "tile.hpp"
+#include "../include/tile.hpp"
 
 tile::tile(const point v[4]):
     vertices_()

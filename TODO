@@ -2,6 +2,3 @@
 # Exceptions
 # Resize window
 # Fullscreen
-
-# Makefile
-// g++ src/*.cpp -std=c++11 -Wall -o bin/a.out $(pkg-config --libs --static allegro-static-5 allegro_ttf-static-5 allegro_font-static-5 allegro_primitives-static-5) && ./bin/a.out
