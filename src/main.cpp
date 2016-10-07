@@ -4,88 +4,62 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
 
-#include <cstdio>
 #include <string>
+#include <cstdio>
 #include <iostream>
 
 #include "common.hpp"
 #include "utility.hpp"
 #include "map.hpp"
 
-const float FPS = 60;
-const int SCREEN_W = 640;
-const int SCREEN_H = 480;
+///////////////// DEFAULT OPTIONS /////////////////
+const double FPS = 60;
+const int SCREEN_W = 800;
+const int SCREEN_H = 800;
 
-// g++ src/*.cpp -std=c++11 -Wall -o bin/a.out $(pkg-config --libs --static allegro-static-5 allegro_ttf-static-5 allegro_font-static-5 allegro_primitives-static-5) && ./bin/a.out
-
+////////////////////// MAIN ///////////////////////
 int main(int argc, char *argv[])
 {
-    ALLEGRO_DISPLAY *display = nullptr;
-    ALLEGRO_EVENT_QUEUE *event_queue = nullptr;
-    ALLEGRO_TIMER *FPStimer = nullptr;
-    ALLEGRO_FONT *caviarFont = nullptr;
+    ALLEGRO_DISPLAY     *display      = nullptr;
+    ALLEGRO_EVENT_QUEUE *event_queue  = nullptr;
+    ALLEGRO_TIMER       *redraw_timer = nullptr;
+    ALLEGRO_FONT        *caviar_font  = nullptr;
 
     bool redraw = true;
-    bool quit = false;
+    bool quit   = false;
 
-    if (!al_init())
+    if (!al_init() ||
+        !al_init_primitives_addon() ||
+        !al_init_font_addon() ||
+        !al_init_ttf_addon())
     {
-        std::cerr << "failed to initialize allegro!" << std::endl;
+        std::cerr << "Failed to initialize Allegro!" << std::endl;
         return -1;
     }
 
-    if (!al_init_primitives_addon())
-    {
-        std::cerr << "failed to initialize primitives!" << std::endl;
-        return -1;
-    }
+    std::cout << versionToString() << std::endl;
 
-    if (!al_init_font_addon() || !al_init_ttf_addon())
-    {
-        std::cerr << "failed to initialize fonts!" << std::endl;
-        return -1;
-    }
+    redraw_timer = al_create_timer(1.0 / FPS);
+    display      = al_create_display(SCREEN_W, SCREEN_H);
+    event_queue  = al_create_event_queue();
+    caviar_font  = al_load_ttf_font("fonts/CaviarDreams.ttf", 16, 0);
 
-    FPStimer = al_create_timer(1.0 / FPS);
-    if (!FPStimer)
+    if (!redraw_timer || !display || !event_queue || !caviar_font)
     {
-        std::cerr << "failed to create timer!" << std::endl;
-        return -1;
-    }
-
-    display = al_create_display(SCREEN_W, SCREEN_H);
-    if (!display)
-    {
-        std::cerr << "failed to create display!" << std::endl;
-        al_destroy_timer(FPStimer);
-        return -1;
-    }
-
-    event_queue = al_create_event_queue();
-    if (!event_queue)
-    {
-        std::cerr << "failed to create event_queue!" << std::endl;
-        al_destroy_display(display);
-        al_destroy_timer(FPStimer);
-        return -1;
-    }
-
-    caviarFont = al_load_ttf_font("fonts/CaviarDreams.ttf", 16, 0);
-    if (!caviarFont)
-    {
-        std::cerr << "failed to create caviarFont!" << std::endl;
+        std::cerr << "Failed to create variables!" << std::endl;
         return -1;
     }
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
-    al_register_event_source(event_queue, al_get_timer_event_source(FPStimer));
+    al_register_event_source(event_queue, al_get_timer_event_source(redraw_timer));
 
     al_set_target_bitmap(al_get_backbuffer(display));
     al_clear_to_color(BLACK);
     al_flip_display();
 
-    al_start_timer(FPStimer);
+    al_start_timer(redraw_timer);
 
+    map mymap(10, SCREEN_W, SCREEN_H);
     while(!quit)
     {
         ALLEGRO_EVENT ev;
@@ -100,15 +74,14 @@ int main(int argc, char *argv[])
 
         if(redraw && al_is_event_queue_empty(event_queue)) {
             redraw = false;
-            map mymap;
             al_clear_to_color(BLACK);
-            displayFPS(caviarFont);
+            displayFPS(caviar_font);
             mymap.draw();
             al_flip_display();
         }
     }
 
-    al_destroy_timer(FPStimer);
+    al_destroy_timer(redraw_timer);
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
 
