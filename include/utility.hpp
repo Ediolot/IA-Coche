@@ -16,13 +16,24 @@
 
 void displayFPS(ALLEGRO_FONT *font)
 {
+    static uint iteration = 0;
+    static double elapsed = 0;
     static double old_time = 0;
+    static int fps = 0;
+
     double new_time = al_get_time();
-    int fps = 1/(new_time - old_time);
+
+    if (++iteration == 10)
+    {
+        fps = 9/elapsed;
+        iteration = 0;
+        elapsed = 0;
+    }
+    else
+        elapsed += (new_time - old_time);
 
     std::string stringFPS("FPS: "+std::to_string(fps));
-
-    al_draw_text(font, PURE_WHITE, 10, 10,ALLEGRO_ALIGN_LEFT, stringFPS.c_str());
+    al_draw_text(font, BLACK, 10, 10,ALLEGRO_ALIGN_LEFT, stringFPS.c_str());
 
     old_time = new_time;
 }
