@@ -23,7 +23,7 @@ const int    SCREEN_H = 800;
 
 void renderScene(const map &tileMap)
 {
-    al_clear_to_color(BLACK); // Clear
+    al_clear_to_color(BACKGROUND_COLOR); // Clear
     displayFPS(caviar_font_16);
     tileMap.draw();
 }
