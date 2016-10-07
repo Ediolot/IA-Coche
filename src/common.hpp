@@ -9,6 +9,7 @@
 
 typedef unsigned int uint;
 
+///////////////// VERSION ////////////////
 const uint VERSION_MAYOR = 0;
 const uint VERSION_MINOR = 1;
 const std::string STAGE  = "Alpha";

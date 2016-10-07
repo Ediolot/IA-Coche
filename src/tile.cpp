@@ -14,6 +14,7 @@ tile::~tile()
 
 void tile::draw() const
 {
+    // The tile is drawed using two triangles
     al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[1].x, vertices_[1].y, vertices_[2].x, vertices_[2].y, ORANGE);
     al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[3].x, vertices_[3].y, vertices_[2].x, vertices_[2].y, ORANGE);
 }

@@ -1,5 +1,7 @@
 #include "map.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+
 map::map(const uint size, const double screenWidth, const double screenHeight, const double percent):
     tiles_(),
     vertices_(),
@@ -11,13 +13,15 @@ map::map(const uint size, const double screenWidth, const double screenHeight, c
     double square_side = width < height ? width : height;
     double side = 0.7071 * square_side;
 
+    // Set the container's vertices
+
     vertices_[0].set((screenWidth - square_side) / 2, screenHeight / 2);
     vertices_[2].set((screenWidth + square_side) / 2, screenHeight / 2);
 
     vertices_[1].set(screenWidth / 2, (screenHeight - square_side) / 2);
     vertices_[3].set(screenWidth / 2, (screenHeight + square_side) / 2);
 
-    // Create tiles:
+    // Create tiles
 
     double tile_side = side / size;
     double delta   = 0.7071 * tile_side;
@@ -41,10 +45,16 @@ map::map(const uint size, const double screenWidth, const double screenHeight, c
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 map::~map()
 {}
+
+////////////////////////////////////////////////////////////////////////////////
 
 void map::draw() const
 {
     for (auto &i : tiles_) i.draw();
 }
+
+////////////////////////////////////////////////////////////////////////////////
