@@ -14,7 +14,7 @@
 #include "../include/map.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
-const bool   accumulative_rivers = true;
+const bool   accumulative_rivers = false;
 const double FPS      = 90;
 const uint   mapsize  = 15;
 const uint   rivers   = 2;
@@ -22,10 +22,8 @@ const int    SCREEN_W = 800;
 const int    SCREEN_H = 800;
 
 ////////////////// SCENE RENDER ///////////////////
-
 void renderScene(const map &tileMap)
 {
-    al_clear_to_color(BACKGROUND_COLOR); // Clear
     displayFPS(caviar_font_16);
     tileMap.draw();
 }
@@ -73,13 +71,13 @@ int main(int argc, char *argv[])
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(redraw_timer));
 
-    // START REDRAW TIMER
-    al_start_timer(redraw_timer);
-
     // VARIABLES
     map tileMap(mapsize, SCREEN_W, SCREEN_H);
 
     tileMap.generateScenario(rivers,mapsize,accumulative_rivers);
+
+    // START REDRAW TIMER
+    al_start_timer(redraw_timer);
 
     // MAIN LOOP
     while (!quit)
@@ -97,10 +95,13 @@ int main(int argc, char *argv[])
         // Update screen
         if (redraw && al_is_event_queue_empty(event_queue)) {
             redraw = false;
+            al_clear_to_color(BACKGROUND_COLOR); // Clear
             renderScene(tileMap);
             al_flip_display();
         }
     }
+
+
 
     // CLEAN UP
     al_destroy_timer(redraw_timer);

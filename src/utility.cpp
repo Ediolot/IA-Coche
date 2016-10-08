@@ -11,9 +11,9 @@ void displayFPS(ALLEGRO_FONT *font)
 
     double new_time = al_get_time();
 
-    if (++iteration == 10)
+    if (++iteration > 10)
     {
-        fps = 9/elapsed;
+        fps = 10/elapsed;
         iteration = 0;
         elapsed = 0;
     }
