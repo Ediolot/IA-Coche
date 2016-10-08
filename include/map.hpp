@@ -55,9 +55,9 @@ class map {
 
     private:
 
-        std::vector<tile> tiles_; // Tiles
-        point vertices_[4];       // Container vertices
-        uint size_;               // Number of tiles in a side
+        std::vector<tile> tiles_;        // Tiles
+        std::vector<point> vertices_; // Container vertices
+        uint size_;                      // Number of tiles in a side
 
         std::default_random_engine generator_; // For random values
 

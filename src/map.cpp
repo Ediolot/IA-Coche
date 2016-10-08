@@ -4,7 +4,7 @@
 
 map::map(const uint size, const double screenWidth, const double screenHeight, const double percent, const uint seed):
     tiles_(),
-    vertices_(),
+    vertices_(4),
     size_(size),
     generator_(seed ? seed : std::time(nullptr))
 {
@@ -14,7 +14,6 @@ map::map(const uint size, const double screenWidth, const double screenHeight, c
     double side = 0.7071 * square_side;
 
     // Set the container's vertices
-
     vertices_[0].set((screenWidth - square_side) / 2, screenHeight / 2);
     vertices_[2].set((screenWidth + square_side) / 2, screenHeight / 2);
 
