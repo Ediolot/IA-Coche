@@ -15,7 +15,8 @@
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const double FPS      = 60;
-const uint   mapsize  = 10;
+const uint   mapsize  = 20;
+const uint   rivers   = 2;
 const int    SCREEN_W = 800;
 const int    SCREEN_H = 800;
 
@@ -32,9 +33,7 @@ void renderScene(const map &tileMap)
 int main(int argc, char *argv[])
 {
 
-    // VARIABLES
-    map tileMap(mapsize, SCREEN_W, SCREEN_H);
-
+    // ALLEGRO VARIABLES
     ALLEGRO_DISPLAY     *display      = nullptr;
     ALLEGRO_EVENT_QUEUE *event_queue  = nullptr;
     ALLEGRO_TIMER       *redraw_timer = nullptr;
@@ -76,22 +75,26 @@ int main(int argc, char *argv[])
     // START REDRAW TIMER
     al_start_timer(redraw_timer);
 
+    // VARIABLES
+    map tileMap(mapsize, SCREEN_W, SCREEN_H);
+
+    tileMap.generateScenario(rivers,mapsize);
+
     // MAIN LOOP
-    while(!quit)
+    while (!quit)
     {
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
         switch (ev.type)
         {
-            case ALLEGRO_EVENT_TIMER:         redraw = true; break;
-            case ALLEGRO_EVENT_DISPLAY_CLOSE: quit   = true; break;
-
-            default: std::cout << "Unregistered event fired: " << ev.type << std::endl; // Unused event
+            case ALLEGRO_EVENT_TIMER:           redraw = true; break;
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:   quit   = true; break;
+            default: break; // Unused event
         }
 
         // Update screen
-        if(redraw && al_is_event_queue_empty(event_queue)) {
+        if (redraw && al_is_event_queue_empty(event_queue)) {
             redraw = false;
             renderScene(tileMap);
             al_flip_display();
