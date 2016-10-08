@@ -2,15 +2,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
-tile::tile(const point v[4], const bool is_border):
-    vertices_(),
+tile::tile(const std::vector<point>& v,const bool is_border):
+    neighbors_(4, nullptr),
+    adjacents_(4, nullptr),
+    vertices_(v),
     color_(),
     is_border_(is_border)
 {
-    vertices_[0] = v[0];
-    vertices_[1] = v[1];
-    vertices_[2] = v[2];
-    vertices_[3] = v[3];
+    if (v.size() != 4) vertices_.clear();
     color_ = NEUTRAL_TILE_COLOR;
 }
 
@@ -18,6 +17,54 @@ tile::tile(const point v[4], const bool is_border):
 
 tile::~tile()
 {}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void tile::storeFriend(tile *n, const dir direction)
+{
+    switch (direction)
+    {
+        case dir::UP:         neighbors_[0] = n; break;
+        case dir::DOWN:       neighbors_[1] = n; break;
+        case dir::LEFT:       neighbors_[2] = n; break;
+        case dir::RIGHT:      neighbors_[3] = n; break;
+
+        case dir::UP_LEFT:    adjacents_[0] = n; break;
+        case dir::UP_RIGHT:   adjacents_[1] = n; break;
+        case dir::DOWN_LEFT:  adjacents_[2] = n; break;
+        case dir::DOWN_RIGHT: adjacents_[3] = n; break;
+        default: break;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+tile* tile::getFriend(const dir direction) const
+{
+    switch (direction)
+    {
+        case dir::UP:         return neighbors_[0];
+        case dir::DOWN:       return neighbors_[1];
+        case dir::LEFT:       return neighbors_[2];
+        case dir::RIGHT:      return neighbors_[3];
+
+        case dir::UP_LEFT:    return adjacents_[0];
+        case dir::UP_RIGHT:   return adjacents_[1];
+        case dir::DOWN_LEFT:  return adjacents_[2];
+        case dir::DOWN_RIGHT: return adjacents_[3];
+        default: return nullptr;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+bool tile::isAdjacentTo(const tile *n) const
+{
+    for (const tile* i : adjacents_)
+        if (i==n) return true;
+
+    return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

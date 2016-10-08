@@ -26,10 +26,10 @@ map::map(const uint size, const double screenWidth, const double screenHeight, c
     double tile_side = side / size;
     double delta   = 0.7071 * tile_side;
 
-    point tilePoints[4];
+    std::vector<point> tilePoints(4);
 
+    // Tiles are stored from left to right, bottom to top. Starting from the middle left vertex.
     for (uint i=0; i<size; ++i)
-    {
         for (uint j=0; j<size; ++j)
         {
             double x = vertices_[0].x + i*delta + j*delta;
@@ -40,9 +40,29 @@ map::map(const uint size, const double screenWidth, const double screenHeight, c
             tilePoints[2].set(x + delta*(2-BORDER), y                   );
             tilePoints[3].set(x + delta           , y + delta*(1-BORDER));
 
-            tiles_.emplace_back(tilePoints, i==0 || j==0 || (i+1)>=size_ || (j+1)>=size_);
+            bool border = i==0 || j==0 || (i+1)>=size_ || (j+1)>=size_;
+
+            tiles_.emplace_back(tilePoints, border);
         }
-    }
+
+    int pos=0;
+    for (int i=0; i<int(size_); ++i)
+        for (int j=0; j<int(size_); ++j, ++pos)
+        {
+            int ii, jj;
+
+            // Adjacents
+            ii = i  ; jj = j+1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::UP_RIGHT);
+            ii = i  ; jj = j-1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::DOWN_LEFT);
+            ii = i+1; jj = j  ; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::DOWN_RIGHT);
+            ii = i-1; jj = j  ; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::UP_LEFT);
+
+            // Neighbors
+            ii = i+1; jj = j+1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::RIGHT);
+            ii = i+1; jj = j-1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::DOWN);
+            ii = i-1; jj = j+1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::UP);
+            ii = i-1; jj = j-1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::LEFT);
+        }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,10 +123,11 @@ void map::generateScenario(const uint rivers, const uint min_size_river, const b
 bool map::generateRiver(const uint start, const dir direction, const uint min_size, const bool accumulative)
 {
     std::normal_distribution<double> normal(0.0,0.3);
-    std::vector<int> river;
+    std::vector<tile*> river;
 
-    int target=0, current=0;
-    river.push_back(current = start);
+    tile* target=nullptr;
+    tile* current= &tiles_[start];
+    river.push_back(current);
 
     // Convert the direction the river is going to an angle
     double target_angle;
@@ -120,7 +141,7 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
     }
 
     // Expand the river while it is too small or there is still a valid target
-    for (uint river_size = 0; river_size < min_size || target>=0; ++river_size)
+    for (uint river_size = 0; river_size < min_size || target; ++river_size)
     {
         uint sentinel = 0;
         do
@@ -139,21 +160,19 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
             else                 target_direction = deviation<270 ? dir::DOWN_LEFT : dir::DOWN_RIGHT;
 
             // Get the tile in that direction
-            target = getNextTilePos(current, target_direction);
-
-                                                                        // CALCULATE A NEW TARGET TILE WHILE:
-        } while ((target<0 && river_size < min_size)             ||     // Target was not found and river is still too small
-                 isAdjacentToAnyInVector(target, river, current) ||     // Target is adjacent to other river tile (Except the current one)
-                 (tiles_[target].isBorder() && river_size < min_size)); // Target is a border tiel and river is still too small
+            target = current->getFriend(target_direction);
+                                                                                // CALCULATE A NEW TARGET TILE WHILE:
+        } while ((river_size < min_size && (!target || target->isBorder()))  ||  // River is too small and target was not found or is a border
+                 isAdjacentToAnyInVector(target, river, current));              // Target is adjacent to other river tile (Except the current one)
 
         // Add the target tile to the river tiles
-        river.push_back(target);
+        if (target) river.push_back(target);
         current = target;
     }
 
     // Set all river tiles
-    for (int i : river)
-        if (i!=-1) tiles_[i].setColor(RIVER_TILE_COLOR);
+    for (tile* i : river)
+        i->setColor(RIVER_TILE_COLOR); // TODO remove if
 
     return true;
 }
@@ -162,57 +181,15 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 
 void map::neutralizeAllTiles()
 {
-    for (auto &i : tiles_) i.setColor(NEUTRAL_TILE_COLOR);
+    for (tile &i : tiles_) i.setColor(NEUTRAL_TILE_COLOR);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int map::getNextTilePos(const uint tile_pos, const dir direction) const
+bool map::isAdjacentToAnyInVector(const tile* test, const std::vector<tile*>& v, const tile* test_exception) const
 {
-    int i = tile_pos / size_;
-    int j = tile_pos % size_;
-
-    switch (direction)
-    {
-        case dir::UP:         i = (i-1); j = (j+1); break;
-        case dir::DOWN:       i = (i+1); j = (j-1); break;
-        case dir::LEFT:       i = (i-1); j = (j-1); break;
-        case dir::RIGHT:      i = (i+1); j = (j+1); break;
-        case dir::UP_LEFT:    i = (i-1);            break;
-        case dir::UP_RIGHT:              j = (j+1); break;
-        case dir::DOWN_LEFT:             j = (j-1); break;
-        case dir::DOWN_RIGHT: i = (i+1);            break;
-        default: break;
-    }
-
-    if (i<0 || j<0 || uint(i)>=size_ || uint(j)>=size_) // The tile doesnt exist
-        return -1;
-    else
-        return i*size_+j;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-bool map::isAdjacent(const uint tile_pos_1, const uint tile_pos_2) const
-{
-    int i = tile_pos_1 / size_;
-    int j = tile_pos_1 % size_;
-
-    int m = tile_pos_2 / size_;
-    int n = tile_pos_2 % size_;
-
-    return (i==m && (j==n+1 || j==n-1)) || (j==n && (i==m+1 || i==m-1));
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-bool map::isAdjacentToAnyInVector(const uint tile_pos, const std::vector<int> v, const int tile_pos_exception) const
-{
-    for (int i : v)
-        if (i>=0                  &&  // The vector tile is valid
-            i!=tile_pos_exception &&  // The vector tile is not an exception
-            isAdjacent(i, tile_pos))  // The vector tile is adjacent to the target tile
+    for (const tile* i : v)
+        if (i!=test_exception && test && test->isAdjacentTo(i)) // The  tile is adjacent to the target tile and the (vector) tile is not an exception
             return true;
 
     return false;

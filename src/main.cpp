@@ -15,7 +15,7 @@
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = true;
-const double FPS      = 60;
+const double FPS      = 90;
 const uint   mapsize  = 15;
 const uint   rivers   = 2;
 const int    SCREEN_W = 800;

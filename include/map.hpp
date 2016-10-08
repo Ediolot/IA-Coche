@@ -31,7 +31,9 @@
                            #   #
                              #
 
-     Tiles UP_LEFT, UP_RIGHT, DOWN_LEFT & DOWN_RIGHT are adjacent to the center. The other are NOT.
+     Tiles UP_LEFT, UP_RIGHT, DOWN_LEFT & DOWN_RIGHT are adjacent to the center. The others are NOT.
+     Tiles UP, LEFT, DOWN & RIGHT are neighbors to the center. The others are NOT.
+     All of them are friends to the center.
 */
 
 #ifndef MAP_HPP
@@ -79,14 +81,8 @@ class map {
         // Generate a river
         bool generateRiver(const uint start_tile, const dir direction, const uint min_size, const bool accumulative);
 
-        // Return the tile (position) next to the target one in a direction
-        int getNextTilePos(const uint tile_pos, const dir direction) const;
-
-        // Test if two tiles are adjacent
-        bool isAdjacent(const uint tile_pos_1, const uint tile_pos_2) const;
-
         // Test if a tile is adjacent by the sides to any of the tiles in a vector. Taking into account a possible exception
-        bool isAdjacentToAnyInVector(const uint tile_pos1, const std::vector<int> v, const int tile_pos_exception) const;
+        bool isAdjacentToAnyInVector(const tile* test, const std::vector<tile*>& v, const tile* test_exception) const;
 };
 
 #endif

@@ -10,26 +10,15 @@
 #include <allegro5/allegro_ttf.h>
 
 ///////////////// GLOBAL FONTS ///////////////
-ALLEGRO_FONT *caviar_font_16;
-ALLEGRO_FONT *caviar_font_24;
+extern ALLEGRO_FONT *caviar_font_8;
+extern ALLEGRO_FONT *caviar_font_16;
+extern ALLEGRO_FONT *caviar_font_24;
 
 ///////////////// FONTS PATHS ////////////////
-char caviar_font_path[] = "fonts/CaviarDreams.ttf";
+extern const char caviar_font_path[];
 
-///////////////// LOAD ///////////////////////
-bool loadFonts()
-{
-    caviar_font_16  = al_load_ttf_font(caviar_font_path, 16, 0);
-    caviar_font_24  = al_load_ttf_font(caviar_font_path, 24, 0);
-
-    return caviar_font_16 && caviar_font_24; // && ...
-}
-
-///////////////// DESTROY ///////////////////
-void destroyFonts()
-{
-    al_destroy_font(caviar_font_16);
-    al_destroy_font(caviar_font_24);
-}
+///////////////// FUNCTIONS ///////////////////////
+bool loadFonts();
+void destroyFonts();
 
 #endif
