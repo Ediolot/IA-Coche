@@ -59,14 +59,19 @@ void map::draw() const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::generateScenario(const uint rivers, const uint min_size_river)
+void map::generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers)
 {
     std::uniform_int_distribution<int> random_switch(0,3);
     std::uniform_int_distribution<int> random_tile(0,size_-1);
     uint rivers_made = 0;
+    uint sentinel = 0;
 
     while (rivers_made < rivers)
     {
+        // Check for infinite loop
+        if (++sentinel==SENTINEL_MAX) return;
+
+        // Slect a random direction
         dir river_direction;
         switch (random_switch(generator_))
         {
@@ -77,27 +82,33 @@ void map::generateScenario(const uint rivers, const uint min_size_river)
             default: break;
         }
 
-        uint start_tile;
+        // Select a random border tile
+        uint start;
         switch (random_switch(generator_))
         {
-            case 0: start_tile = random_tile(generator_)*size_ + size_-1; break;
-            case 1: start_tile = random_tile(generator_)*size_; break;
-            case 2: start_tile = (size_-1)*size_ + random_tile(generator_); break;
-            case 3: start_tile = random_tile(generator_); break;
+            case 0: start = random_tile(generator_)*size_ + size_-1; break;
+            case 1: start = random_tile(generator_)*size_; break;
+            case 2: start = (size_-1)*size_ + random_tile(generator_); break;
+            case 3: start = random_tile(generator_); break;
         }
 
-        if (generateRiver(start_tile,river_direction,min_size_river))
+        // Generate the river
+        if (generateRiver(start, river_direction, min_size_river, accumulative_rivers))
             rivers_made++;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool map::generateRiver(const uint start_tile, const dir direction, const uint min_size)
+bool map::generateRiver(const uint start, const dir direction, const uint min_size, const bool accumulative)
 {
     std::normal_distribution<double> normal(0.0,0.3);
-    std::vector<int> river_tiles;
+    std::vector<int> river;
 
+    int target=0, current=0;
+    river.push_back(current = start);
+
+    // Convert the direction the river is going to an angle
     double target_angle;
     switch (direction)
     {
@@ -108,44 +119,40 @@ bool map::generateRiver(const uint start_tile, const dir direction, const uint m
         default: return false;
     }
 
-    int target_tile  = -1;
-    int current_tile = start_tile;
-
-    river_tiles.push_back(start_tile);
-
-    int maxit = 100;
-
-    for (uint current_size = 0; current_size < min_size || target_tile>=0; ++current_size)
+    // Expand the river while it is too small or there is still a valid target
+    for (uint river_size = 0; river_size < min_size || target>=0; ++river_size)
     {
-        int it = 0;
+        uint sentinel = 0;
         do
         {
-            double desviation = normal(generator_)*135.0;
-            double new_angle = target_angle + desviation;
-            while (new_angle > 360) new_angle -= 360;
+            // Check for infinite loop
+            if (++sentinel==SENTINEL_MAX) return false;
 
+            // Generate a new angle for the river with a maximum deviation of +-135 degrees
+            double deviation = target_angle + normal(generator_)*135.0;
+            target_angle = accumulative ? deviation : target_angle;
+            while (deviation > 360) deviation -= 360;
+
+            // The new direction the river will be facing
             dir target_direction;
+            if (deviation < 180) target_direction = deviation< 90 ? dir::UP_RIGHT  : dir::UP_LEFT;
+            else                 target_direction = deviation<270 ? dir::DOWN_LEFT : dir::DOWN_RIGHT;
 
-            if (new_angle < 90)
-                target_direction = dir::UP_RIGHT;
-            else if (new_angle < 180)
-                target_direction = dir::UP_LEFT;
-            else if (new_angle < 270)
-                target_direction = dir::DOWN_LEFT;
-            else
-                target_direction = dir::DOWN_RIGHT;
+            // Get the tile in that direction
+            target = getNextTilePos(current, target_direction);
 
-            target_tile = getAdjacentTilePos(current_tile, target_direction);
+                                                                        // CALCULATE A NEW TARGET TILE WHILE:
+        } while ((target<0 && river_size < min_size)             ||     // Target was not found and river is still too small
+                 isAdjacentToAnyInVector(target, river, current) ||     // Target is adjacent to other river tile (Except the current one)
+                 (tiles_[target].isBorder() && river_size < min_size)); // Target is a border tiel and river is still too small
 
-            if (++it==maxit) return false;
-
-        } while ((target_tile<0 && current_size < min_size) || isAdjacentToAnyInVector(target_tile, river_tiles, current_tile));
-
-        river_tiles.push_back(target_tile);
-        current_tile = target_tile;
+        // Add the target tile to the river tiles
+        river.push_back(target);
+        current = target;
     }
 
-    for (int i : river_tiles)
+    // Set all river tiles
+    for (int i : river)
         if (i!=-1) tiles_[i].setColor(RIVER_TILE_COLOR);
 
     return true;
@@ -160,7 +167,7 @@ void map::neutralizeAllTiles()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int map::getAdjacentTilePos(const uint tile_pos, const dir direction) const
+int map::getNextTilePos(const uint tile_pos, const dir direction) const
 {
     int i = tile_pos / size_;
     int j = tile_pos % size_;
@@ -178,7 +185,7 @@ int map::getAdjacentTilePos(const uint tile_pos, const dir direction) const
         default: break;
     }
 
-    if (i<0 || j<0 || uint(i)>=size_ || uint(j)>=size_) // No existe la casilla
+    if (i<0 || j<0 || uint(i)>=size_ || uint(j)>=size_) // The tile doesnt exist
         return -1;
     else
         return i*size_+j;
@@ -197,12 +204,15 @@ bool map::isAdjacent(const uint tile_pos_1, const uint tile_pos_2) const
     return (i==m && (j==n+1 || j==n-1)) || (j==n && (i==m+1 || i==m-1));
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 bool map::isAdjacentToAnyInVector(const uint tile_pos, const std::vector<int> v, const int tile_pos_exception) const
 {
     for (int i : v)
-        if (i>=0 && i!=tile_pos_exception && isAdjacent(i, tile_pos))
+        if (i>=0                  &&  // The vector tile is valid
+            i!=tile_pos_exception &&  // The vector tile is not an exception
+            isAdjacent(i, tile_pos))  // The vector tile is adjacent to the target tile
             return true;
 
     return false;

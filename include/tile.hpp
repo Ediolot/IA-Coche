@@ -6,12 +6,14 @@
 #define TILE_HPP
 
 #include <allegro5/allegro_primitives.h>
+#include <vector>
 #include "common.hpp"
 
 class tile {
 
     private:
 
+        //std::vector<tile*> neighbors_;
         point vertices_[4]; // Vertices of the tile
         ALLEGRO_COLOR color_;
         bool is_border_;

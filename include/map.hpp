@@ -1,7 +1,37 @@
 /*
     REPRESENTS THE TILES MAP
 
-    Container with multiple tiles elements.
+    Container with multiple tiles elements. Each tile is a diamond shape.
+
+    TILES ADJACENCY & DIRECTIONS:
+
+                             #
+                           #   #
+                         #       #
+                       #           #
+                     #      UP       #
+                   #   #           #   #
+                 #       #       #       #
+               #           #   #           #
+             #    UP_LEFT    #   UP_RIGHT    #
+           #   #           #   #           #   #
+         #       #       #       #       #       #
+       #           #   #           #   #           #
+     #     LEFT      #     CENTER    #     RIGHT     #
+       #           #   #           #   #           #
+         #       #       #       #       #       #
+           #   #           #   #           #   #
+             #   DOWN_LEFT   #  DOWN_RIGHT   #
+               #           #   #           #
+                 #       #       #       #
+                   #   #           #   #
+                     #     DOWN      #
+                       #           #
+                         #       #
+                           #   #
+                             #
+
+     Tiles UP_LEFT, UP_RIGHT, DOWN_LEFT & DOWN_RIGHT are adjacent to the center. The other are NOT.
 */
 
 #ifndef MAP_HPP
@@ -16,19 +46,10 @@
 #include "utility.hpp"
 #include "tile.hpp"
 
-/* TILES:
-              UP
-   UP_LEFT    |     UP_RIGHT
-           \  |   /
- LEFT ----- CENTER ----- RIGHT
-           /  |   \
- DOWN_LEFT    |     DOWN_RIGHT
-            DOWN
-*/
-
 class map {
 
-    const double BORDER = 0.1; // Separation between tiles
+    const double BORDER       = 0.1; // Separation between tiles
+    const uint   SENTINEL_MAX =  20; // Prevent infinite loops when generating the sceneario
 
     private:
 
@@ -48,7 +69,7 @@ class map {
         void draw() const;
 
         // Generate all map elements
-        void generateScenario(const uint rivers, const uint min_size_river);
+        void generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
 
         // Make all tiles neutral land
         void neutralizeAllTiles();
@@ -56,15 +77,15 @@ class map {
     private:
 
         // Generate a river
-        bool generateRiver(const uint start_tile, const dir direction, const uint min_size);
+        bool generateRiver(const uint start_tile, const dir direction, const uint min_size, const bool accumulative);
 
-        // Return the adjacent tile position in a direction
-        int getAdjacentTilePos(const uint tile_pos, const dir direction) const;
+        // Return the tile (position) next to the target one in a direction
+        int getNextTilePos(const uint tile_pos, const dir direction) const;
 
-        // Test if two tiles are adjacent by the sides (NOT THE VERTICES)
+        // Test if two tiles are adjacent
         bool isAdjacent(const uint tile_pos_1, const uint tile_pos_2) const;
 
-        // Test if a tile is adjacent by the sides (NOT THE VERCITES) to any of the tiles in a vector. Taking into account a possible exception
+        // Test if a tile is adjacent by the sides to any of the tiles in a vector. Taking into account a possible exception
         bool isAdjacentToAnyInVector(const uint tile_pos1, const std::vector<int> v, const int tile_pos_exception) const;
 };
 

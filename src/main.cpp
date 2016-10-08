@@ -14,8 +14,9 @@
 #include "../include/map.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
+const bool   accumulative_rivers = true;
 const double FPS      = 60;
-const uint   mapsize  = 20;
+const uint   mapsize  = 15;
 const uint   rivers   = 2;
 const int    SCREEN_W = 800;
 const int    SCREEN_H = 800;
@@ -78,7 +79,7 @@ int main(int argc, char *argv[])
     // VARIABLES
     map tileMap(mapsize, SCREEN_W, SCREEN_H);
 
-    tileMap.generateScenario(rivers,mapsize);
+    tileMap.generateScenario(rivers,mapsize,accumulative_rivers);
 
     // MAIN LOOP
     while (!quit)
