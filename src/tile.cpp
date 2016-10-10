@@ -2,12 +2,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
-tile::tile(const std::vector<point>& v,const bool is_border):
+tile::tile(const std::vector<point>& v, const double side, const bool is_border):
     neighbors_(4, nullptr),
     adjacents_(4, nullptr),
     vertices_(v),
     color_(),
-    is_border_(is_border)
+    side_(side),
+    is_border_(is_border),
+    tile_type_(0)
 {
     if (v.size() != 4) vertices_.clear();
     color_ = NEUTRAL_TILE_COLOR;
@@ -73,12 +75,48 @@ void tile::draw() const
     // The tile is drawed using two triangles
     al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[1].x, vertices_[1].y, vertices_[2].x, vertices_[2].y, color_);
     al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[3].x, vertices_[3].y, vertices_[2].x, vertices_[2].y, color_);
+
+/* NOTE Draw borders in the tile. Unused
+    double s = side_*0.2;
+    double frac = (vertices_[0].y - vertices_[1].y)/(vertices_[0].x - vertices_[1].x);
+    double x = s / std::sqrt(1 + frac*frac);
+    double y = std::sqrt(s*s-x*x);
+
+    if (!getFriend(dir::DOWN_LEFT) || !(getFriend(dir::DOWN_LEFT)->tile_type_))
+    {
+        // DOWN_LEFT border
+        al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[0].x+x, vertices_[0].y-y, vertices_[3].x, vertices_[3].y, NEUTRAL_TILE_COLOR);
+        al_draw_filled_triangle(vertices_[0].x+x, vertices_[0].y-y, vertices_[3].x, vertices_[3].y, vertices_[3].x+x, vertices_[3].y-y, NEUTRAL_TILE_COLOR);
+    }
+
+    if (!getFriend(dir::DOWN_RIGHT) || !(getFriend(dir::DOWN_RIGHT)->tile_type_))
+    {
+        // DOWN_RIGHT border
+        al_draw_filled_triangle(vertices_[3].x-x, vertices_[3].y-y, vertices_[3].x, vertices_[3].y, vertices_[2].x, vertices_[2].y, NEUTRAL_TILE_COLOR);
+        al_draw_filled_triangle(vertices_[3].x-x, vertices_[3].y-y, vertices_[2].x-x, vertices_[2].y-y, vertices_[2].x, vertices_[2].y, NEUTRAL_TILE_COLOR);
+    }
+
+    if (!getFriend(dir::UP_LEFT) || !(getFriend(dir::UP_LEFT)->tile_type_))
+    {
+        // UP_LEFT border
+        al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[1].x, vertices_[1].y, vertices_[0].x+x, vertices_[0].y+y, NEUTRAL_TILE_COLOR);
+        al_draw_filled_triangle(vertices_[0].x+x, vertices_[0].y+y, vertices_[1].x, vertices_[1].y, vertices_[1].x+x, vertices_[1].y+y, NEUTRAL_TILE_COLOR);
+    }
+
+    if (!getFriend(dir::UP_RIGHT) || !(getFriend(dir::UP_RIGHT)->tile_type_))
+    {
+        // UP_RIGHT border
+        al_draw_filled_triangle(vertices_[1].x, vertices_[1].y, vertices_[2].x, vertices_[2].y, vertices_[2].x-x, vertices_[0].y+y, NEUTRAL_TILE_COLOR);
+        al_draw_filled_triangle(vertices_[1].x-x, vertices_[1].y+y, vertices_[1].x, vertices_[1].y, vertices_[2].x-x, vertices_[2].y+y, NEUTRAL_TILE_COLOR);
+    }
+*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void tile::setColor(ALLEGRO_COLOR color)
 {
+    tile_type_ = 1;
     color_ = color;
 }
 

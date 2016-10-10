@@ -41,7 +41,7 @@ map::map(const uint size, const double screenWidth, const double screenHeight, c
 
             bool border = i==0 || j==0 || (i+1)>=size_ || (j+1)>=size_;
 
-            tiles_.emplace_back(tilePoints, border);
+            tiles_.emplace_back(tilePoints, tile_side, border);
         }
 
     int pos=0;
