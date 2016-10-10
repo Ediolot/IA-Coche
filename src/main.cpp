@@ -101,8 +101,6 @@ int main(int argc, char *argv[])
         }
     }
 
-
-
     // CLEAN UP
     al_destroy_timer(redraw_timer);
     al_destroy_display(display);
