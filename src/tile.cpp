@@ -2,16 +2,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
-tile::tile(const std::vector<point>& v, const double side, const bool is_border):
+tile::tile(const bool is_border):
     neighbors_(4, nullptr),
     adjacents_(4, nullptr),
-    vertices_(v),
     color_(),
-    side_(side),
     is_border_(is_border),
     tile_type_(0)
 {
-    if (v.size() != 4) vertices_.clear();
     color_ = NEUTRAL_TILE_COLOR;
 }
 
@@ -22,7 +19,7 @@ tile::~tile()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::storeFriend(tile *n, const dir direction)
+void tile::addFriend(tile *n, const dir direction)
 {
     switch (direction)
     {
@@ -70,11 +67,18 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::draw() const
+void tile::draw(const double cx, const double cy, const double width) const
 {
     // The tile is drawed using two triangles
-    al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[1].x, vertices_[1].y, vertices_[2].x, vertices_[2].y, color_);
-    al_draw_filled_triangle(vertices_[0].x, vertices_[0].y, vertices_[3].x, vertices_[3].y, vertices_[2].x, vertices_[2].y, color_);
+
+    point vertices[4] = {
+        {cx - width/2, cy},
+        {cx, cy - width/2},
+        {cx + width/2, cy},
+        {cx, cy + width/2}
+    };
+
+    drawQUAD(vertices, color_);
 
 /* NOTE Draw borders in the tile. Unused
     double s = side_*0.2;

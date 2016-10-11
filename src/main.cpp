@@ -25,7 +25,8 @@ const int    SCREEN_H = 800;
 void renderScene(const map &tileMap)
 {
     displayFPS(caviar_font_16);
-    tileMap.draw();
+    std::cout << (SCREEN_W>SCREEN_H ? SCREEN_H*0.8 : SCREEN_W*0.8) << std::endl;
+    tileMap.draw(SCREEN_W/2, SCREEN_H/2, SCREEN_W>SCREEN_H ? SCREEN_H*0.8 : SCREEN_W*0.8);
 }
 
 ////////////////////// MAIN ///////////////////////
@@ -72,7 +73,7 @@ int main(int argc, char *argv[])
     al_register_event_source(event_queue, al_get_timer_event_source(redraw_timer));
 
     // VARIABLES
-    map tileMap(mapsize, SCREEN_W, SCREEN_H);
+    map tileMap(mapsize);
 
     tileMap.generateScenario(rivers,mapsize,accumulative_rivers);
 

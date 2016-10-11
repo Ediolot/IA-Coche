@@ -2,22 +2,26 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint size, const uint seed = 0):
+map::map(const uint size, const uint seed):
     generator_(seed ? seed : std::time(nullptr)),
-    tiles_(size*size),
+    tiles_(),
     size_(size)
 {
+    for (uint i=0; i<size_; ++i)
+        for (uint j=0; j<size_; ++j)
+            tiles_.emplace_back(i==0 || j==0 || i==(size_-1) || j==(size_-1));
+
     for (uint i=0; i<tiles_.size(); ++i)
     {
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::UP) );
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN) );
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::LEFT) );
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::RIGHT) );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP)        , dir::UP       );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN)      , dir::DOWN     );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::LEFT)      , dir::LEFT     );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::RIGHT)     , dir::RIGHT    );
 
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::UP_RIGHT) );
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::UP_LEFT) );
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_LEFT) );
-        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_RIGHT) );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP_RIGHT)  , dir::UP_RIGHT );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP_LEFT)   , dir::UP_LEFT  );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_LEFT) , dir::DOWN_LEFT);
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_RIGHT), dir::DOWN_RIGHT);
     }
 }
 
@@ -36,19 +40,19 @@ void map::draw(const double cx, const double cy, const double width) const
     uint pos=0;
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j, ++pos)
-            tiles_[pos].draw(left_corner.x, left_corner.y, delta);
+            tiles_[pos].draw(left_corner.x+(delta/2)*i, left_corner.y+(delta/2)*j, delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-tile *map::accessTile(const uint row, const uint col) const
+tile *map::accessTile(const uint row, const uint col)
 {
     return (row<size_ && col<size_) ? &tiles_[row*size_ + col] : nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-tile *map::accessTile(const uint row, const uint col, const dir direction) const
+tile *map::accessTile(const uint row, const uint col, const dir direction)
 {
     switch (direction)
     {
@@ -128,7 +132,7 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 
             // Generate a new angle for the river with a maximum deviation of +-135 degrees
             double diverted_angle = normalAngle(target_angle + normal(generator_)*135.0);
-            if (accumulative) target_angle = diverted_angle
+            if (accumulative) target_angle = diverted_angle;
 
             // The new direction the river will be facing
             dir target_direction;

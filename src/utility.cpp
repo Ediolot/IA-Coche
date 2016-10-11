@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void displayFPS(const ALLEGRO_FONT *font)
+void displayFPS(ALLEGRO_FONT *font)
 {
     static uint iteration = 0;
     static double elapsed = 0;
@@ -59,7 +59,7 @@ double directionToDegrees(const dir direction)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-double normalAngle(double angle);
+double normalAngle(double angle)
 {
     while (angle < 0.0) angle += 360.0;
     while (angle > 360.0) angle -= 360;

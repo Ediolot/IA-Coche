@@ -66,13 +66,16 @@ class map {
         virtual ~map();
 
         // Draw all the tiles
-        void draw(const double x, const double y, const double width) const;
+        void draw(const double cx, const double cy, const double width) const;
 
         // Generate all map elements
         void generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
 
         // Make all tiles neutral land
         void neutralizeAllTiles();
+
+        tile *accessTile(const uint row, const uint col);
+        tile *accessTile(const uint row, const uint col, const dir direction);
 
     private:
 
