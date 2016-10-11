@@ -55,20 +55,18 @@ class map {
 
     private:
 
-        std::vector<tile> tiles_;     // Tiles
-        std::vector<point> vertices_; // Container vertices
-        uint size_;                   // Number of tiles in a side
-
         std::default_random_engine generator_; // For random values
+        std::vector<tile> tiles_;              // Tiles
+        uint size_;                            // Number of tiles in the side
 
     public:
 
-        // Create the map centered with the max width or height available inside a square
-        map(const uint size, const double screenWidth, const double screenHeight, const double percent = 0.9, const uint seed = 0);
+        // TODO
+        map(const uint size, const uint seed = 0);
         virtual ~map();
 
         // Draw all the tiles
-        void draw() const;
+        void draw(const double x, const double y, const double width) const;
 
         // Generate all map elements
         void generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers);

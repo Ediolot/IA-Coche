@@ -2,67 +2,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint size, const double screenWidth, const double screenHeight, const double percent, const uint seed):
-    tiles_(),
-    vertices_(4),
-    size_(size),
-    generator_(seed ? seed : std::time(nullptr))
-{
-    double width  = screenWidth * percent;
-    double height = screenHeight * percent;
-    double square_side = width < height ? width : height;
-    double side = 0.7071 * square_side;
-
-    // Set the container's vertices
-    vertices_[0].set((screenWidth - square_side) / 2, screenHeight / 2);
-    vertices_[2].set((screenWidth + square_side) / 2, screenHeight / 2);
-
-    vertices_[1].set(screenWidth / 2, (screenHeight - square_side) / 2);
-    vertices_[3].set(screenWidth / 2, (screenHeight + square_side) / 2);
-
-    // Create tiles
-
-    double tile_side = side / size;
-    double delta   = 0.7071 * tile_side;
-
-    std::vector<point> tilePoints(4);
-
-    // Tiles are stored from left to right, bottom to top. Starting from the middle left vertex.
-    for (uint i=0; i<size; ++i)
-        for (uint j=0; j<size; ++j)
-        {
-            double x = vertices_[0].x + i*delta + j*delta;
-            double y = vertices_[0].y + i*delta - j*delta;
-
-            tilePoints[0].set(x + delta*(BORDER  ), y                   );
-            tilePoints[1].set(x + delta           , y + delta*(BORDER-1));
-            tilePoints[2].set(x + delta*(2-BORDER), y                   );
-            tilePoints[3].set(x + delta           , y + delta*(1-BORDER));
-
-            bool border = i==0 || j==0 || (i+1)>=size_ || (j+1)>=size_;
-
-            tiles_.emplace_back(tilePoints, tile_side, border);
-        }
-
-    int pos=0;
-    for (int i=0; i<int(size_); ++i)
-        for (int j=0; j<int(size_); ++j, ++pos)
-        {
-            int ii, jj;
-
-            // Adjacents
-            ii = i  ; jj = j+1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::UP_RIGHT);
-            ii = i  ; jj = j-1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::DOWN_LEFT);
-            ii = i+1; jj = j  ; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::DOWN_RIGHT);
-            ii = i-1; jj = j  ; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::UP_LEFT);
-
-            // Neighbors
-            ii = i+1; jj = j+1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::RIGHT);
-            ii = i+1; jj = j-1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::DOWN);
-            ii = i-1; jj = j+1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::UP);
-            ii = i-1; jj = j-1; tiles_[pos].storeFriend((ii<int(size_) && jj<int(size_) && jj>=0 && ii>=0) ? &tiles_[ii*size_+jj] : nullptr, dir::LEFT);
-        }
-}
+map::map(const uint size, const uint seed = 0):
+    generator_(seed ? seed : std::time(nullptr)),
+    tiles_(size*size),
+    size_(size)
+{}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -71,9 +15,15 @@ map::~map()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::draw() const
+void map::draw(const double cx, const double cy, const double width) const
 {
-    for (auto &i : tiles_) i.draw();
+    const double delta       = (width/2) / size_;
+    const point  left_corner = {cx - (width/2) + delta, cy};
+
+    uint pos=0;
+    for (uint i=0; i<size_; ++i)
+        for (uint j=0; j<size_; ++j, ++pos)
+            tiles_[pos].draw(left_corner.x, left_corner.y, delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
