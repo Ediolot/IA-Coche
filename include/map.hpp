@@ -50,8 +50,7 @@
 
 class map {
 
-    const double BORDER       = 0.1; // Separation between tiles
-    const uint   SENTINEL_MAX =  20; // Prevent infinite loops when generating the sceneario
+    const uint SENTINEL_MAX =  20; // Prevent infinite loops when generating the sceneario
 
     private:
 
@@ -66,7 +65,7 @@ class map {
         virtual ~map();
 
         // Draw all the tiles
-        void draw(const double cx, const double cy, const double width) const;
+        void draw(const double cx, const double cy, const double width, const double border) const;
 
         // Generate all map elements
         void generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers);

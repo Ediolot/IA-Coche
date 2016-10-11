@@ -16,7 +16,7 @@
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
 const double FPS      = 90;
-const uint   mapsize  = 15;
+const uint   mapsize  = 50;
 const uint   rivers   = 2;
 const int    SCREEN_W = 800;
 const int    SCREEN_H = 800;
@@ -25,8 +25,10 @@ const int    SCREEN_H = 800;
 void renderScene(const map &tileMap)
 {
     displayFPS(caviar_font_16);
-    
-    tileMap.draw(SCREEN_W/2, SCREEN_H/2, SCREEN_W>SCREEN_H ? SCREEN_H*0.8 : SCREEN_W*0.8);
+    tileMap.draw(SCREEN_W/2, SCREEN_H/2, SCREEN_W>SCREEN_H ? SCREEN_H*0.8 : SCREEN_W*0.8, 0.06);
+
+    std::string stringTri("Triangles: "+std::to_string(mapsize*mapsize));
+    al_draw_text(caviar_font_16, BLACK, 10, 40,ALLEGRO_ALIGN_LEFT, stringTri.c_str());
 }
 
 ////////////////////// MAIN ///////////////////////
