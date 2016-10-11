@@ -35,13 +35,19 @@ map::~map()
 void map::draw(const double cx, const double cy, const double width) const
 {
     const double delta       = (width/2) / size_;
+    const double delta_2     = delta/2;
     const point  left_corner = {cx - (width/2) + delta, cy};
 
     uint pos=0;
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j, ++pos)
+{
+    tiles_[pos].draw(left_corner.x+delta_2*(i+j), left_corner.y + (delta_2*j-delta_2*i), delta,0.1);
+    std::cout << left_corner.y << " " << delta_2 << " " << j << " " << i << " " << (left_corner.y + (delta_2*j-delta_2*i)) << " - " << (left_corner.y + (delta_2*(j-i))) << std::endl;
 
-            tiles_[pos].draw(left_corner.x+(delta/2)*i+(delta/2)*j, left_corner.y+(delta/2)*j-(delta/2)*j, delta);
+}
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

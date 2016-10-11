@@ -67,15 +67,17 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::draw(const double cx, const double cy, const double width) const
+void tile::draw(const double cx, const double cy, const double width, const double border) const
 {
     // The tile is drawed using two triangles
 
+    double border_px = border*width;
+
     point vertices[4] = {
-        {cx - width/2, cy},
-        {cx, cy - width/2},
-        {cx + width/2, cy},
-        {cx, cy + width/2}
+        {(cx - width/2)+border_px, (cy          )          },
+        {(cx          )          , (cy - width/2)+border_px},
+        {(cx + width/2)-border_px, (cy          )          },
+        {(cx          )          , (cy + width/2)-border_px}
     };
 
     drawQUAD(vertices, color_);

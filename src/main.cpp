@@ -25,7 +25,7 @@ const int    SCREEN_H = 800;
 void renderScene(const map &tileMap)
 {
     displayFPS(caviar_font_16);
-    std::cout << (SCREEN_W>SCREEN_H ? SCREEN_H*0.8 : SCREEN_W*0.8) << std::endl;
+    
     tileMap.draw(SCREEN_W/2, SCREEN_H/2, SCREEN_W>SCREEN_H ? SCREEN_H*0.8 : SCREEN_W*0.8);
 }
 
