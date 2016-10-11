@@ -6,7 +6,20 @@ map::map(const uint size, const uint seed = 0):
     generator_(seed ? seed : std::time(nullptr)),
     tiles_(size*size),
     size_(size)
-{}
+{
+    for (uint i=0; i<tiles_.size(); ++i)
+    {
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::UP) );
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN) );
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::LEFT) );
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::RIGHT) );
+
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::UP_RIGHT) );
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::UP_LEFT) );
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_LEFT) );
+        tiles[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_RIGHT) );
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -24,6 +37,31 @@ void map::draw(const double cx, const double cy, const double width) const
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j, ++pos)
             tiles_[pos].draw(left_corner.x, left_corner.y, delta);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+tile *map::accessTile(const uint row, const uint col) const
+{
+    return (row<size_ && col<size_) ? &tiles_[row*size_ + col] : nullptr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+tile *map::accessTile(const uint row, const uint col, const dir direction) const
+{
+    switch (direction)
+    {
+        case dir::UP:         return accessTile(row-1, col+1);
+        case dir::DOWN:       return accessTile(row+1, col-1);
+        case dir::RIGHT:      return accessTile(row+1, col+1);
+        case dir::LEFT:       return accessTile(row-1, col-1);
+        case dir::UP_LEFT:    return accessTile(row-1, col  );
+        case dir::DOWN_RIGHT: return accessTile(row+1, col  );
+        case dir::UP_RIGHT:   return accessTile(row  , col+1);
+        case dir::DOWN_LEFT:  return accessTile(row  , col-1);
+        default: return nullptr;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,21 +111,11 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 {
     std::normal_distribution<double> normal(0.0,0.3);
     std::vector<tile*> river;
-
     tile* target=nullptr;
     tile* current= &tiles_[start];
-    river.push_back(current);
+    double target_angle = directionToDegrees(direction);
 
-    // Convert the direction the river is going to an angle
-    double target_angle;
-    switch (direction)
-    {
-        case dir::UP:    target_angle =  90.0; break;
-        case dir::DOWN:  target_angle = 270.0; break;
-        case dir::LEFT:  target_angle = 180.0; break;
-        case dir::RIGHT: target_angle =   0.0; break;
-        default: return false;
-    }
+    river.push_back(current);
 
     // Expand the river while it is too small or there is still a valid target
     for (uint river_size = 0; river_size < min_size || target; ++river_size)
@@ -99,14 +127,13 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
             if (++sentinel==SENTINEL_MAX) return false;
 
             // Generate a new angle for the river with a maximum deviation of +-135 degrees
-            double deviation = target_angle + normal(generator_)*135.0;
-            target_angle = accumulative ? deviation : target_angle;
-            while (deviation > 360) deviation -= 360;
+            double diverted_angle = normalAngle(target_angle + normal(generator_)*135.0);
+            if (accumulative) target_angle = diverted_angle
 
             // The new direction the river will be facing
             dir target_direction;
-            if (deviation < 180) target_direction = deviation< 90 ? dir::UP_RIGHT  : dir::UP_LEFT;
-            else                 target_direction = deviation<270 ? dir::DOWN_LEFT : dir::DOWN_RIGHT;
+            if (diverted_angle < 180) target_direction = diverted_angle< 90 ? dir::UP_RIGHT  : dir::UP_LEFT;
+            else                      target_direction = diverted_angle<270 ? dir::DOWN_LEFT : dir::DOWN_RIGHT;
 
             // Get the tile in that direction
             target = current->getFriend(target_direction);

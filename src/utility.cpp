@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void displayFPS(ALLEGRO_FONT *font)
+void displayFPS(const ALLEGRO_FONT *font)
 {
     static uint iteration = 0;
     static double elapsed = 0;
@@ -41,6 +41,29 @@ std::string versionToString()
     version_string += "[Allegro "+std::to_string(major) + "." + std::to_string(minor) + "]";
 
     return version_string;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+double directionToDegrees(const dir direction)
+{
+    switch (direction)
+    {
+        case dir::UP:    return  90.0;
+        case dir::DOWN:  return 270.0;
+        case dir::LEFT:  return 180.0;
+        case dir::RIGHT: return   0.0;
+        default: return false;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+double normalAngle(double angle);
+{
+    while (angle < 0.0) angle += 360.0;
+    while (angle > 360.0) angle -= 360;
+    return angle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
