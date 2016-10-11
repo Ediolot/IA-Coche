@@ -40,7 +40,8 @@ void map::draw(const double cx, const double cy, const double width) const
     uint pos=0;
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j, ++pos)
-            tiles_[pos].draw(left_corner.x+(delta/2)*i, left_corner.y+(delta/2)*j, delta);
+
+            tiles_[pos].draw(left_corner.x+(delta/2)*i+(delta/2)*j, left_corner.y+(delta/2)*j-(delta/2)*j, delta);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
