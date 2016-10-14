@@ -67,20 +67,22 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::draw(const double cx, const double cy, const double width, const double border) const
+std::vector<ALLEGRO_VERTEX> tile::draw(const double cx, const double cy, const double width, const double border) const
 {
     // The tile is drawed using two triangles
+    std::vector<ALLEGRO_VERTEX> triangles(6);
 
     double border_px = border*width;
+    double width_2   = width/2;
 
-    point vertices[4] = {
-        {(cx - width/2)+border_px, (cy          )          },
-        {(cx          )          , (cy - width/2)+border_px},
-        {(cx + width/2)-border_px, (cy          )          },
-        {(cx          )          , (cy + width/2)-border_px}
-    };
+    triangles[0] = (ALLEGRO_VERTEX){ cx - width_2 + border_px, cy                      , 0, 0, 0, color_};
+    triangles[1] = (ALLEGRO_VERTEX){ cx + width_2 - border_px, cy                      , 0, 0, 0, color_};
+    triangles[2] = (ALLEGRO_VERTEX){ cx                      , cy + width_2 - border_px, 0, 0, 0, color_};
+    triangles[3] = (ALLEGRO_VERTEX){ cx - width_2 + border_px, cy                      , 0, 0, 0, color_};
+    triangles[4] = (ALLEGRO_VERTEX){ cx + width_2 - border_px, cy                      , 0, 0, 0, color_};
+    triangles[5] = (ALLEGRO_VERTEX){ cx                      , cy - width_2 + border_px, 0, 0, 0, color_};
 
-    drawQUAD(vertices, color_);
+    return triangles;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -33,11 +33,15 @@ map::~map()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::draw(const double cx, const double cy, const double width, const double max_x, const double min_x, const double max_y, const double min_y) const
+std::vector<ALLEGRO_VERTEX> map::draw(const double cx, const double cy, const double width, const double max_x, const double min_x, const double max_y, const double min_y) const
 {
     const double delta       = width / size_;
     const double delta_2     = delta/2;
     const point  left_corner = {cx - (width/2) + delta, cy};
+
+    std::vector<ALLEGRO_VERTEX> vertices;
+
+    vertices.reserve(4*size_*size_);
 
     uint pos=0;
     for (uint i=0; i<size_; ++i)
@@ -47,8 +51,13 @@ void map::draw(const double cx, const double cy, const double width, const doubl
             double y = left_corner.y + delta_2*(double(j)-double(i));
 
             if ((x-delta)>=min_x && (x+delta)<=max_x && (y-delta)>=min_y && (y+delta)<=max_y)
-                tiles_[pos].draw(x, y, delta, separation_);
+            {
+                std::vector<ALLEGRO_VERTEX> aux = tiles_[pos].draw(x, y, delta, separation_);
+                vertices.insert(std::end(vertices), std::begin(aux), std::end(aux));
+            }
         }
+
+    return vertices;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

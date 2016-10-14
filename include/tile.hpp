@@ -37,7 +37,7 @@ class tile {
         bool isBorder() const;
 
         // Draw the tile
-        void draw(const double cx, const double cy, const double width, const double border) const;
+        std::vector<ALLEGRO_VERTEX> draw(const double cx, const double cy, const double width, const double border) const;
 
         // Change the tile color
         void setColor(ALLEGRO_COLOR color); // TODO cambiar por set type
