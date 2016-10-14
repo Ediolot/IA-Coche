@@ -18,7 +18,7 @@ bool keysPress[ALLEGRO_KEY_MAX] = {false};
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
-const double FPS         = 300;
+const double FPS         = 120;
 const double scrollSpeed = 650;
 const double border      = 0.95;
 const double separation  = 0.06;
