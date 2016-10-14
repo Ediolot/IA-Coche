@@ -8,6 +8,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <vector>
 #include <cmath>
+#include <utility>
 #include "fonts.hpp"
 #include "common.hpp"
 #include "utility.hpp"
@@ -19,28 +20,40 @@ class tile {
         std::vector<tile*> neighbors_;
         std::vector<tile*> adjacents_;
 
-        ALLEGRO_COLOR color_;
-        bool is_border_;
-        uint tile_type_; // TODO hacer enum
+        ALLEGRO_COLOR tile_color_;
+        tileType tile_type_;
 
     public:
 
-        // Constructs a tile with those vertices
-        tile(const bool is_border);
+        tile();
         virtual ~tile();
 
+        // Add a tile's friend
         void addFriend(tile *n, const dir direction);
+
+        // Get a tile's friend
         tile* getFriend(const dir direction) const;
+
+        // Tell's if a tile is adjacent to another
         bool isAdjacentTo(const tile *n) const;
 
         // Check if is a border tile
         bool isBorder() const;
 
-        // Draw the tile
-        std::vector<ALLEGRO_VERTEX> draw(const double cx, const double cy, const double width, const double border) const;
+        // Append the tile's vertices points to a vector
+        void appendVertices(
+            std::vector<ALLEGRO_VERTEX> &v,
+            const double cx,
+            const double cy,
+            const double width,
+            const double border,
+            const double max_x,
+            const double max_y
+        ) const;
 
         // Change the tile color
-        void setColor(ALLEGRO_COLOR color); // TODO cambiar por set type
+        void setType(const tileType type);
 };
+
 
 #endif

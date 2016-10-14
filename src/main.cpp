@@ -18,11 +18,11 @@ bool keysPress[ALLEGRO_KEY_MAX] = {false};
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
-const double FPS         = 120;
+const double FPS         = 60;
 const double scrollSpeed = 650;
-const double border      = 0.95;
-const double separation  = 0.06;
-const uint   mapsize     = 10;
+const double map_separation    = 0.05;
+const double tiles_separation  = 0.06;
+const uint   mapsize     = 2;
 const uint   rivers      = 2;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 
     // VARIABLES
-    scene main_scene(SCREEN_W, SCREEN_H, mapsize, 0.06);
+    scene main_scene(SCREEN_W, SCREEN_H, mapsize, tiles_separation, map_separation);
 
     main_scene.generate(rivers, mapsize, accumulative_rivers);
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     while (!quit)
     {
         ALLEGRO_EVENT ev;
-        al_get_next_event(event_queue, &ev);
+        al_wait_for_event(event_queue, &ev);
 
         switch (ev.type)
         {
@@ -115,9 +115,6 @@ int main(int argc, char *argv[])
 
             updateMovement(main_scene);
             main_scene.draw();
-
-            std::string stringFPS("Triangles: "+std::to_string(triangles_global));
-            al_draw_text(caviar_font_16, BLACK, 10, 40,ALLEGRO_ALIGN_LEFT, stringFPS.c_str());
 
             displayFPS(caviar_font_16);
             al_flip_display();

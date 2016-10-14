@@ -9,10 +9,6 @@
 
 typedef unsigned int uint;
 
-////////////////// DEBUG /////////////////
-
-extern uint triangles_global;  
-
 ///////////////// VERSION ////////////////
 const uint VERSION_MAYOR = 0;
 const uint VERSION_MINOR = 1;
@@ -33,6 +29,13 @@ enum dir {
     CENTER
 };
 
+/////////////// TILE TYPES //////////////
+
+enum tileType {
+    NEUTRAL,
+    WATER
+};
+
 ///////////////// COLORS /////////////////
 #define PURE_WHITE          al_map_rgb(255,255,255)
 #define PURE_BLACK          al_map_rgb(  0,  0,  0)
@@ -40,19 +43,6 @@ enum dir {
 #define ORANGE              al_map_rgb(244,188, 66)
 #define BACKGROUND_COLOR    al_map_rgb(226,230,235)
 #define NEUTRAL_TILE_COLOR  al_map_rgb( 63, 64, 65)
-#define RIVER_TILE_COLOR    al_map_rgb(  0,137,123)
-
-///////////////// POINT //////////////////
-struct point
-{
-    double x;
-    double y;
-
-    void set(double x1, double y1)
-    {
-        x = x1;
-        y = y1;
-    }
-};
+#define WATER_TILE_COLOR    al_map_rgb(  0,137,123)
 
 #endif

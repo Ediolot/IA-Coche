@@ -1,7 +1,8 @@
 #include "../include/scene.hpp"
 
-scene::scene(const uint screen_w, const uint screen_h, const uint map_size, const double map_separation):
-    tile_map_(map_size, map_separation),
+scene::scene(const uint screen_w, const uint screen_h, const uint map_size, const double tiles_separation, const double map_separation):
+    tile_map_(map_size, tiles_separation),
+    map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
     map_size_(map_size),
@@ -19,20 +20,22 @@ void scene::generate(const uint rivers, const uint min_size_river, const bool ac
 
 void scene::draw() const
 {
-    triangles_global = 0;
+    std::vector<ALLEGRO_VERTEX> vertices;
 
     double cx = screen_w_/2 + inc_x_;
     double cy = screen_h_/2 + inc_y_;
 
-
-    std::vector<ALLEGRO_VERTEX> map_points = tile_map_.draw(cx, cy, screen_w_>screen_h_ ? screen_h_ : screen_w_, screen_w_, 0, screen_h_, 0);
+    tile_map_.appendVertices(vertices, cx, cy, (screen_w_>screen_h_ ? screen_h_ : screen_w_)*(1.0-map_separation_), screen_w_, screen_h_);
 
     al_clear_to_color(BACKGROUND_COLOR);
     al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
 
-    al_draw_prim(map_points.data(), nullptr, nullptr, 0, map_points.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
+    al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
 
     al_unlock_bitmap(al_get_target_bitmap());
+
+    std::string stringTriangles("Triangles: "+std::to_string(vertices.size()/3));
+    al_draw_text(caviar_font_16, BLACK, 10, 40,ALLEGRO_ALIGN_LEFT, stringTriangles.c_str());
 }
 
 void scene::moveX(const double x)

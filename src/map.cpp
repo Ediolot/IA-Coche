@@ -4,14 +4,10 @@
 
 map::map(const uint size, const double separation, const uint seed):
     generator_(seed ? seed : std::time(nullptr)),
-    tiles_(),
-    separation_(separation),
+    tiles_(size*size),
+    tiles_separation_(separation),
     size_(size)
 {
-    for (uint i=0; i<size_; ++i)
-        for (uint j=0; j<size_; ++j)
-            tiles_.emplace_back(i==0 || j==0 || i==(size_-1) || j==(size_-1));
-
     for (uint i=0; i<tiles_.size(); ++i)
     {
         tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP)        , dir::UP       );
@@ -33,31 +29,23 @@ map::~map()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-std::vector<ALLEGRO_VERTEX> map::draw(const double cx, const double cy, const double width, const double max_x, const double min_x, const double max_y, const double min_y) const
+void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const
 {
-    const double delta       = width / size_;
-    const double delta_2     = delta/2;
-    const point  left_corner = {cx - (width/2) + delta, cy};
+    const double delta         = width / size_;
+    const double delta_2       = delta/2;
+    const double left_corner_x = cx - (width/2) + delta_2;
 
-    std::vector<ALLEGRO_VERTEX> vertices;
+    // Reserve spaces for all the tiles in the vector
+    v.reserve(v.size() + 4*size_*size_);
 
-    vertices.reserve(4*size_*size_);
-
-    uint pos=0;
     for (uint i=0; i<size_; ++i)
-        for (uint j=0; j<size_; ++j, ++pos)
+        for (uint j=0; j<size_; ++j)
         {
-            double x = left_corner.x + delta_2*(i+j);
-            double y = left_corner.y + delta_2*(double(j)-double(i));
+            double x = left_corner_x + delta_2*(i+j);
+            double y = cy + delta_2*j - delta_2*i;
 
-            if ((x-delta)>=min_x && (x+delta)<=max_x && (y-delta)>=min_y && (y+delta)<=max_y)
-            {
-                std::vector<ALLEGRO_VERTEX> aux = tiles_[pos].draw(x, y, delta, separation_);
-                vertices.insert(std::end(vertices), std::begin(aux), std::end(aux));
-            }
+            tiles_[i*size_+j].appendVertices(v, x, y, delta, tiles_separation_, max_x, max_y);
         }
-
-    return vertices;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,7 +157,7 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 
     // Set all river tiles
     for (tile* i : river)
-        i->setColor(RIVER_TILE_COLOR); // TODO remove if
+        i->setType(tileType::WATER); // TODO remove if
 
     return true;
 }
@@ -178,7 +166,7 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 
 void map::neutralizeAllTiles()
 {
-    for (tile &i : tiles_) i.setColor(NEUTRAL_TILE_COLOR);
+    for (tile &i : tiles_) i.setType(tileType::NEUTRAL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

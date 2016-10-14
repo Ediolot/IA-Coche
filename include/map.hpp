@@ -56,7 +56,7 @@ class map {
 
         std::default_random_engine generator_; // For random values
         std::vector<tile> tiles_;              // Tiles
-        double separation_;                    // Separation between tiles (%)
+        double tiles_separation_;              // Separation between tiles (%)
         uint size_;                            // Number of tiles in the side
 
     public:
@@ -66,7 +66,7 @@ class map {
         virtual ~map();
 
         // Draw all the tiles
-        std::vector<ALLEGRO_VERTEX> draw(const double cx, const double cy, const double width, const double max_x, const double min_x, const double max_y, const double min_y) const;
+        void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const;
 
         // Generate all map elements
         void generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
