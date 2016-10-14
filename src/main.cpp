@@ -18,11 +18,11 @@ bool keysPress[ALLEGRO_KEY_MAX] = {false};
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
-const double FPS         = 90;
-const double scrollSpeed = 0.08;
+const double FPS         = 300;
+const double scrollSpeed = 650;
 const double border      = 0.95;
 const double separation  = 0.06;
-const uint   mapsize     = 20;
+const uint   mapsize     = 10;
 const uint   rivers      = 2;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
@@ -30,10 +30,10 @@ const int    SCREEN_H    = 700;
 ////////////////// SCENE RENDER ///////////////////
 void updateMovement(scene &s)
 {
-    if (keysPress[ALLEGRO_KEY_W]) s.moveY(+scrollSpeed*FPS);
-    if (keysPress[ALLEGRO_KEY_S]) s.moveY(-scrollSpeed*FPS);
-    if (keysPress[ALLEGRO_KEY_A]) s.moveX(+scrollSpeed*FPS);
-    if (keysPress[ALLEGRO_KEY_D]) s.moveX(-scrollSpeed*FPS);
+    if (keysPress[ALLEGRO_KEY_W]) s.moveY(+scrollSpeed/FPS);
+    if (keysPress[ALLEGRO_KEY_S]) s.moveY(-scrollSpeed/FPS);
+    if (keysPress[ALLEGRO_KEY_A]) s.moveX(+scrollSpeed/FPS);
+    if (keysPress[ALLEGRO_KEY_D]) s.moveX(-scrollSpeed/FPS);
 }
 
 ////////////////////// MAIN ///////////////////////
@@ -88,11 +88,14 @@ int main(int argc, char *argv[])
     // START REDRAW TIMER
     al_start_timer(redraw_timer);
 
+    // SET DISPLAY AS CURRENT BITMAP
+    al_set_target_bitmap(al_get_backbuffer(display));
+
     // MAIN LOOP
     while (!quit)
     {
         ALLEGRO_EVENT ev;
-        al_wait_for_event(event_queue, &ev);
+        al_get_next_event(event_queue, &ev);
 
         switch (ev.type)
         {
