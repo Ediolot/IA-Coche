@@ -9,6 +9,10 @@
 
 typedef unsigned int uint;
 
+////////////////// DEBUG /////////////////
+
+extern uint triangles_global;  
+
 ///////////////// VERSION ////////////////
 const uint VERSION_MAYOR = 0;
 const uint VERSION_MINOR = 1;

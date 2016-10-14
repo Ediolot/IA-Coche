@@ -30,6 +30,7 @@ inline void drawQUAD(const point *v, const ALLEGRO_COLOR &color)
 {
     al_draw_filled_triangle(v[0].x, v[0].y, v[2].x, v[2].y, v[3].x, v[3].y, color);
     al_draw_filled_triangle(v[0].x, v[0].y, v[2].x, v[2].y, v[1].x, v[1].y, color);
+    triangles_global += 2;
 }
 
 #endif

@@ -2,9 +2,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint size, const uint seed):
+map::map(const uint size, const double separation, const uint seed):
     generator_(seed ? seed : std::time(nullptr)),
     tiles_(),
+    separation_(separation),
     size_(size)
 {
     for (uint i=0; i<size_; ++i)
@@ -32,7 +33,7 @@ map::~map()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::draw(const double cx, const double cy, const double width, const double border) const
+void map::draw(const double cx, const double cy, const double width, const double max_x, const double min_x, const double max_y, const double min_y) const
 {
     const double delta       = width / size_;
     const double delta_2     = delta/2;
@@ -41,7 +42,13 @@ void map::draw(const double cx, const double cy, const double width, const doubl
     uint pos=0;
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j, ++pos)
-            tiles_[pos].draw(left_corner.x + delta_2*(i+j), left_corner.y + delta_2*(double(j)-double(i)), delta, border);
+        {
+            double x = left_corner.x + delta_2*(i+j);
+            double y = left_corner.y + delta_2*(double(j)-double(i));
+
+            if ((x-delta)>=min_x && (x+delta)<=max_x && (y-delta)>=min_y && (y+delta)<=max_y)
+                tiles_[pos].draw(x, y, delta, separation_);
+        }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

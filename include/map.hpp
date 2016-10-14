@@ -56,16 +56,17 @@ class map {
 
         std::default_random_engine generator_; // For random values
         std::vector<tile> tiles_;              // Tiles
+        double separation_;                    // Separation between tiles (%)
         uint size_;                            // Number of tiles in the side
 
     public:
 
         // TODO
-        map(const uint size, const uint seed = 0);
+        map(const uint size, const double separation, const uint seed = 0);
         virtual ~map();
 
         // Draw all the tiles
-        void draw(const double cx, const double cy, const double width, const double border) const;
+        void draw(const double cx, const double cy, const double width, const double max_x, const double min_x, const double max_y, const double min_y) const;
 
         // Generate all map elements
         void generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
