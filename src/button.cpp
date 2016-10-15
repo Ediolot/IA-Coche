@@ -37,13 +37,28 @@ void button::update()
 {
     mouse_inside_ = mouse.insideBox(x_, y_, x_+w_, y_+h_);
 
-    if (mouse_inside_ && mouse.isPressed(1))
-        mouse_pressed_ = true;
-
-    if (mouse_pressed_ && !mouse.isPressed(1))
+    if (!mouse_inside)
     {
-        was_pressed_events_++;
-        mouse_pressed_ = false;
+        mouse_realased_ = false;
+        mouse_presssed_ = false;
+    }
+    else
+    {
+        if (!mouse.isPressed(1))
+            mouse_realased_ = true;
+
+        if (mouse.isPressed(1) && mouse_realased_)
+        {
+            mouse_pressed_ = true;
+            mouse_realased_ = false;
+        }
+
+        if (mouse_pressed_ && mouse_realased_)
+        {
+            was_pressed_events_++;
+            mouse_pressed_ = false;
+            mouse_realased_ = false;
+        }
     }
 }
 
