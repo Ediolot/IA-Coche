@@ -69,14 +69,14 @@ bool tile::isAdjacentTo(const tile *n) const
 void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double border, const double max_x, const double max_y) const
 {
     // The tile is drawed using two triangles
-    double border_px = border*width;
-    double width_2   = width/2;
+    float border_px = border*width;
+    float width_2   = width/2;
 
     ALLEGRO_VERTEX points[4] = {
-        {(cx - width_2)+border_px, (cy          )          , 0.0, 0.0, 0.0, tile_color_},
-        {(cx          )          , (cy - width_2)+border_px, 0.0, 0.0, 0.0, tile_color_},
-        {(cx + width_2)-border_px, (cy          )          , 0.0, 0.0, 0.0, tile_color_},
-        {(cx          )          , (cy + width_2)-border_px, 0.0, 0.0, 0.0, tile_color_}
+        {float((cx - width_2)+border_px), float((cy          )          ), 0.0f, 0.0f, 0.0f, tile_color_},
+        {float((cx          )          ), float((cy - width_2)+border_px), 0.0f, 0.0f, 0.0f, tile_color_},
+        {float((cx + width_2)-border_px), float((cy          )          ), 0.0f, 0.0f, 0.0f, tile_color_},
+        {float((cx          )          ), float((cy + width_2)-border_px), 0.0f, 0.0f, 0.0f, tile_color_}
     };
 
     if (points[0].y >= 0 && points[1].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
