@@ -1,7 +1,7 @@
 #include "../include/tile.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
+
 tile::tile():
     neighbors_(4, nullptr),
     adjacents_(4, nullptr),
@@ -86,12 +86,12 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
         v.push_back(points[2]);
     }
 
-    /*if (points[3].y >= 0 && points[0].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
+    if (points[3].y >= 0 && points[0].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
     {
         v.push_back(points[0]);
         v.push_back(points[2]);
         v.push_back(points[3]);
-    }*/
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

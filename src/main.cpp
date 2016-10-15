@@ -23,7 +23,7 @@ const double FPS         = 60;
 const double scrollSpeed = 650;
 const double map_separation    = 0.05;
 const double tiles_separation  = 0.06;
-const uint   mapsize     = 15;
+const uint   mapsize     = 100;
 const uint   rivers      = 2;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
     }
 
     // INITIALIZE ALLEGRO VARIABLES
+    al_set_new_display_flags(ALLEGRO_RESIZABLE);
     redraw_timer = al_create_timer(1.0 / FPS);
     display      = al_create_display(SCREEN_W, SCREEN_H);
     event_queue  = al_create_event_queue();
@@ -113,6 +114,11 @@ int main(int argc, char *argv[])
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:   mouse.press(ev);     break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:     mouse.realase(ev);   break;
             case ALLEGRO_EVENT_MOUSE_AXES:          mouse.updatePos(ev); break;
+
+            case ALLEGRO_EVENT_DISPLAY_RESIZE:
+                al_acknowledge_resize(display);
+                main_scene.resize(ev.display.width, ev.display.height);
+                break;
 
             default: break; // Unused event
         }

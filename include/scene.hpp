@@ -31,6 +31,8 @@ class scene {
         // Mueve la escena en x o y
         void moveX(const double x);
         void moveY(const double y);
+
+        void resize(const double w, const double h);
 };
 
 #endif
