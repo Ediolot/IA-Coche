@@ -34,18 +34,19 @@ void scene::draw() const
     static button play_pause_button("Play"     , 0.15);
     static button randomize_button( "Randomize", 0.15);
     static button speed_button( "Step", 0.15);
-    static scrollbar speed(0.15);
+    static scrollbar speed_scrollbar(0.15);
 
     restart_button.moveTo(                  0, screen_h_-80.0, screen_w_/3.0, 80.0);
     play_pause_button.moveTo(screen_w_*0.3333, screen_h_-80.0, screen_w_/3.0, 80.0);
     randomize_button.moveTo( screen_w_*0.6666, screen_h_-80.0, screen_w_/3.0, 80.0);
-    speed.moveTo(screen_w_-30, 50, 5, screen_h_-200);
+    speed_scrollbar.moveTo(screen_w_-30, 50, 5, screen_h_-200);
+    speed_button.moveTo(screen_w_-30, 10, 40, 40);
 
     restart_button.update();
     play_pause_button.update();
     randomize_button.update();
-    speed.update();
-    std::cout << "\r" << speed.getValue() << "               ";
+    speed_scrollbar.update();
+    std::cout << "\r" << speed_scrollbar.getValue() << "               ";
 
     //double cx = screen_w_/2.0 + inc_x_;
     //double cy = screen_h_/2.0 + inc_y_;
@@ -75,7 +76,7 @@ void scene::draw() const
     restart_button.draw();
     play_pause_button.draw();
     randomize_button.draw();
-    speed.draw();
+    speed_scrollbar.draw();
 
     if (restart_button.mouseOver()    ||
         play_pause_button.mouseOver() ||
