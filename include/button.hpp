@@ -20,6 +20,7 @@ class button {
 
         bool mouse_inside_;
         bool mouse_pressed_;
+        bool mouse_realased_;
         uint was_pressed_events_;
 
         double animation_time_;

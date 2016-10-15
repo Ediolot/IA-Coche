@@ -11,6 +11,7 @@ button::button(const std::string &label, const double animation_time):
     min_h_(0),
     mouse_inside_(false),
     mouse_pressed_(false),
+    mouse_realased_(false),
     was_pressed_events_(0),
     animation_time_(animation_time),
     line_size_(0),
@@ -37,10 +38,10 @@ void button::update()
 {
     mouse_inside_ = mouse.insideBox(x_, y_, x_+w_, y_+h_);
 
-    if (!mouse_inside)
+    if (!mouse_inside_)
     {
         mouse_realased_ = false;
-        mouse_presssed_ = false;
+        mouse_pressed_ = false;
     }
     else
     {
