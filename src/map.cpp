@@ -120,8 +120,10 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 {
     std::normal_distribution<double> normal(0.0,0.3);
     std::vector<tile*> river;
-    tile* target=nullptr;
+
     tile* current= &tiles_[start];
+    tile* target=nullptr;
+
     double target_angle = directionToDegrees(direction);
 
     river.push_back(current);
@@ -147,8 +149,8 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
             // Get the tile in that direction
             target = current->getFriend(target_direction);
                                                                                 // CALCULATE A NEW TARGET TILE WHILE:
-        } while ((river_size < min_size && (!target || target->isBorder()))  ||  // River is too small and target was not found or is a border
-                 isAdjacentToAnyInVector(target, river, current));              // Target is adjacent to other river tile (Except the current one)
+        } while ((river_size < min_size && (!target || target->isBorder()))  || // River is too small and target was not found or is a border
+                riverTargetOverlap(target, river) );
 
         // Add the target tile to the river tiles
         if (target) river.push_back(target);
@@ -157,7 +159,7 @@ bool map::generateRiver(const uint start, const dir direction, const uint min_si
 
     // Set all river tiles
     for (tile* i : river)
-        i->setType(tileType::WATER); // TODO remove if
+        i->setType(tileType::WATER);
 
     return true;
 }
@@ -171,11 +173,12 @@ void map::neutralizeAllTiles()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool map::isAdjacentToAnyInVector(const tile* test, const std::vector<tile*>& v, const tile* test_exception) const
+bool map::riverTargetOverlap(const tile* test, const std::vector<tile*>& v) const
 {
-    for (const tile* i : v)
-        if (i!=test_exception && test && test->isAdjacentTo(i)) // The  tile is adjacent to the target tile and the (vector) tile is not an exception
-            return true;
+    if (!test) return false;
+
+    for (std::vector<tile*>::const_iterator it = v.cbegin(); it != std::prev(v.cend()); ++it)
+        if (test->isAdjacentTo(*it)) return true;
 
     return false;
 }

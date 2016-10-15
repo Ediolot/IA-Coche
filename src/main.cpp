@@ -22,7 +22,7 @@ const double FPS         = 60;
 const double scrollSpeed = 650;
 const double map_separation    = 0.05;
 const double tiles_separation  = 0.06;
-const uint   mapsize     = 2;
+const uint   mapsize     = 15;
 const uint   rivers      = 2;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
@@ -115,8 +115,6 @@ int main(int argc, char *argv[])
 
             updateMovement(main_scene);
             main_scene.draw();
-
-            displayFPS(caviar_font_16);
             al_flip_display();
         }
     }

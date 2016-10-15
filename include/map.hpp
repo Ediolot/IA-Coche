@@ -42,7 +42,6 @@
 #include <vector>
 #include <ctime>
 #include <random>
-#include <iostream> // TODO Delete
 #include <algorithm>
 #include "common.hpp"
 #include "utility.hpp"
@@ -85,7 +84,7 @@ class map {
         bool generateRiver(const uint start_tile, const dir direction, const uint min_size, const bool accumulative);
 
         // Test if a tile is adjacent by the sides to any of the tiles in a vector. Taking into account a possible exception
-        bool isAdjacentToAnyInVector(const tile* test, const std::vector<tile*>& v, const tile* test_exception) const;
+        bool riverTargetOverlap(const tile* test, const std::vector<tile*>& v) const;
 };
 
 #endif

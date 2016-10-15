@@ -40,6 +40,9 @@ class tile {
         // Check if is a border tile
         bool isBorder() const;
 
+        // Check if the tile's type is water
+        bool isWater() const;
+
         // Append the tile's vertices points to a vector
         void appendVertices(
             std::vector<ALLEGRO_VERTEX> &v,
