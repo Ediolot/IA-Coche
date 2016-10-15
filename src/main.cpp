@@ -12,6 +12,7 @@
 #include "../include/fonts.hpp"
 #include "../include/utility.hpp"
 #include "../include/scene.hpp"
+#include "../include/mouse.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
 bool keysPress[ALLEGRO_KEY_MAX] = {false};
@@ -52,7 +53,8 @@ int main(int argc, char *argv[])
         !al_init_primitives_addon() ||
         !al_init_font_addon()       ||
         !al_init_ttf_addon()        ||
-        !al_install_keyboard())
+        !al_install_keyboard()      ||
+        !al_install_mouse())
     {
         std::cerr << "Failed to initialize Allegro!" << std::endl;
         return -1;
@@ -79,6 +81,7 @@ int main(int argc, char *argv[])
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(redraw_timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
+    al_register_event_source(event_queue, al_get_mouse_event_source());
 
     // VARIABLES
     scene main_scene(SCREEN_W, SCREEN_H, mapsize, tiles_separation, map_separation);
@@ -99,10 +102,18 @@ int main(int argc, char *argv[])
 
         switch (ev.type)
         {
-            case ALLEGRO_EVENT_TIMER:           redraw = true; break;
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:   quit   = true; break;
-            case ALLEGRO_EVENT_KEY_DOWN:        keysPress[ev.keyboard.keycode] = true;  break;
-            case ALLEGRO_EVENT_KEY_UP:          keysPress[ev.keyboard.keycode] = false; break;
+            case ALLEGRO_EVENT_TIMER:               redraw = true; break;
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:       quit   = true; break;
+
+            case ALLEGRO_EVENT_KEY_DOWN:            keysPress[ev.keyboard.keycode] = true;  break;
+            case ALLEGRO_EVENT_KEY_UP:              keysPress[ev.keyboard.keycode] = false; break;
+
+            case ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY: mouse.updatePos(ev); mouse.intoScreen(); break;
+            case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY: mouse.updatePos(ev); mouse.outoScreen(); break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:   mouse.press(ev);     break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:     mouse.realase(ev);   break;
+            case ALLEGRO_EVENT_MOUSE_AXES:          mouse.updatePos(ev); break;
+
             default: break; // Unused event
         }
 
