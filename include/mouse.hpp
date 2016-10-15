@@ -21,9 +21,14 @@ class _mouse {
         _mouse();
         virtual ~_mouse();
 
+        double getX() const;
+        
+        double getY() const;
+
         void updatePos(const ALLEGRO_EVENT &ev);
 
         void intoScreen();
+
         void outoScreen();
 
         void press(const ALLEGRO_EVENT &ev);

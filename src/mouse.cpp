@@ -16,6 +16,16 @@ _mouse::_mouse():
 _mouse::~_mouse()
 {}
 
+double _mouse::getX() const
+{
+    return x_;
+}
+
+double _mouse::getY() const
+{
+    return y_;
+}
+
 void _mouse::updatePos(const ALLEGRO_EVENT &ev)
 {
     x_ = ev.mouse.x;

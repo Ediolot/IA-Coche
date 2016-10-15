@@ -5,6 +5,7 @@
 #include "common.hpp"
 #include "map.hpp"
 #include "button.hpp"
+#include "scrollbar.hpp"
 
 class scene {
 
@@ -16,7 +17,7 @@ class scene {
         uint map_size_;         // Number of tiles in the side of the map
         double inc_x_;
         double inc_y_;
-        
+
     public:
         scene(const double screen_w, const double screen_h, const uint map_size, const double tiles_separation, const double map_separation);
         virtual ~scene();
