@@ -75,7 +75,7 @@ tile *map::accessTile(const uint row, const uint col, const dir direction)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::generateScenario(const uint rivers, const uint min_size_river, const bool accumulative_rivers)
+void map::generate(const uint rivers, const uint min_size_river, const bool accumulative_rivers)
 {
     std::uniform_int_distribution<int> random_switch(0,3);
     std::uniform_int_distribution<int> random_tile(0,size_-1);
