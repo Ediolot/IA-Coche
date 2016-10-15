@@ -25,7 +25,7 @@ void scene::generate(const uint rivers, const uint min_size_river, const bool ac
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
+
 void scene::draw() const
 {
     std::vector<ALLEGRO_VERTEX> vertices;
@@ -33,45 +33,46 @@ void scene::draw() const
     static button restart_button(   "Restart"  , 0.15);
     static button play_pause_button("Play"     , 0.15);
     static button randomize_button( "Randomize", 0.15);
-    static button speed_button( "Step", 0.15);
-    static scrollbar speed_scrollbar(0.15);
+    static button step_button(      "Step"     , 0);
+    static button real_button(      "Real", 0);
 
-    restart_button.moveTo(                  0, screen_h_-80.0, screen_w_/3.0, 80.0);
-    play_pause_button.moveTo(screen_w_*0.3333, screen_h_-80.0, screen_w_/3.0, 80.0);
-    randomize_button.moveTo( screen_w_*0.6666, screen_h_-80.0, screen_w_/3.0, 80.0);
-    speed_scrollbar.moveTo(screen_w_-30, 50, 5, screen_h_-200);
-    speed_button.moveTo(screen_w_-30, 10, 40, 40);
+    static scrollbar speed_scrollbar;
+
+    restart_button.moveTo(   0               , screen_h_-80.0, screen_w_/3.0, 80.0         );
+    play_pause_button.moveTo(screen_w_*0.3333, screen_h_-80.0, screen_w_/3.0, 80.0         );
+    randomize_button.moveTo( screen_w_*0.6666, screen_h_-80.0, screen_w_/3.0, 80.0         );
+    speed_scrollbar.moveTo(  screen_w_-30    , 50            , 5            , screen_h_-200);
+    step_button.moveTo(      screen_w_-50    , 10            , 40           , 40           );
+    real_button.moveTo(      screen_w_-50    , 10            , 40           , 40           );
 
     restart_button.update();
     play_pause_button.update();
     randomize_button.update();
     speed_scrollbar.update();
-    std::cout << "\r" << speed_scrollbar.getValue() << "               ";
+    step_button.update();
 
-    //double cx = screen_w_/2.0 + inc_x_;
-    //double cy = screen_h_/2.0 + inc_y_;
+    double cx = screen_w_/2.0 + inc_x_;
+    double cy = screen_h_/2.0 + inc_y_;
 
     // GET VERTICES
-    //tile_map_.appendVertices(vertices, cx, cy, (screen_w_>screen_h_ ? screen_h_ : screen_w_)*(1.0-map_separation_), screen_w_, screen_h_);
+    tile_map_.appendVertices(vertices, cx, cy, (screen_w_>screen_h_ ? screen_h_ : screen_w_)*(1.0-map_separation_), screen_w_-100, screen_h_-100);
 
     // CLEAR & LOCK
     al_clear_to_color(BACKGROUND_COLOR);
-    //al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
+    al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
 
     // DRAW
-    //al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
+    al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
 
     // UNLOCK
-    //al_unlock_bitmap(al_get_target_bitmap());
+    al_unlock_bitmap(al_get_target_bitmap());
 
-    if (restart_button.wasPressed())
-        std::cout << "RESTART" << std::endl;
-    if (play_pause_button.wasPressed())
-    {
-        std::cout << "PLAY" << std::endl;
-    }
-    if (randomize_button.wasPressed())
-        std::cout << "RANDOMIZE" << std::endl;
+    double speed = speed_scrollbar.getValue();
+
+    if (speed > 0.999)
+        real_button.draw();
+    if (speed < 0.001)
+        step_button.draw();
 
     restart_button.draw();
     play_pause_button.draw();
@@ -80,7 +81,8 @@ void scene::draw() const
 
     if (restart_button.mouseOver()    ||
         play_pause_button.mouseOver() ||
-        randomize_button.mouseOver() )
+        randomize_button.mouseOver()  ||
+        (step_button.mouseOver() && speed<0.001) )
 
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
     else

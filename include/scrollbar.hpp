@@ -16,12 +16,14 @@ class scrollbar {
         double w_;
         double h_;
 
+        double last_mouse_z_;
+
         bool mouse_inside_;
         bool scrolling_;
 
     public:
 
-        scrollbar(const double animation_time);
+        scrollbar();
 
         ~scrollbar();
 

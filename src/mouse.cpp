@@ -8,6 +8,7 @@ _mouse::_mouse():
     button_3_(false),
     x_(0),
     y_(0),
+    z_(0),
     cursor_(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT)
 {
     al_set_system_mouse_cursor(al_get_current_display(), cursor_);
@@ -26,10 +27,16 @@ double _mouse::getY() const
     return y_;
 }
 
+double _mouse::getZ() const
+{
+    return z_;
+}
+
 void _mouse::updatePos(const ALLEGRO_EVENT &ev)
 {
     x_ = ev.mouse.x;
     y_ = ev.mouse.y;
+    z_ = ev.mouse.z;
 }
 
 void _mouse::intoScreen()

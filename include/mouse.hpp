@@ -13,6 +13,7 @@ class _mouse {
         bool button_3_;
         double x_;
         double y_;
+        double z_;
 
         ALLEGRO_SYSTEM_MOUSE_CURSOR cursor_;
 
@@ -22,8 +23,10 @@ class _mouse {
         virtual ~_mouse();
 
         double getX() const;
-        
+
         double getY() const;
+
+        double getZ() const;
 
         void updatePos(const ALLEGRO_EVENT &ev);
 

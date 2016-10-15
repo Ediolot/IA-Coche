@@ -1,12 +1,13 @@
 #include "../include/scrollbar.hpp"
 
 
-scrollbar::scrollbar(const double animation_time):
+scrollbar::scrollbar():
     value_(0),
     x_(0),
     y_(0),
     w_(0),
     h_(0),
+    last_mouse_z_(0),
     mouse_inside_(false),
     scrolling_(false)
 {}
@@ -38,6 +39,14 @@ void scrollbar::update()
         if (value_ > 1.0) value_ = 1.0;
         if (value_ < 0.0) value_ = 0.0;
     }
+    else if (mouse_inside_ && last_mouse_z_ != mouse.getZ())
+    {
+        value_ += (mouse.getZ() - last_mouse_z_)*0.05;
+        if (value_ > 1.0) value_ = 1.0;
+        if (value_ < 0.0) value_ = 0.0;
+    }
+
+    last_mouse_z_ = mouse.getZ();
 }
 
 void scrollbar::draw()
