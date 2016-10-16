@@ -67,7 +67,7 @@ void scene::draw() const
     al_clear_to_color(BACKGROUND_COLOR);
 
     // LOCK
-    al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
+    //al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
 
     // DRAW
     if (!show_menu_)
@@ -77,7 +77,7 @@ void scene::draw() const
     }
 
     // UNLOCK
-    al_unlock_bitmap(al_get_target_bitmap());
+    //al_unlock_bitmap(al_get_target_bitmap());
 
     if (!show_menu_)
     {

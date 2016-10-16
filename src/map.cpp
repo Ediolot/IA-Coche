@@ -8,6 +8,7 @@ map::map(const uint size, const double separation, const uint seed):
     tiles_separation_(separation),
     size_(size)
 {
+    // TODO comprobar
     for (uint i=0; i<tiles_.size(); ++i)
     {
         tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP)        , dir::UP       );
@@ -34,6 +35,7 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
     const double delta         = width / size_;
     const double delta_2       = delta/2;
     const double left_corner_x = cx - (width/2) + delta_2;
+    const double top_corner_y  = cy - (width/2) + delta_2;
 
     // Reserve spaces for all the tiles in the vector
     v.reserve(v.size() + 4*size_*size_);
@@ -41,10 +43,10 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j)
         {
-            double x = left_corner_x + delta_2*i;
-            double y = cy + delta_2*j;
+            double x = left_corner_x + delta*j;
+            double y = top_corner_y + delta*i;
 
-            tiles_[i*size_+j].appendVertices(v, x, y, delta, tiles_separation_, max_x, max_y);
+            tiles_[0*size_+j].appendVertices(v, x, y, delta, tiles_separation_, max_x, max_y);
         }
 }
 
