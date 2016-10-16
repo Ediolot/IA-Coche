@@ -12,10 +12,6 @@ class button_image {
 
     private:
 
-        std::string toolTip_;
-        ALLEGRO_FONT *font_;
-
-        std::string path_;
         ALLEGRO_BITMAP *image_;
 
         double x_;
@@ -32,7 +28,7 @@ class button_image {
 
     public:
 
-        button_image(const std::string &path);
+        button_image(ALLEGRO_BITMAP *image);
 
         ~button_image();
 
@@ -44,7 +40,7 @@ class button_image {
 
         bool mouseOver() const;
 
-        void setImage(const std::string &path);
+        void setImage(ALLEGRO_BITMAP *image);
 
         bool wasPressed();
 };

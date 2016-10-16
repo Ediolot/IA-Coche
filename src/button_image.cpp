@@ -1,8 +1,7 @@
 #include "../include/button_image.hpp"
 
 
-button_image::button_image(const std::string &path):
-    path_(path),
+button_image::button_image(ALLEGRO_BITMAP *image):
     image_(nullptr),
     x_(0),
     y_(0),
@@ -15,18 +14,11 @@ button_image::button_image(const std::string &path):
     mouse_realased_(false),
     was_pressed_events_(0)
 {
-    image_ = al_load_bitmap(path.c_str());
-    if (image_)
-    {
-        min_w_ = al_get_bitmap_width(image_)+2;
-        min_h_ = al_get_bitmap_height(image_)+2;
-    }
+    setImage(image);
 }
 
 button_image::~button_image()
-{
-    if (image_) al_destroy_bitmap(image_);
-}
+{}
 
 void button_image::moveTo(const double x, const double y, const double w, const double h)
 {
@@ -67,7 +59,7 @@ void button_image::update()
 
 void button_image::draw()
 {
-    if (image_) al_draw_bitmap(image_, x_+(w_-min_w_)/2, y_+(h_-min_h_)/2, 0);
+    al_draw_bitmap(image_, x_+(w_-min_w_)/2, y_+(h_-min_h_)/2, 0);
 }
 
 bool button_image::mouseOver() const
@@ -75,16 +67,11 @@ bool button_image::mouseOver() const
     return mouse_inside_;
 }
 
-void button_image::setImage(const std::string &path)
+void button_image::setImage(ALLEGRO_BITMAP *image)
 {
-    if (path == path_) return;
-
-    path_ = path;
-    al_destroy_bitmap(image_);
-    image_ = al_load_bitmap(path.c_str());
-
-    if (!image_) return;
-
+    image_ = image;
+    min_w_ = al_get_bitmap_width(image_)+2;
+    min_h_ = al_get_bitmap_height(image_)+2;
     if (w_ < min_w_) w_ = min_w_;
     if (h_ < min_h_) h_ = min_h_;
 }

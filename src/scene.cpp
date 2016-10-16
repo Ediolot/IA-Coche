@@ -17,18 +17,18 @@ scene::scene(const double screen_w, const double screen_h, const uint map_size, 
     istracking_(false),
     esc_was_pressed_(false),
 
-    restart_("images/restart.png"),
-    play_("images/play_disabled.png"),
-    random_("images/random.png"),
-    step_("images/step.png"),
-    tracking_("images/tracking_disabled.png"),
+    restart_(restart_image),
+    play_(play_disabled_image),
+    random_(random_image),
+    step_(step_image),
+    tracking_(tracking_image),
 
     quit_("QUIT", default_animation_time_),
 
-    algorithm_("Algorithm  ", {"AAA", "BBBB", "CCCC"}, "images/larrow.png"),
+    algorithm_("Algorithm  ", {"AAA", "BBBB", "CCCC"}),
 
-    width_("Grid width ", "images/larrow.png", 1, 100),
-    height_("Grid height", "images/larrow.png", 1, 100),
+    width_("Grid width ", 1, 100),
+    height_("Grid height", 1, 100),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL)
@@ -156,13 +156,13 @@ void scene::update()
         if (tracking_.wasPressed()) istracking_ = !istracking_;
         if (speed < 0.001         ) isplaying_  = false;
 
-        tracking_.setImage(istracking_   ? "images/tracking.png" : "images/tracking_disabled.png");
-        step_.setImage(speed < 0.001 ? "images/step.png" : "images/step_disabled.png");
+        tracking_.setImage(istracking_   ? tracking_image : tracking_disabled_image);
+        step_.setImage(speed < 0.001 ? step_image : step_disabled_image);
 
         if (speed > 0.001)
-            play_.setImage(isplaying_ ? "images/pause.png" : "images/play.png");
+            play_.setImage(isplaying_ ? pause_image : play_image);
         else
-            play_.setImage("images/play_disabled.png");
+            play_.setImage(play_disabled_image);
     }
 
     // ESC KEY

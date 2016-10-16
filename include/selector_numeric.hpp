@@ -4,10 +4,11 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
-#include "common.hpp"
-#include "fonts.hpp"
 #include <string>
 #include <vector>
+#include "common.hpp"
+#include "fonts.hpp"
+#include "images.hpp"
 
 class selector_numeric {
 
@@ -17,8 +18,6 @@ class selector_numeric {
         double value_;
         int max_;
         int min_;
-
-        ALLEGRO_BITMAP *arrow_;
 
         double x_;
         double y_;
@@ -35,7 +34,7 @@ class selector_numeric {
 
     public:
 
-        selector_numeric(const std::string &label, const std::string &arrow_path, const int min, const int max);
+        selector_numeric(const std::string &label, const int min, const int max);
 
         ~selector_numeric();
 

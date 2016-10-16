@@ -4,10 +4,11 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
-#include "common.hpp"
-#include "fonts.hpp"
 #include <string>
 #include <vector>
+#include "common.hpp"
+#include "fonts.hpp"
+#include "images.hpp"
 
 class selector {
 
@@ -16,8 +17,6 @@ class selector {
         std::string label_;
         std::vector<std::string> list_;
         uint selected_;
-
-        ALLEGRO_BITMAP *arrow_;
 
         double x_;
         double y_;
@@ -33,7 +32,7 @@ class selector {
 
     public:
 
-        selector(const std::string &label, const std::vector<std::string>& list, const std::string& arrow_path);
+        selector(const std::string &label, const std::vector<std::string>& list);
 
         ~selector();
 
