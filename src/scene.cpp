@@ -163,6 +163,9 @@ void scene::update()
             play_.setImage(isplaying_ ? "images/pause.png" : "images/play.png");
         else
             play_.setImage("images/play_disabled.png");
+
+        // Clicked on map
+        map.checkClick();
     }
 
     // ESC KEY

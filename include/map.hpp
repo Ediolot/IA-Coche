@@ -78,6 +78,7 @@ class map {
         // Access a tile's friend
         tile *accessTile(const uint row, const uint col, const dir direction);
 
+        void checkClick();
 };
 
 #endif
