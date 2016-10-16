@@ -30,7 +30,7 @@ void scene::draw() const
 {
     std::vector<ALLEGRO_VERTEX> vertices;
 
-    static bool show_menu_ = false;
+    static bool show_menu_ = true;
     static bool playing_   = false;
     static bool tracking_  = false;
 
@@ -40,6 +40,7 @@ void scene::draw() const
     static button_image step_button("images/step.png");
     static button_image tracking_button("images/tracking_disabled.png");
     static button       quit_button("QUIT", 0.2);
+    static selector     algorithm_selector("Algorithm", {"Algoritmo1", "Algoritmo2", "Algoritmo largo3"}, "images/larrow.png", "images/rarrow.png");
 
     static scrollbar speed_scrollbar(scroll::VERTICAL);
     static scrollbar obstacles_scrollbar(scroll::HORIZONTAL);
@@ -134,14 +135,17 @@ void scene::draw() const
     {
         obstacles_scrollbar.moveTo(150, 300, screen_w_-300, 5);
         quit_button.moveTo(screen_w_-120, screen_h_-70, 100, 50);
+        algorithm_selector.moveTo(150, 400);
         obstacles_scrollbar.update();
         quit_button.update();
+        algorithm_selector.update();
         obstacles_scrollbar.draw();
         quit_button.draw();
+        algorithm_selector.draw();
 
         al_draw_text(caviar_font_16, BLACK, 150, 320,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_scrollbar.getValue()*100))+"% Obstacles").c_str());
 
-        if (quit_button.mouseOver())
+        if (quit_button.mouseOver() || algorithm_selector.mouseOverArrow())
             mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
         else
             mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
