@@ -7,19 +7,19 @@
 #include <string>
 #include <vector>
 
-class selector {
+class selector_numeric {
 
     private:
 
         std::string label_;
-        std::vector<std::string> list_;
-        uint selected_;
+        double value_;
+        int max_;
+        int min_;
 
         ALLEGRO_BITMAP *arrow_;
 
         double x_;
         double y_;
-        double w_;
 
         bool r_mouse_inside_;
         bool r_mouse_pressed_;
@@ -29,11 +29,13 @@ class selector {
         bool l_mouse_pressed_;
         bool l_mouse_realased_;
 
+        double last_mouse_z_;
+
     public:
 
-        selector(const std::string &label, const std::vector<std::string>& list, const std::string& arrow_path);
+        selector_numeric(const std::string &label, const std::string &arrow_path, const int min, const int max);
 
-        ~selector();
+        ~selector_numeric();
 
         void moveTo(const double x, const double y);
 
@@ -45,5 +47,5 @@ class selector {
 
         void setLabel(const std::string &label);
 
-        uint getSelectedIndex() const;
+        int getValue() const;
 };

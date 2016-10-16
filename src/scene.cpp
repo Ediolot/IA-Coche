@@ -9,8 +9,31 @@ scene::scene(const double screen_w, const double screen_h, const uint map_size, 
     screen_h_(screen_h),
     map_size_(map_size),
     inc_x_(0),
-    inc_y_(0)
-{}
+    inc_y_(0),
+    zoom_(1),
+    show_menu_(true),
+    isplaying_(false),
+    istracking_(false),
+    esc_was_pressed_(false),
+
+    restart_("images/restart.png"),
+    play_("images/play_disabled.png"),
+    random_("images/random.png"),
+    step_("images/step.png"),
+    tracking_("images/tracking_disabled.png"),
+
+    quit_("QUIT", default_animation_time_),
+
+    algorithm_("Algorithm  ", {"AAA", "BBBB", "CCCC"}, "images/larrow.png"),
+
+    width_("Grid width ", "images/larrow.png", 1, 100),
+    height_("Grid height", "images/larrow.png", 1, 100),
+
+    speed_(scroll::VERTICAL),
+    obstacles_(scroll::HORIZONTAL)
+{
+    resize(screen_w_, screen_h_);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -26,36 +49,9 @@ void scene::generate(const uint rivers, const uint min_size_river, const bool ac
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void scene::draw() const
+void scene::draw()
 {
     std::vector<ALLEGRO_VERTEX> vertices;
-
-    static bool show_menu_ = true;
-    static bool playing_   = false;
-    static bool tracking_  = false;
-
-    static button_image restart_button("images/restart.png");
-    static button_image play_pause_button("images/play_disabled.png");
-    static button_image randomize_button("images/random.png");
-    static button_image step_button("images/step.png");
-    static button_image tracking_button("images/tracking_disabled.png");
-    static button       quit_button("QUIT", 0.2);
-    static selector     algorithm_selector("Algorithm  ", {"Algoritmo1", "Algoritmo2", "Algoritmo largo3"}, "images/larrow.png");
-
-    static selector_numeric width_selector("Grid width ", "images/larrow.png", 1, 100);
-    static selector_numeric height_selector("Grid height", "images/larrow.png", 1, 100);
-
-    static scrollbar speed_scrollbar(scroll::VERTICAL);
-    static scrollbar obstacles_scrollbar(scroll::HORIZONTAL);
-
-    static bool esc_was_pressed = false;
-    if (keysPress[ALLEGRO_KEY_ESCAPE])
-        esc_was_pressed = true;
-    if (!keysPress[ALLEGRO_KEY_ESCAPE] && esc_was_pressed)
-    {
-        show_menu_ = !show_menu_;
-        esc_was_pressed = false;
-    }
 
     double cx = screen_w_/2.0 + inc_x_;
     double cy = screen_h_/2.0 + inc_y_;
@@ -83,91 +79,108 @@ void scene::draw() const
     // UNLOCK
     al_unlock_bitmap(al_get_target_bitmap());
 
-    if (!show_menu_)
+    // MENU
+    if (show_menu_)
+        drawMenu();
+    else
+        drawSimMenu(vertices.size()/3);
+
+    // ESC KEY
+    if (keysPress[ALLEGRO_KEY_ESCAPE])
+        esc_was_pressed_ = true;
+    else if (esc_was_pressed_)
     {
-        speed_scrollbar.moveTo(  screen_w_-30, 50, 5, screen_h_-220);
+        show_menu_ = !show_menu_;
+        esc_was_pressed_ = false;
+    }
 
-        tracking_button.moveTo(  screen_w_-46, 10           , 40, 40);
-        step_button.moveTo(      screen_w_-45, screen_h_-160, 40, 40);
-        play_pause_button.moveTo(screen_w_-45, screen_h_-120, 40, 40);
-        restart_button.moveTo(   screen_w_-45, screen_h_-80 , 40, 40);
-        randomize_button.moveTo( screen_w_-45, screen_h_-40 , 40, 40);
+}
 
-        restart_button.update();
-        play_pause_button.update();
-        randomize_button.update();
-        speed_scrollbar.update();
-        step_button.update();
-        tracking_button.update();
-        double speed = speed_scrollbar.getValue();
+////////////////////////////////////////////////////////////////////////////////
 
-        if (play_pause_button.wasPressed())
-            playing_ = !playing_;
+void scene::drawSimMenu(const uint triangles)
+{
+    double speed = speed_.getValue();
 
-        if (tracking_button.wasPressed())
-            tracking_ = !tracking_;
+    if (play_.wasPressed())
+        isplaying_ = !isplaying_;
 
-        if (speed < 0.001)
-            playing_ = false;
+    if (tracking_.wasPressed())
+        istracking_ = !istracking_;
 
-        tracking_button.setImage(tracking_ ? "images/tracking.png" : "images/tracking_disabled.png");
-        step_button.setImage(speed < 0.001 ? "images/step.png" : "images/step_disabled.png");
-        if (speed > 0.001)
-            play_pause_button.setImage(playing_ ? "images/pause.png" : "images/play.png");
-        else
-            play_pause_button.setImage("images/play_disabled.png");
+    if (speed < 0.001)
+        isplaying_ = false;
 
-        tracking_button.draw();
-        restart_button.draw();
-        step_button.draw();
-        play_pause_button.draw();
-        randomize_button.draw();
-        speed_scrollbar.draw();
+    tracking_.setImage(istracking_ ? "images/tracking.png" : "images/tracking_disabled.png");
+    step_.setImage(speed < 0.001 ? "images/step.png" : "images/step_disabled.png");
+    if (speed > 0.001)
+        play_.setImage(isplaying_ ? "images/pause.png" : "images/play.png");
+    else
+        play_.setImage("images/play_disabled.png");
 
-        if (restart_button.mouseOver()    ||
-            play_pause_button.mouseOver() ||
-            randomize_button.mouseOver()  ||
-            step_button.mouseOver()       ||
-            tracking_button.mouseOver() )
+    tracking_.draw();
+    restart_.draw();
+    step_.draw();
+    play_.draw();
+    random_.draw();
+    speed_.draw();
 
-            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
-        else
-            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+    if (restart_.mouseOver()    ||
+        play_.mouseOver() ||
+        random_.mouseOver()  ||
+        step_.mouseOver()       ||
+        tracking_.mouseOver() )
+
+        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
+    else
+        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+
+    // TEXT & DEBG
+    al_draw_text(caviar_font_16, BLACK, 100, 10,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(triangles)).c_str());
+    displayFPS(caviar_font_16);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void scene::drawMenu()
+{
+    obstacles_.draw();
+    quit_.draw();
+    algorithm_.draw();
+    width_.draw();
+    height_.draw();
+
+    al_draw_text(caviar_font_16, BLACK, 150, 420,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_.getValue()*100))+"% Obstacles").c_str());
+
+    if (quit_.mouseOver() || algorithm_.mouseOverArrow() || width_.mouseOverArrow() || height_.mouseOverArrow())
+        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
+    else
+        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+
+    if (quit_.wasPressed())
+        quit = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void scene::update()
+{
+    if (show_menu_)
+    {
+        obstacles_.update();
+        quit_.update();
+        algorithm_.update();
+        width_.update();
+        height_.update();
     }
     else
     {
-        width_selector.moveTo(150, 130);
-        height_selector.moveTo(150, 220);
-        algorithm_selector.moveTo(150, 310);
-        obstacles_scrollbar.moveTo(150, 400, screen_w_-300, 5);
-        quit_button.moveTo(screen_w_-120, screen_h_-70, 100, 50);
-
-        obstacles_scrollbar.update();
-        quit_button.update();
-        algorithm_selector.update();
-        width_selector.update();
-        height_selector.update();
-
-        obstacles_scrollbar.draw();
-        quit_button.draw();
-        algorithm_selector.draw();
-        width_selector.draw();
-        height_selector.draw();
-
-        al_draw_text(caviar_font_16, BLACK, 150, 420,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_scrollbar.getValue()*100))+"% Obstacles").c_str());
-
-        if (quit_button.mouseOver() || algorithm_selector.mouseOverArrow() || width_selector.mouseOverArrow() || height_selector.mouseOverArrow())
-            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
-        else
-            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
-
-        if (quit_button.wasPressed())
-            quit = true;
+        restart_.update();
+        play_.update();
+        random_.update();
+        speed_.update();
+        step_.update();
     }
-
-    // TEXT & DEBG
-    al_draw_text(caviar_font_16, BLACK, 100, 10,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(vertices.size()/3)).c_str());
-    displayFPS(caviar_font_16);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,6 +203,19 @@ void scene::resize(const double w, const double h)
 {
     screen_w_ = w;
     screen_h_ = h;
+
+    width_.moveTo(150, 130);
+    height_.moveTo(150, 220);
+    algorithm_.moveTo(150, 310);
+    obstacles_.moveTo(150, 400, screen_w_-300, 5);
+    quit_.moveTo(screen_w_-120, screen_h_-70, 100, 50);
+
+    speed_.moveTo(  screen_w_-30, 50, 5, screen_h_-220);
+    tracking_.moveTo(  screen_w_-46, 10           , 40, 40);
+    step_.moveTo(      screen_w_-45, screen_h_-160, 40, 40);
+    play_.moveTo(screen_w_-45, screen_h_-120, 40, 40);
+    restart_.moveTo(   screen_w_-45, screen_h_-80 , 40, 40);
+    random_.moveTo( screen_w_-45, screen_h_-40 , 40, 40);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -12,7 +12,10 @@
 
 class scene {
 
+    const double default_animation_time_ = 0.2;
+
     private:
+
         map tile_map_;          // Tiles map
         double map_separation_; // Tiles map's separation from the borders of the window
         double screen_w_;
@@ -20,6 +23,34 @@ class scene {
         uint map_size_;         // Number of tiles in the side of the map
         double inc_x_;
         double inc_y_;
+        double zoom_;
+
+        bool show_menu_;
+        bool isplaying_;
+        bool istracking_;
+
+        bool esc_was_pressed_;
+
+        // BUTTONS WITH IMAGES
+        button_image restart_;
+        button_image play_;
+        button_image random_;
+        button_image step_;
+        button_image tracking_;
+
+        // BUTTONS WITH TEXT
+        button quit_;
+
+        // LIST SELECTORS
+        selector algorithm_;
+
+        // NUMERIC SELECTORS
+        selector_numeric width_;
+        selector_numeric height_;
+
+        // SCROLLBARS
+        scrollbar speed_;
+        scrollbar obstacles_;
 
     public:
         scene(const double screen_w, const double screen_h, const uint map_size, const double tiles_separation, const double map_separation);
@@ -29,13 +60,18 @@ class scene {
         void generate(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
 
         // Dibuja los elementos de la escena
-        void draw() const;
+        void draw();
 
         // Mueve la escena en x o y
         void moveX(const double x);
         void moveY(const double y);
 
         void resize(const double w, const double h);
+        void update();
+
+    private:
+        void drawMenu();
+        void drawSimMenu(const uint triangles);
 };
 
 #endif

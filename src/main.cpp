@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
             redraw = false;
 
             updateMovement(main_scene);
+            main_scene.update();
             main_scene.draw();
             al_flip_display();
         }
