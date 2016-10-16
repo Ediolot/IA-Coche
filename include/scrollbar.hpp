@@ -9,6 +9,8 @@ class scrollbar {
 
     private:
 
+        scroll type_;
+
         double value_;
 
         double x_;
@@ -23,7 +25,7 @@ class scrollbar {
 
     public:
 
-        scrollbar();
+        scrollbar(const scroll type);
 
         ~scrollbar();
 

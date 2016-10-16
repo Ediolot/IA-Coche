@@ -1,7 +1,8 @@
 #include "../include/scrollbar.hpp"
 
 
-scrollbar::scrollbar():
+scrollbar::scrollbar(const scroll type):
+    type_(type),
     value_(0),
     x_(0),
     y_(0),
@@ -35,7 +36,7 @@ void scrollbar::update()
 
     if (scrolling_)
     {
-        value_ = 1.0 - (mouse.getY() - y_)/h_;
+        value_ = type==VERTICAL ? (1.0 - (mouse.getY()-y_)/h_) : (1.0 - (mouse.getX()-x_)/w_);
         if (value_ > 1.0) value_ = 1.0;
         if (value_ < 0.0) value_ = 0.0;
     }
@@ -52,7 +53,11 @@ void scrollbar::update()
 void scrollbar::draw()
 {
     al_draw_filled_rectangle(x_, y_, x_+w_, y_+h_, LIGHT_GRAY);
-    al_draw_filled_rectangle(x_+w_, y_+h_, x_, y_-(h_*value_)+h_, ORANGE_STRONG);
+
+    if (type==VERTICAL)
+        al_draw_filled_rectangle(x_+w_, y_+h_, x_, y_-(h_*value_)+h_, ORANGE_STRONG);
+    else
+        al_draw_filled_rectangle(x_, y_, x_+w_*value_, y_+h_, ORANGE_STRONG);
 }
 
 double scrollbar::getValue() const
