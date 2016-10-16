@@ -21,7 +21,8 @@ const double FPS         = 60;
 const double scrollSpeed = 650;
 const double map_separation    = 0.05;
 const double tiles_separation  = 0.06;
-const uint   mapsize     = 20;
+const uint   rows     = 20;
+const uint   cols     = 20;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
 
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
     al_register_event_source(event_queue, al_get_mouse_event_source());
 
     // VARIABLES
-    scene main_scene(SCREEN_W, SCREEN_H, mapsize, tiles_separation, map_separation);
+    scene main_scene(SCREEN_W, SCREEN_H, rows, cols, tiles_separation, map_separation);
 
     main_scene.generate();
 

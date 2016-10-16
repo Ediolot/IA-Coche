@@ -2,12 +2,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-scene::scene(const double screen_w, const double screen_h, const uint map_size, const double tiles_separation, const double map_separation):
-    tile_map_(map_size, tiles_separation),
+scene::scene(const double screen_w, const double screen_h, const uint rows, const uint cols, const double tiles_separation, const double map_separation):
+    tile_map_(rows, cols, tiles_separation),
     map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
-    map_size_(map_size),
     inc_x_(0),
     inc_y_(0),
     zoom_(1),
@@ -57,7 +56,9 @@ void scene::draw()
     double draw_w = screen_w_-60;
     double cx =    draw_w/2.0 + inc_x_;
     double cy = screen_h_/2.0 + inc_y_;
-    double sq_size = (draw_w > screen_h_ ? screen_h_ : draw_w)*zoom_*(1-map_separation_);
+    double h_size = screen_h_/tile_map_.getNRows();
+    double w_size = screen_w_/tile_map_.getNCols();
+    double sq_size = (w_size*tile_map_.getNRows() > screen_h_ ? h_size : w_size)*zoom_*(1-map_separation_);
 
     if (!show_menu_)
         tile_map_.appendVertices(vertices, cx, cy, sq_size, draw_w, screen_h_);
@@ -177,7 +178,8 @@ void scene::update()
     }
 
     // ZOOM
-    zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
+    if (mouse.insideBox(0,0,screen_w_-60,screen_h_))
+        zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
     zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
 
     last_mouse_z_ = mouse.getZ();

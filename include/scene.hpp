@@ -20,7 +20,6 @@ class scene {
         double map_separation_; // Tiles map's separation from the borders of the window
         double screen_w_;
         double screen_h_;
-        uint map_size_;         // Number of tiles in the side of the map
         double inc_x_;
         double inc_y_;
         double zoom_;
@@ -55,7 +54,7 @@ class scene {
         scrollbar obstacles_;
 
     public:
-        scene(const double screen_w, const double screen_h, const uint map_size, const double tiles_separation, const double map_separation);
+        scene(const double screen_w, const double screen_h, const uint rows, const uint cols, const double tiles_separation, const double map_separation);
         virtual ~scene();
 
         // Genera los elementos de la escena

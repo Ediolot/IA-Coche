@@ -46,19 +46,20 @@ class map {
         std::default_random_engine generator_; // For random values
         std::vector<tile> tiles_;              // Tiles
         double tiles_separation_;              // Separation between tiles (%)
-        uint size_;                            // Number of tiles in the side
+        uint rows_;
+        uint cols_;
 
         double cx_;
         double cy_;
-        double width_;
+        double tile_size_;
 
     public:
 
-        map(const uint size, const double separation, const uint seed = 0);
+        map(const uint rows, const uint cols, const double separation, const uint seed = 0);
         virtual ~map();
 
         // Append the map's vertices points to a vector
-        void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y);
+        void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double tile_size, const double max_x, const double max_y);
 
         // Generate map elements
         void generate(void);
@@ -71,6 +72,9 @@ class map {
 
         // Access a tile's friend
         tile *accessTile(const uint row, const uint col, const dir direction);
+
+        uint getNRows() const;
+        uint getNCols() const;
 
         void checkClick();
 };
