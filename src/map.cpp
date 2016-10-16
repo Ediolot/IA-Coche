@@ -4,14 +4,31 @@
 
 map::map(const uint rows, const uint cols, const double separation, const uint seed):
     generator_(seed ? seed : std::time(nullptr)),
-    tiles_(rows*cols),
+    tiles_(),
     tiles_separation_(separation),
-    rows_(rows),
-    cols_(cols),
+    rows_(0),
+    cols_(0),
     cx_(0),
     cy_(0),
     tile_size_(0)
 {
+    rebuild(rows, cols);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+map::~map()
+{}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void map::rebuild(const uint rows, const uint cols)
+{
+    rows_ = rows;
+    cols_ = cols;
+
+    tiles_.clear();
+    tiles_.resize(rows*cols);
     for (uint i=0; i<rows_; ++i)
         for (uint j=0; j<cols_; ++j)
         {
@@ -26,11 +43,6 @@ map::map(const uint rows, const uint cols, const double separation, const uint s
             tiles_[i*cols_+j].addFriend( accessTile(i, j, dir::DOWN) , dir::DOWN);
         }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-
-map::~map()
-{}
 
 ////////////////////////////////////////////////////////////////////////////////
 

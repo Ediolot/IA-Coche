@@ -58,6 +58,8 @@ class map {
         map(const uint rows, const uint cols, const double separation, const uint seed = 0);
         virtual ~map();
 
+        void rebuild(const uint rows, const uint cols);
+
         // Append the map's vertices points to a vector
         void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double tile_size, const double max_x, const double max_y);
 

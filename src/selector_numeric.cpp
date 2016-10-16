@@ -1,9 +1,9 @@
 #include "../include/selector_numeric.hpp"
 
-selector_numeric::selector_numeric(const std::string &label, ALLEGRO_FONT *font, const int min, const int max):
+selector_numeric::selector_numeric(const std::string &label, ALLEGRO_FONT *font, const int min, const int max, const int val):
     font_(font),
     label_(label),
-    value_((min+max)/2),
+    value_(val),
     max_(max),
     min_(min),
     x_(0),

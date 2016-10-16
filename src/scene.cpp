@@ -2,8 +2,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-scene::scene(const double screen_w, const double screen_h, const uint rows, const uint cols, const double tiles_separation, const double map_separation):
-    tile_map_(rows, cols, tiles_separation),
+scene::scene(const double screen_w, const double screen_h, const double tiles_separation, const double map_separation):
+    tile_map_(20, 20, tiles_separation),
     map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
@@ -26,8 +26,8 @@ scene::scene(const double screen_w, const double screen_h, const uint rows, cons
 
     algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
 
-    width_("Grid width ", ubuntu_mono_font_40, 1, 100),
-    height_("Grid height", ubuntu_mono_font_40, 1, 100),
+    width_("Grid width ", ubuntu_mono_font_40, 1, 100, 20),
+    height_("Grid height", ubuntu_mono_font_40, 1, 100, 20),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL)
@@ -124,7 +124,7 @@ void scene::drawMenu()
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 
     // TEXT & DEBG
-    al_draw_text(caviar_font_16, BLACK, 150, 420,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_.getValue()*100))+"% Obstacles").c_str());
+    al_draw_text(caviar_font_16, BLACK, 150, 420, ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_.getValue()*100))+"% Obstacles").c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +152,7 @@ void scene::update()
 
         double speed = speed_.getValue();
 
+        if (random_.wasPressed()) tile_map_.rebuild(width_.getValue(), height_.getValue());
         if (play_.wasPressed()    ) isplaying_  = !isplaying_;
         if (tracking_.wasPressed()) istracking_ = !istracking_;
         if (speed < 0.001         ) isplaying_  = false;
