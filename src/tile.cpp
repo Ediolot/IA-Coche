@@ -79,13 +79,17 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
         {float((cx - width_2)+border_px), float((cy - width_2)+border_px), 0.0f, 0.0f, 0.0f, tile_color_}
     };
 
-    v.push_back(points[0]);
-    v.push_back(points[1]);
-    v.push_back(points[3]);
 
-    v.push_back(points[2]);
-    v.push_back(points[1]);
-    v.push_back(points[3]);
+    if (points[0].y >= 0 && points[1].y <= max_y && points[0].x <= max_x && points[3].x >= 0){
+        v.push_back(points[0]);
+        v.push_back(points[1]);
+        v.push_back(points[3]);
+    }
+    if (points[2].y >= 0 && points[1].y <= max_y && points[2].x <= max_x && points[3].x >= 0){
+        v.push_back(points[2]);
+        v.push_back(points[1]);
+        v.push_back(points[3]);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
