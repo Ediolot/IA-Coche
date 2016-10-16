@@ -8,6 +8,7 @@
 #include "button_image.hpp"
 #include "scrollbar.hpp"
 #include "selector.hpp"
+#include "selector_numeric.hpp"
 
 class scene {
 

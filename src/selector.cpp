@@ -26,7 +26,7 @@ selector::selector(const std::string &label, const std::vector<std::string>& lis
 
 selector::~selector()
 {
-    al_destroy_bitmap(arrow_);
+    if (arrow_) al_destroy_bitmap(arrow_);
 }
 
 void selector::moveTo(const double x, const double y)
@@ -110,7 +110,7 @@ void selector::setLabel(const std::string &label)
     label_ = label;
 }
 
-uint selector::getSelectedIndex()
+uint selector::getSelectedIndex() const
 {
     return selected_;
 }

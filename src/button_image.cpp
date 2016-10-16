@@ -25,7 +25,7 @@ button_image::button_image(const std::string &path):
 
 button_image::~button_image()
 {
-    al_destroy_bitmap(image_);
+    if (image_) al_destroy_bitmap(image_);
 }
 
 void button_image::moveTo(const double x, const double y, const double w, const double h)
