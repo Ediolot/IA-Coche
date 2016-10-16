@@ -40,7 +40,7 @@ void scene::draw() const
     static button_image step_button("images/step.png");
     static button_image tracking_button("images/tracking_disabled.png");
     static button       quit_button("QUIT", 0.2);
-    static selector     algorithm_selector("Algorithm", {"Algoritmo1", "Algoritmo2", "Algoritmo largo3"}, "images/larrow.png", "images/rarrow.png");
+    static selector     algorithm_selector("Algorithm", {"Algoritmo1", "Algoritmo2", "Algoritmo largo3"}, "images/larrow.png");
 
     static scrollbar speed_scrollbar(scroll::VERTICAL);
     static scrollbar obstacles_scrollbar(scroll::HORIZONTAL);
