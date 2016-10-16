@@ -17,7 +17,8 @@ ALLEGRO_LIBS = \
 	allegro-static-5 \
 	allegro_ttf-static-5 \
 	allegro_font-static-5 \
-	allegro_primitives-static-5
+	allegro_primitives-static-5 \
+	allegro_image-static-5
 
 # Directories #
 SRCDIR   = src

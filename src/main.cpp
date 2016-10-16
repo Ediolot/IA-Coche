@@ -3,6 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
 
 #include <string>
 #include <cstdio>
@@ -13,9 +14,6 @@
 #include "../include/utility.hpp"
 #include "../include/scene.hpp"
 #include "../include/mouse.hpp"
-
-///////////////// DEFAULT OPTIONS /////////////////
-bool keysPress[ALLEGRO_KEY_MAX] = {false};
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
@@ -46,7 +44,6 @@ int main(int argc, char *argv[])
     ALLEGRO_TIMER       *redraw_timer = nullptr;
 
     bool redraw = true;
-    bool quit   = false;
 
     // INITIALIZE ALLEGRO
     if (!al_init()                  ||
@@ -54,7 +51,8 @@ int main(int argc, char *argv[])
         !al_init_font_addon()       ||
         !al_init_ttf_addon()        ||
         !al_install_keyboard()      ||
-        !al_install_mouse())
+        !al_install_mouse()         ||
+        !al_init_image_addon() )
     {
         std::cerr << "Failed to initialize Allegro!" << std::endl;
         return -1;
@@ -122,9 +120,6 @@ int main(int argc, char *argv[])
 
             default: break; // Unused event
         }
-
-        if (keysPress[ALLEGRO_KEY_ESCAPE])
-            quit = true;
 
         // Update screen
         if (redraw && al_is_event_queue_empty(event_queue)) {

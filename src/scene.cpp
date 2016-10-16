@@ -25,33 +25,33 @@ void scene::generate(const uint rivers, const uint min_size_river, const bool ac
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
+
 void scene::draw() const
 {
     std::vector<ALLEGRO_VERTEX> vertices;
 
-    static bool playing_ = false;
+    static bool show_menu_ = false;
+    static bool playing_   = false;
+    static bool tracking_  = false;
 
-    static button restart_button(   "Restart"  , 0.15);
-    static button play_pause_button("Play"     , 0.15);
-    static button randomize_button( "Randomize", 0.15);
-    static button step_button(      "Step"     , 0);
-    static button real_button(      "Real", 0);
+    static button_image restart_button("images/restart.png");
+    static button_image play_pause_button("images/play_disabled.png");
+    static button_image randomize_button("images/random.png");
+    static button_image step_button("images/step.png");
+    static button_image tracking_button("images/tracking_disabled.png");
+    static button       quit_button("QUIT", 0.2);
 
-    static scrollbar speed_scrollbar;
+    static scrollbar speed_scrollbar(scroll::VERTICAL);
+    static scrollbar obstacles_scrollbar(scroll::HORIZONTAL);
 
-    restart_button.moveTo(   0               , screen_h_-70.0, screen_w_/3.0, 80.0         );
-    play_pause_button.moveTo(screen_w_*0.3333, screen_h_-70.0, screen_w_/3.0, 80.0         );
-    randomize_button.moveTo( screen_w_*0.6666, screen_h_-70.0, screen_w_/3.0, 80.0         );
-    speed_scrollbar.moveTo(  screen_w_-30    , 50            , 5            , screen_h_-150);
-    step_button.moveTo(      screen_w_-50    , 10            , 40           , 40           );
-    real_button.moveTo(      screen_w_-50    , 10            , 40           , 40           );
-
-    restart_button.update();
-    play_pause_button.update();
-    randomize_button.update();
-    speed_scrollbar.update();
-    step_button.update();
+    static bool esc_was_pressed = false;
+    if (keysPress[ALLEGRO_KEY_ESCAPE])
+        esc_was_pressed = true;
+    if (!keysPress[ALLEGRO_KEY_ESCAPE] && esc_was_pressed)
+    {
+        show_menu_ = !show_menu_;
+        esc_was_pressed = false;
+    }
 
     double cx = screen_w_/2.0 + inc_x_;
     double cy = screen_h_/2.0 + inc_y_;
@@ -60,48 +60,95 @@ void scene::draw() const
     zoom = mouse.getZ()*0.1 + 1;
 
     // GET VERTICES
-    tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_-50);
+    if (!show_menu_)
+        tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_);
 
-    // CLEAR & LOCK
+    // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
+
+    // LOCK
     al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
 
     // DRAW
-    al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
-    al_draw_filled_rectangle(0, 0, screen_w_, 40, BACKGROUND_COLOR);
-    al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, BACKGROUND_COLOR);
-    al_draw_filled_rectangle(10, 0, 0, screen_h_, BACKGROUND_COLOR);
-    al_draw_filled_rectangle(0, screen_h_-60, screen_w_, screen_h_, BACKGROUND_COLOR);
+    if (!show_menu_)
+    {
+        al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
+        al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
+    }
 
     // UNLOCK
     al_unlock_bitmap(al_get_target_bitmap());
 
-    double speed = speed_scrollbar.getValue();
-
-    if (speed > 0.999)
-        real_button.draw();
-    if (speed < 0.001)
-        step_button.draw();
-
-    restart_button.draw();
-    play_pause_button.draw();
-    randomize_button.draw();
-    speed_scrollbar.draw();
-
-    if (play_pause_button.wasPressed())
+    if (!show_menu_)
     {
-        playing_ = !playing_;
-        play_pause_button.setLabel(playing_ ? "Play" : "Pause");
+        speed_scrollbar.moveTo(  screen_w_-30, 50, 5, screen_h_-220);
+
+        tracking_button.moveTo(  screen_w_-46, 10           , 40, 40);
+        step_button.moveTo(      screen_w_-45, screen_h_-160, 40, 40);
+        play_pause_button.moveTo(screen_w_-45, screen_h_-120, 40, 40);
+        restart_button.moveTo(   screen_w_-45, screen_h_-80 , 40, 40);
+        randomize_button.moveTo( screen_w_-45, screen_h_-40 , 40, 40);
+
+        restart_button.update();
+        play_pause_button.update();
+        randomize_button.update();
+        speed_scrollbar.update();
+        step_button.update();
+        tracking_button.update();
+        double speed = speed_scrollbar.getValue();
+
+        if (play_pause_button.wasPressed())
+            playing_ = !playing_;
+
+        if (tracking_button.wasPressed())
+            tracking_ = !tracking_;
+
+        if (speed < 0.001)
+            playing_ = false;
+
+        tracking_button.setImage(tracking_ ? "images/tracking.png" : "images/tracking_disabled.png");
+        step_button.setImage(speed < 0.001 ? "images/step.png" : "images/step_disabled.png");
+        if (speed > 0.001)
+            play_pause_button.setImage(playing_ ? "images/pause.png" : "images/play.png");
+        else
+            play_pause_button.setImage("images/play_disabled.png");
+
+        tracking_button.draw();
+        restart_button.draw();
+        step_button.draw();
+        play_pause_button.draw();
+        randomize_button.draw();
+        speed_scrollbar.draw();
+
+        if (restart_button.mouseOver()    ||
+            play_pause_button.mouseOver() ||
+            randomize_button.mouseOver()  ||
+            step_button.mouseOver()       ||
+            tracking_button.mouseOver() )
+
+            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
+        else
+            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
     }
-
-    if (restart_button.mouseOver()    ||
-        play_pause_button.mouseOver() ||
-        randomize_button.mouseOver()  ||
-        (step_button.mouseOver() && speed<0.001) )
-
-        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
     else
-        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+    {
+        obstacles_scrollbar.moveTo(150, 300, screen_w_-300, 5);
+        quit_button.moveTo(screen_w_-120, screen_h_-70, 100, 50);
+        obstacles_scrollbar.update();
+        quit_button.update();
+        obstacles_scrollbar.draw();
+        quit_button.draw();
+
+        al_draw_text(caviar_font_16, BLACK, 150, 320,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_scrollbar.getValue()*100))+"% Obstacles").c_str());
+
+        if (quit_button.mouseOver())
+            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
+        else
+            mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+
+        if (quit_button.wasPressed())
+            quit = true;
+    }
 
     // TEXT & DEBG
     al_draw_text(caviar_font_16, BLACK, 100, 10,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(vertices.size()/3)).c_str());
