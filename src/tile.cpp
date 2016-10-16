@@ -1,7 +1,7 @@
 #include "../include/tile.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
+
 tile::tile():
     neighbors_(4, nullptr),
     adjacents_(4, nullptr),
