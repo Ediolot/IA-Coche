@@ -2,8 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint rows, const uint cols, const double separation, const uint seed):
-    generator_(seed ? seed : std::time(nullptr)),
+map::map(const uint rows, const uint cols, const double separation):
     tiles_(),
     tiles_separation_(separation),
     rows_(0),

@@ -29,7 +29,6 @@
 
 #include <vector>
 #include <ctime>
-#include <random>
 #include <algorithm>
 #include <cmath>
 #include "common.hpp"
@@ -43,9 +42,8 @@ class map {
 
     private:
 
-        std::default_random_engine generator_; // For random values
-        std::vector<tile> tiles_;              // Tiles
-        double tiles_separation_;              // Separation between tiles (%)
+        std::vector<tile> tiles_;  // Tiles
+        double tiles_separation_;  // Separation between tiles (%)
         uint rows_;
         uint cols_;
 
@@ -55,7 +53,7 @@ class map {
 
     public:
 
-        map(const uint rows, const uint cols, const double separation, const uint seed = 0);
+        map(const uint rows, const uint cols, const double separation);
         virtual ~map();
 
         void rebuild(const uint rows, const uint cols);
