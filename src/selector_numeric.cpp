@@ -3,7 +3,7 @@
 selector_numeric::selector_numeric(const std::string &label, ALLEGRO_FONT *font, const int min, const int max):
     font_(font),
     label_(label),
-    value_(min),
+    value_((min+max)/2),
     max_(max),
     min_(min),
     x_(0),
