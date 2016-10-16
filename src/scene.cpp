@@ -40,7 +40,7 @@ void scene::draw() const
     static button_image step_button("images/step.png");
     static button_image tracking_button("images/tracking_disabled.png");
     static button       quit_button("QUIT", 0.2);
-    static selector     algorithm_selector("Algorithm", {"Algoritmo1", "Algoritmo2", "Algoritmo largo3"}, "images/larrow.png");
+    static selector     algorithm_selector("Algorithm  ", {"Algoritmo1", "Algoritmo2", "Algoritmo largo3"}, "images/larrow.png");
 
     static selector_numeric width_selector("Grid width ", "images/larrow.png", 1, 100);
     static selector_numeric height_selector("Grid height", "images/larrow.png", 1, 100);
@@ -136,10 +136,10 @@ void scene::draw() const
     }
     else
     {
-        width_selector.moveTo(150, 200);
-        height_selector.moveTo(150, 250);
-        algorithm_selector.moveTo(150, 300);
-        obstacles_scrollbar.moveTo(150, 350, screen_w_-300, 5);
+        width_selector.moveTo(150, 130);
+        height_selector.moveTo(150, 220);
+        algorithm_selector.moveTo(150, 310);
+        obstacles_scrollbar.moveTo(150, 400, screen_w_-300, 5);
         quit_button.moveTo(screen_w_-120, screen_h_-70, 100, 50);
 
         obstacles_scrollbar.update();
@@ -154,7 +154,7 @@ void scene::draw() const
         width_selector.draw();
         height_selector.draw();
 
-        al_draw_text(caviar_font_16, BLACK, 150, 320,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_scrollbar.getValue()*100))+"% Obstacles").c_str());
+        al_draw_text(caviar_font_16, BLACK, 150, 420,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_scrollbar.getValue()*100))+"% Obstacles").c_str());
 
         if (quit_button.mouseOver() || algorithm_selector.mouseOverArrow() || width_selector.mouseOverArrow() || height_selector.mouseOverArrow())
             mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
