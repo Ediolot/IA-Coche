@@ -14,6 +14,7 @@
 #include "../include/utility.hpp"
 #include "../include/scene.hpp"
 #include "../include/mouse.hpp"
+#include "../include/images.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
@@ -67,7 +68,8 @@ int main(int argc, char *argv[])
     if (!redraw_timer ||
         !display      ||
         !event_queue  ||
-        !loadFonts())
+        !loadFonts()  ||
+        !loadImages())
     {
         std::cerr << "Failed to create variables!" << std::endl;
         return -1;
@@ -137,6 +139,7 @@ int main(int argc, char *argv[])
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
     destroyFonts();
+    destroyImages();
 
     return 0;
 }

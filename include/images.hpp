@@ -3,31 +3,40 @@
     VARIABLES: font_name_size
 */
 
-#ifndef FONTS_HPP
-#define FONTS_HPP
+#ifndef IMAGES_HPP
+#define IMAGES_HPP
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 
 ///////////////// GLOBAL IMAGES ///////////////
-extern ALLEGRO_BITMAP *arrow;
-extern ALLEGRO_BITMAP *pause_disabled;
-extern ALLEGRO_BITMAP *pause;
-extern ALLEGRO_BITMAP *play_disabled;
-extern ALLEGRO_BITMAP *play;
-extern ALLEGRO_BITMAP *random;
-extern ALLEGRO_BITMAP *restart;
-extern ALLEGRO_BITMAP *step_disabled;
-extern ALLEGRO_BITMAP *step;
-extern ALLEGRO_BITMAP *tracking_disabled;
-extern ALLEGRO_BITMAP *tracking;
+extern ALLEGRO_BITMAP *arrow_image;
+extern ALLEGRO_BITMAP *pause_disabled_image;
+extern ALLEGRO_BITMAP *pause_image;
+extern ALLEGRO_BITMAP *play_disabled_image;
+extern ALLEGRO_BITMAP *play_image;
+extern ALLEGRO_BITMAP *random_image;
+extern ALLEGRO_BITMAP *restart_image;
+extern ALLEGRO_BITMAP *step_disabled_image;
+extern ALLEGRO_BITMAP *step_image;
+extern ALLEGRO_BITMAP *tracking_disabled_image;
+extern ALLEGRO_BITMAP *tracking_image;
 
-///////////////// FONTS PATHS ////////////////
-extern const char caviar_font_path[];
-extern const char ubuntu_mono_font_path[];
+///////////////// IMAGES PATHS ////////////////
+extern const char arrow_path[];
+extern const char pause_disabled_path[];
+extern const char pause_path[];
+extern const char play_disabled_path[];
+extern const char play_path[];
+extern const char random_path[];
+extern const char restart_path[];
+extern const char step_disabled_path[];
+extern const char step_path[];
+extern const char tracking_disabled_path[];
+extern const char tracking_path[];
 
 ///////////////// FUNCTIONS ///////////////////////
-bool loadFonts();
-void destroyFonts();
+bool loadImages();
+void destroyImages();
 
 #endif
