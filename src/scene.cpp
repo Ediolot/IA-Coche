@@ -11,7 +11,7 @@ scene::scene(const double screen_w, const double screen_h, const uint map_size, 
     inc_x_(0),
     inc_y_(0),
     zoom_(1),
-    show_menu_(true),
+    show_menu_(false),
     isplaying_(false),
     istracking_(false),
     esc_was_pressed_(false),
@@ -59,10 +59,6 @@ void scene::draw()
     static double zoom = 1; // TODO mouse inside
     zoom = mouse.getZ()*0.1 + 1;
 
-    // GET VERTICES
-    if (!show_menu_)
-        tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_);
-
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
@@ -72,6 +68,7 @@ void scene::draw()
     // DRAW
     if (!show_menu_)
     {
+        tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_);
         al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
     }
@@ -100,24 +97,6 @@ void scene::draw()
 
 void scene::drawSimMenu(const uint triangles)
 {
-    double speed = speed_.getValue();
-
-    if (play_.wasPressed())
-        isplaying_ = !isplaying_;
-
-    if (tracking_.wasPressed())
-        istracking_ = !istracking_;
-
-    if (speed < 0.001)
-        isplaying_ = false;
-
-    tracking_.setImage(istracking_ ? "images/tracking.png" : "images/tracking_disabled.png");
-    step_.setImage(speed < 0.001 ? "images/step.png" : "images/step_disabled.png");
-    if (speed > 0.001)
-        play_.setImage(isplaying_ ? "images/pause.png" : "images/play.png");
-    else
-        play_.setImage("images/play_disabled.png");
-
     tracking_.draw();
     restart_.draw();
     step_.draw();
@@ -135,7 +114,7 @@ void scene::drawSimMenu(const uint triangles)
     else
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 
-    // TEXT & DEBG
+    // TEXT & DEBUG
     al_draw_text(caviar_font_16, BLACK, 100, 10,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(triangles)).c_str());
     displayFPS(caviar_font_16);
 }
@@ -150,15 +129,13 @@ void scene::drawMenu()
     width_.draw();
     height_.draw();
 
-    al_draw_text(caviar_font_16, BLACK, 150, 420,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_.getValue()*100))+"% Obstacles").c_str());
-
     if (quit_.mouseOver() || algorithm_.mouseOverArrow() || width_.mouseOverArrow() || height_.mouseOverArrow())
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
     else
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 
-    if (quit_.wasPressed())
-        quit = true;
+    // TEXT & DEBG
+    al_draw_text(caviar_font_16, BLACK, 150, 420,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_.getValue()*100))+"% Obstacles").c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +149,8 @@ void scene::update()
         algorithm_.update();
         width_.update();
         height_.update();
+
+        if (quit_.wasPressed()) quit = true;
     }
     else
     {
@@ -180,6 +159,20 @@ void scene::update()
         random_.update();
         speed_.update();
         step_.update();
+
+        double speed = speed_.getValue();
+
+        if (play_.wasPressed()    ) isplaying_  = !isplaying_;
+        if (tracking_.wasPressed()) istracking_ = !istracking_;
+        if (speed < 0.001         ) isplaying_  = false;
+
+        tracking_.setImage(istracking_   ? "images/tracking.png" : "images/tracking_disabled.png");
+        step_.setImage(speed < 0.001 ? "images/step.png" : "images/step_disabled.png");
+
+        if (speed > 0.001)
+            play_.setImage(isplaying_ ? "images/pause.png" : "images/play.png");
+        else
+            play_.setImage("images/play_disabled.png");
     }
 }
 
@@ -207,14 +200,14 @@ void scene::resize(const double w, const double h)
     width_.moveTo(150, 130);
     height_.moveTo(150, 220);
     algorithm_.moveTo(150, 310);
+
     obstacles_.moveTo(150, 400, screen_w_-300, 5);
     quit_.moveTo(screen_w_-120, screen_h_-70, 100, 50);
-
-    speed_.moveTo(  screen_w_-30, 50, 5, screen_h_-220);
-    tracking_.moveTo(  screen_w_-46, 10           , 40, 40);
-    step_.moveTo(      screen_w_-45, screen_h_-160, 40, 40);
+    speed_.moveTo(screen_w_-30, 50, 5, screen_h_-220);
+    tracking_.moveTo(screen_w_-46, 10, 40, 40);
+    step_.moveTo(screen_w_-45, screen_h_-160, 40, 40);
     play_.moveTo(screen_w_-45, screen_h_-120, 40, 40);
-    restart_.moveTo(   screen_w_-45, screen_h_-80 , 40, 40);
+    restart_.moveTo(screen_w_-45, screen_h_-80 , 40, 40);
     random_.moveTo( screen_w_-45, screen_h_-40 , 40, 40);
 }
 
