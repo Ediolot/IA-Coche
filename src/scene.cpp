@@ -11,6 +11,7 @@ scene::scene(const double screen_w, const double screen_h, const uint map_size, 
     inc_x_(0),
     inc_y_(0),
     zoom_(1),
+    last_mouse_z_(0),
     show_menu_(false),
     isplaying_(false),
     istracking_(false),
@@ -53,28 +54,29 @@ void scene::draw()
 {
     std::vector<ALLEGRO_VERTEX> vertices;
 
-    double cx = screen_w_/2.0 + inc_x_;
+    double draw_w = screen_w_-60;
+    double cx =    draw_w/2.0 + inc_x_;
     double cy = screen_h_/2.0 + inc_y_;
+    double sq_size = (draw_w > screen_h_ ? screen_h_ : draw_w)*zoom_*(1-map_separation_);
 
-    static double zoom = 1; // TODO mouse inside
-    zoom = mouse.getZ()*0.1 + 1;
+    if (!show_menu_)
+        tile_map_.appendVertices(vertices, cx, cy, sq_size, draw_w, screen_h_);
 
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
     // LOCK
-    //al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE );
+    al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, 0);
 
     // DRAW
     if (!show_menu_)
     {
-        tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_);
         al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
     }
 
     // UNLOCK
-    //al_unlock_bitmap(al_get_target_bitmap());
+    al_unlock_bitmap(al_get_target_bitmap());
 
     // MENU
     if (show_menu_)
@@ -82,19 +84,11 @@ void scene::draw()
     else
         drawSimMenu(vertices.size()/3);
 
-    // ESC KEY
-    if (keysPress[ALLEGRO_KEY_ESCAPE])
-        esc_was_pressed_ = true;
-    else if (esc_was_pressed_)
-    {
-        show_menu_ = !show_menu_;
-        esc_was_pressed_ = false;
-    }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 void scene::drawSimMenu(const uint triangles)
 {
     tracking_.draw();
@@ -104,12 +98,7 @@ void scene::drawSimMenu(const uint triangles)
     random_.draw();
     speed_.draw();
 
-    if (restart_.mouseOver()    ||
-        play_.mouseOver() ||
-        random_.mouseOver()  ||
-        step_.mouseOver()       ||
-        tracking_.mouseOver() )
-
+    if (restart_.mouseOver() || play_.mouseOver() || random_.mouseOver() || step_.mouseOver() || tracking_.mouseOver() )
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
     else
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
@@ -158,6 +147,7 @@ void scene::update()
         play_.update();
         random_.update();
         speed_.update();
+        tracking_.update();
         step_.update();
 
         double speed = speed_.getValue();
@@ -174,6 +164,21 @@ void scene::update()
         else
             play_.setImage("images/play_disabled.png");
     }
+
+    // ESC KEY
+    if (keysPress[ALLEGRO_KEY_ESCAPE])
+        esc_was_pressed_ = true;
+    else if (esc_was_pressed_)
+    {
+        show_menu_ = !show_menu_;
+        esc_was_pressed_ = false;
+    }
+
+    // ZOOM
+    zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
+    zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
+
+    last_mouse_z_ = mouse.getZ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -25,6 +25,8 @@ class scene {
         double inc_y_;
         double zoom_;
 
+        double last_mouse_z_;
+
         bool show_menu_;
         bool isplaying_;
         bool istracking_;
