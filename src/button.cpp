@@ -1,7 +1,8 @@
 #include "../include/button.hpp"
 
 
-button::button(const std::string &label, const double animation_time):
+button::button(const std::string &label, ALLEGRO_FONT *font, const double animation_time):
+    font_(font),
     label_(label),
     x_(0),
     y_(0),
@@ -17,8 +18,8 @@ button::button(const std::string &label, const double animation_time):
     line_size_(0),
     last_time_called_(0)
 {
-    min_w_ = al_get_text_width(ubuntu_mono_font_40, label_.c_str())+2;
-    min_h_ = al_get_font_line_height(ubuntu_mono_font_40)+2;
+    min_w_ = al_get_text_width(font_, label_.c_str())+2;
+    min_h_ = al_get_font_line_height(font_)+2;
 }
 
 button::~button()
@@ -80,7 +81,7 @@ void button::draw()
     last_time_called_ = current_time;
 
     // TEXT
-    al_draw_text(ubuntu_mono_font_40, GRAY, x_+w_/2, y_+(h_-min_h_)/2,ALLEGRO_ALIGN_CENTER, label_.c_str());
+    al_draw_text(font_, GRAY, x_+w_/2, y_+(h_-min_h_)/2,ALLEGRO_ALIGN_CENTER, label_.c_str());
 }
 
 bool button::mouseOver() const
@@ -91,7 +92,7 @@ bool button::mouseOver() const
 void button::setLabel(const std::string &label)
 {
     label_ = label;
-    min_w_ = al_get_text_width(ubuntu_mono_font_40, label_.c_str())+2;
+    min_w_ = al_get_text_width(font_, label_.c_str())+2;
     if (w_ < min_w_) w_ = min_w_;
 }
 

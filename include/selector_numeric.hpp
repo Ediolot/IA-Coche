@@ -14,6 +14,8 @@ class selector_numeric {
 
     private:
 
+        ALLEGRO_FONT *font_;
+
         std::string label_;
         double value_;
         int max_;
@@ -34,7 +36,7 @@ class selector_numeric {
 
     public:
 
-        selector_numeric(const std::string &label, const int min, const int max);
+        selector_numeric(const std::string &label, ALLEGRO_FONT *font, const int min, const int max);
 
         ~selector_numeric();
 

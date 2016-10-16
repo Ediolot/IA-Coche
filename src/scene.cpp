@@ -23,12 +23,12 @@ scene::scene(const double screen_w, const double screen_h, const uint map_size, 
     step_(step_image),
     tracking_(tracking_image),
 
-    quit_("QUIT", default_animation_time_),
+    quit_("QUIT", ubuntu_mono_font_40, default_animation_time_),
 
-    algorithm_("Algorithm  ", {"AAA", "BBBB", "CCCC"}),
+    algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
 
-    width_("Grid width ", 1, 100),
-    height_("Grid height", 1, 100),
+    width_("Grid width ", ubuntu_mono_font_40, 1, 100),
+    height_("Grid height", ubuntu_mono_font_40, 1, 100),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL)
@@ -164,7 +164,7 @@ void scene::update()
             play_.setImage(play_disabled_image);
 
         // Clicked on map
-        map.checkClick();
+        tile_map_.checkClick();
     }
 
     // ESC KEY

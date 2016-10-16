@@ -1,6 +1,7 @@
 #include "../include/selector_numeric.hpp"
 
-selector_numeric::selector_numeric(const std::string &label, const int min, const int max):
+selector_numeric::selector_numeric(const std::string &label, ALLEGRO_FONT *font, const int min, const int max):
+    font_(font),
     label_(label),
     value_(min),
     max_(max),
@@ -27,9 +28,9 @@ void selector_numeric::moveTo(const double x, const double y)
 
 void selector_numeric::update()
 {
-    double labelw = al_get_text_width(ubuntu_mono_font_40, label_.c_str());
+    double labelw = al_get_text_width(font_, label_.c_str());
     double lw = al_get_bitmap_width(arrow_image);
-    double w = al_get_text_width(ubuntu_mono_font_40, std::to_string(int(value_)).c_str());
+    double w = al_get_text_width(font_, std::to_string(int(value_)).c_str());
 
     l_mouse_inside_ = mouse.insideBox(x_+labelw+10, y_-5, x_+labelw+lw+40, y_+30);
     r_mouse_inside_ = mouse.insideBox(x_+labelw+lw+w+50, y_-5, x_+labelw+lw+w+80, y_+30);
@@ -91,15 +92,15 @@ void selector_numeric::update()
 
 void selector_numeric::draw() const
 {
-    double labelw = al_get_text_width(ubuntu_mono_font_40, label_.c_str());
-    double w = al_get_text_width(ubuntu_mono_font_40, std::to_string(int(value_)).c_str());
+    double labelw = al_get_text_width(font_, label_.c_str());
+    double w = al_get_text_width(font_, std::to_string(int(value_)).c_str());
     double lw = al_get_bitmap_width(arrow_image);
 
     al_draw_bitmap(arrow_image, x_+labelw+20, y_+4, 0);
     al_draw_bitmap(arrow_image, x_+labelw+lw+w+60, y_+4, ALLEGRO_FLIP_HORIZONTAL);
 
-    al_draw_text(ubuntu_mono_font_40, GRAY, x_, y_,ALLEGRO_ALIGN_LEFT, label_.c_str());
-    al_draw_text(ubuntu_mono_font_40, GRAY, x_+labelw+lw+40+w/2, y_,ALLEGRO_ALIGN_CENTER, std::to_string(int(value_)).c_str());
+    al_draw_text(font_, GRAY, x_, y_,ALLEGRO_ALIGN_LEFT, label_.c_str());
+    al_draw_text(font_, GRAY, x_+labelw+lw+40+w/2, y_,ALLEGRO_ALIGN_CENTER, std::to_string(int(value_)).c_str());
 }
 
 bool selector_numeric::mouseOverArrow() const

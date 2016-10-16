@@ -14,6 +14,8 @@ class selector {
 
     private:
 
+        ALLEGRO_FONT *font_;
+
         std::string label_;
         std::vector<std::string> list_;
         uint selected_;
@@ -32,7 +34,7 @@ class selector {
 
     public:
 
-        selector(const std::string &label, const std::vector<std::string>& list);
+        selector(const std::string &label, ALLEGRO_FONT *font, const std::vector<std::string>& list);
 
         ~selector();
 

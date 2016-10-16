@@ -11,6 +11,7 @@ class button {
 
     private:
 
+        ALLEGRO_FONT *font_;
         std::string label_;
 
         double x_;
@@ -31,7 +32,7 @@ class button {
 
     public:
 
-        button(const std::string &label, const double animation_time);
+        button(const std::string &label, ALLEGRO_FONT *font, const double animation_time);
 
         ~button();
 
