@@ -31,13 +31,15 @@
 #include <ctime>
 #include <random>
 #include <algorithm>
+#include <cmath>
 #include "common.hpp"
 #include "utility.hpp"
 #include "tile.hpp"
+#include "mouse.hpp"
 
 class map {
 
-    const uint SENTINEL_MAX =  20; // Prevent infinite loops when generating the sceneario
+    const uint SENTINEL_MAX = 20; // Prevent infinite loops when generating the sceneario
 
     private:
 
@@ -46,13 +48,17 @@ class map {
         double tiles_separation_;              // Separation between tiles (%)
         uint size_;                            // Number of tiles in the side
 
+        double cx_;
+        double cy_;
+        double width_;
+
     public:
 
         map(const uint size, const double separation, const uint seed = 0);
         virtual ~map();
 
         // Append the map's vertices points to a vector
-        void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const;
+        void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y);
 
         // Generate map elements
         void generate(void);

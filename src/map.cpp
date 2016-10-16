@@ -6,7 +6,10 @@ map::map(const uint size, const double separation, const uint seed):
     generator_(seed ? seed : std::time(nullptr)),
     tiles_(size*size),
     tiles_separation_(separation),
-    size_(size)
+    size_(size),
+    cx_(0),
+    cy_(0),
+    width_(0)
 {
     for (uint i=0; i<tiles_.size(); ++i)
     {
@@ -29,12 +32,15 @@ map::~map()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const
+void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y)
 {
-    const double delta         = width / size_;
-    const double delta_2       = delta/2;
-    const double left_corner_x = cx - (width/2) + delta_2;
-    const double top_corner_y  = cy - (width/2) + delta_2;
+    width_ = width;
+    cx_ = cx;
+    cy_ = cy;
+
+    const double delta    = width_ / size_;
+    const double left_corner_x = cx_ - (width/2) + delta/2;
+    const double top_corner_y  = cy_ - (width/2) + delta/2;
 
     // Reserve spaces for all the tiles in the vector
     v.reserve(v.size() + 4*size_*size_);
@@ -45,7 +51,7 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
             double x = left_corner_x + delta*j;
             double y = top_corner_y + delta*i;
 
-            tiles_[0*size_+j].appendVertices(v, x, y, delta, tiles_separation_, max_x, max_y);
+            tiles_[i*size_+j].appendVertices(v, x, y, delta, tiles_separation_, max_x, max_y);
         }
 }
 
@@ -91,7 +97,18 @@ void map::neutralizeAllTiles()
 
 void map::checkClick()
 {
+    if (mouse.isPressed(1) || mouse.isPressed(2))
+    {
+        const double delta = width_ / size_;
+        const double left_corner_x = cx_ - (width_/2) + delta/2;
+        const double top_corner_y  = cy_ - (width_/2) + delta/2;
+        int j = std::round((mouse.getX()-left_corner_x)/delta);
+        int i = std::round((mouse.getY()-top_corner_y)/delta);
 
+        tile *t;
+        if (i>=0 && j>=0 && (t = accessTile(i,j)))
+            t->setType(mouse.isPressed(1) ? tileType::WATER : tileType::NEUTRAL);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
