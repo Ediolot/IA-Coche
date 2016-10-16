@@ -49,6 +49,8 @@ void scene::draw() const
     // TEXT & DEBG
     al_draw_text(caviar_font_16, BLACK, 10, 40,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(vertices.size()/3)).c_str());
     displayFPS(caviar_font_16);
+
+    // THIS IS A TEST
 }
 
 ////////////////////////////////////////////////////////////////////////////////
