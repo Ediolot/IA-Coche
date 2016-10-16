@@ -41,8 +41,8 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
     for (uint i=0; i<size_; ++i)
         for (uint j=0; j<size_; ++j)
         {
-            double x = left_corner_x + delta_2*(i+j);
-            double y = cy + delta_2*j - delta_2*i;
+            double x = left_corner_x + delta_2*i;
+            double y = cy + delta_2*j;
 
             tiles_[i*size_+j].appendVertices(v, x, y, delta, tiles_separation_, max_x, max_y);
         }

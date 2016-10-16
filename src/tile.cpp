@@ -73,25 +73,19 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
     float width_2   = width/2;
 
     ALLEGRO_VERTEX points[4] = {
-        {float((cx - width_2)+border_px), float((cy          )          ), 0.0f, 0.0f, 0.0f, tile_color_},
-        {float((cx          )          ), float((cy - width_2)+border_px), 0.0f, 0.0f, 0.0f, tile_color_},
-        {float((cx + width_2)-border_px), float((cy          )          ), 0.0f, 0.0f, 0.0f, tile_color_},
-        {float((cx          )          ), float((cy + width_2)-border_px), 0.0f, 0.0f, 0.0f, tile_color_}
-    };
+        {float((cx - width_2)+border_px), float((cy + width_2)-border_px), 0.0f, 0.0f, 0.0f, tile_color_},
+        {float((cx + width_2)-border_px), float((cy + width_2)-border_px), 0.0f, 0.0f, 0.0f, tile_color_},
+        {float((cx + width_2)-border_px), float((cy - width_2)+border_px), 0.0f, 0.0f, 0.0f, tile_color_},
+        {float((cx - width_2)+border_px), float((cy - width_2)+border_px), 0.0f, 0.0f, 0.0f, tile_color_}
+        };
 
-    if (points[0].y >= 0 && points[1].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
-    {
         v.push_back(points[0]);
         v.push_back(points[1]);
-        v.push_back(points[2]);
-    }
-
-    if (points[3].y >= 0 && points[0].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
-    {
-        v.push_back(points[0]);
-        v.push_back(points[2]);
         v.push_back(points[3]);
-    }
+
+        v.push_back(points[2]);
+        v.push_back(points[1]);
+        v.push_back(points[3]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
