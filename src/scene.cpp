@@ -88,7 +88,6 @@ void scene::draw()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
 void scene::drawSimMenu(const uint triangles)
 {
     tracking_.draw();
