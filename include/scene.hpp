@@ -24,7 +24,7 @@ class scene {
         virtual ~scene();
 
         // Genera los elementos de la escena
-        void generate(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
+        void generate();
 
         // Dibuja los elementos de la escena
         void draw() const;

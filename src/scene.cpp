@@ -19,9 +19,9 @@ scene::~scene()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void scene::generate(const uint rivers, const uint min_size_river, const bool accumulative_rivers)
+void scene::generate()
 {
-    tile_map_.generate(rivers,min_size_river,accumulative_rivers);
+    tile_map_.generate();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
