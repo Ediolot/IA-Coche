@@ -40,9 +40,9 @@ void scene::draw() const
     static button_image step_button("images/step.png");
     static button_image tracking_button("images/tracking_disabled.png");
     static button       quit_button("QUIT", 0.2);
-    //static button_image real_button("Real");
 
-    static scrollbar speed_scrollbar;
+    static scrollbar speed_scrollbar(scroll::VERTICAL);
+    static scrollbar obstacles_scrollbar(scroll::HORIZONTAL);
 
     static bool esc_was_pressed = false;
     if (keysPress[ALLEGRO_KEY_ESCAPE])
@@ -60,7 +60,8 @@ void scene::draw() const
     zoom = mouse.getZ()*0.1 + 1;
 
     // GET VERTICES
-    tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_);
+    if (!show_menu_)
+        tile_map_.appendVertices(vertices, cx, cy, screen_h_*zoom, screen_w_-50, screen_h_);
 
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
@@ -131,9 +132,14 @@ void scene::draw() const
     }
     else
     {
-        quit_button.update();
+        obstacles_scrollbar.moveTo(150, 300, screen_w_-300, 5);
         quit_button.moveTo(screen_w_-120, screen_h_-70, 100, 50);
+        obstacles_scrollbar.update();
+        quit_button.update();
+        obstacles_scrollbar.draw();
         quit_button.draw();
+
+        al_draw_text(caviar_font_16, BLACK, 150, 320,ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_scrollbar.getValue()*100))+"% Obstacles").c_str());
 
         if (quit_button.mouseOver())
             mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);

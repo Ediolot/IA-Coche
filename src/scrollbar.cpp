@@ -26,7 +26,10 @@ void scrollbar::moveTo(const double x, const double y, const double w, const dou
 
 void scrollbar::update()
 {
-    mouse_inside_ = mouse.insideBox(x_-20, y_, x_+w_+20, y_+h_);
+    if (type_==VERTICAL)
+        mouse_inside_ = mouse.insideBox(x_-20, y_, x_+w_+20, y_+h_);
+    else
+        mouse_inside_ = mouse.insideBox(x_, y_-20, x_+w_, y_+h_+20);
 
     if (mouse_inside_ && mouse.isPressed(1))
         scrolling_ = true;
@@ -36,7 +39,7 @@ void scrollbar::update()
 
     if (scrolling_)
     {
-        value_ = type==VERTICAL ? (1.0 - (mouse.getY()-y_)/h_) : (1.0 - (mouse.getX()-x_)/w_);
+        value_ = type_==VERTICAL ? (1.0 - (mouse.getY()-y_)/h_) : (mouse.getX()-x_)/w_;
         if (value_ > 1.0) value_ = 1.0;
         if (value_ < 0.0) value_ = 0.0;
     }
@@ -54,7 +57,7 @@ void scrollbar::draw()
 {
     al_draw_filled_rectangle(x_, y_, x_+w_, y_+h_, LIGHT_GRAY);
 
-    if (type==VERTICAL)
+    if (type_==VERTICAL)
         al_draw_filled_rectangle(x_+w_, y_+h_, x_, y_-(h_*value_)+h_, ORANGE_STRONG);
     else
         al_draw_filled_rectangle(x_, y_, x_+w_*value_, y_+h_, ORANGE_STRONG);
