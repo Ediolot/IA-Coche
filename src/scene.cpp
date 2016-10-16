@@ -167,6 +167,11 @@ void scene::update()
 
         // Clicked on map
         tile_map_.checkClick();
+
+        // ZOOM
+        if (mouse.insideBox(0,0,screen_w_-60,screen_h_))
+            zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
+        zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
     }
 
     // ESC KEY
@@ -178,10 +183,6 @@ void scene::update()
         esc_was_pressed_ = false;
     }
 
-    // ZOOM
-    if (mouse.insideBox(0,0,screen_w_-60,screen_h_))
-        zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
-    zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
 
     last_mouse_z_ = mouse.getZ();
 }
