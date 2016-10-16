@@ -11,15 +11,15 @@ map::map(const uint size, const double separation, const uint seed):
     // TODO comprobar
     for (uint i=0; i<tiles_.size(); ++i)
     {
-        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP_RIGHT)        , dir::UP_RIGHT       );
-        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_LEFT)      , dir::DOWN_LEFT     );
-        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP_LEFT)      , dir::UP_LEFT     );
-        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_RIGHT)     , dir::DOWN_RIGHT    );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP_RIGHT)  , dir::UP_RIGHT);
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_LEFT) , dir::DOWN_LEFT);
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP_LEFT)   , dir::UP_LEFT);
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN_RIGHT), dir::DOWN_RIGHT);
 
-        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::RIGHT)  , dir::RIGHT );
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::RIGHT), dir::RIGHT );
         tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::UP)   , dir::UP);
         tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::LEFT) , dir::LEFT);
-        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN), dir::DOWN);
+        tiles_[i].addFriend( accessTile(i / size_, i % size_, dir::DOWN) , dir::DOWN);
     }
 }
 
@@ -63,14 +63,14 @@ tile *map::accessTile(const uint row, const uint col, const dir direction)
 {
     switch (direction)
     {
-        case dir::UP:         return accessTile(row-1, col+1);
-        case dir::DOWN:       return accessTile(row+1, col-1);
-        case dir::RIGHT:      return accessTile(row+1, col+1);
-        case dir::LEFT:       return accessTile(row-1, col-1);
-        case dir::UP_LEFT:    return accessTile(row-1, col  );
-        case dir::DOWN_RIGHT: return accessTile(row+1, col  );
-        case dir::UP_RIGHT:   return accessTile(row  , col+1);
-        case dir::DOWN_LEFT:  return accessTile(row  , col-1);
+        case dir::UP:         return accessTile(row-1, col  );
+        case dir::DOWN:       return accessTile(row+1, col  );
+        case dir::RIGHT:      return accessTile(row  , col+1);
+        case dir::LEFT:       return accessTile(row  , col-1);
+        case dir::UP_LEFT:    return accessTile(row-1, col-1);
+        case dir::DOWN_RIGHT: return accessTile(row+1, col+1);
+        case dir::UP_RIGHT:   return accessTile(row-1, col+1);
+        case dir::DOWN_LEFT:  return accessTile(row+1, col-1);
         default: return nullptr;
     }
 }
