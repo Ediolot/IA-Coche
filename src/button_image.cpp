@@ -84,11 +84,9 @@ void button_image::setImage(const std::string &path)
     path_ = path;
     al_destroy_bitmap(image_);
     image_ = al_load_bitmap(path.c_str());
-    if (image_)
-    {
-        min_w_ = al_get_bitmap_width(image_)+2;
-        min_h_ = al_get_bitmap_height(image_)+2;
-    }
+
+    if (!image_) return;
+
     if (w_ < min_w_) w_ = min_w_;
     if (h_ < min_h_) h_ = min_h_;
 }

@@ -16,9 +16,6 @@
 #include "../include/mouse.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
-bool keysPress[ALLEGRO_KEY_MAX] = {false};
-
-///////////////// DEFAULT OPTIONS /////////////////
 const bool   accumulative_rivers = false;
 const double FPS         = 60;
 const double scrollSpeed = 650;
@@ -47,7 +44,6 @@ int main(int argc, char *argv[])
     ALLEGRO_TIMER       *redraw_timer = nullptr;
 
     bool redraw = true;
-    bool quit   = false;
 
     // INITIALIZE ALLEGRO
     if (!al_init()                  ||
@@ -124,9 +120,6 @@ int main(int argc, char *argv[])
 
             default: break; // Unused event
         }
-
-        if (keysPress[ALLEGRO_KEY_ESCAPE])
-            quit = true;
 
         // Update screen
         if (redraw && al_is_event_queue_empty(event_queue)) {

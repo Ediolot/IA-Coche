@@ -11,6 +11,14 @@
 
 typedef unsigned int uint;
 
+///////////////// QUIT /////////////////
+
+extern bool quit;
+
+////////////////// KEYS ////////////////
+
+extern bool keysPress[ALLEGRO_KEY_MAX];
+
 ///////////////// MOUSE ////////////////
 
 extern _mouse mouse;
@@ -43,11 +51,11 @@ enum tileType {
     WATER
 };
 
-/////////////// MEASURE UNITS /////////////
+///////////// SCROLLBAR TYPE /////////////
 
-enum units {
-    PX,
-    PERCENT
+enum scroll {
+    VERTICAL,
+    HORIZONTAL
 };
 
 ///////////////// COLORS /////////////////

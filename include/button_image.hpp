@@ -10,6 +10,9 @@ class button_image {
 
     private:
 
+        std::string toolTip_;
+        ALLEGRO_FONT *font_;
+
         std::string path_;
         ALLEGRO_BITMAP *image_;
 
