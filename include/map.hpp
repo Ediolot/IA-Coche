@@ -5,31 +5,19 @@
 
     TILES ADJACENCY & DIRECTIONS:
 
-                             #
-                           #   #
-                         #       #
-                       #           #
-                     #      UP       #
-                   #   #           #   #
-                 #       #       #       #
-               #           #   #           #
-             #    UP_LEFT    #   UP_RIGHT    #
-           #   #           #   #           #   #
-         #       #       #       #       #       #
-       #           #   #           #   #           #
-     #     LEFT      #     CENTER    #     RIGHT     #
-       #           #   #           #   #           #
-         #       #       #       #       #       #
-           #   #           #   #           #   #
-             #   DOWN_LEFT   #  DOWN_RIGHT   #
-               #           #   #           #
-                 #       #       #       #
-                   #   #           #   #
-                     #     DOWN      #
-                       #           #
-                         #       #
-                           #   #
-                             #
+    ####################################
+    #            #        #            #
+    #  UP_LEFT   #   UP   #  UP_RIGHT  #
+    #            #        #            #
+    ####################################
+    #            #        #            #
+    #    LEFT    # CENTER #    RIGHT   #
+    #            #        #            #
+    ####################################
+    #            #        #            #
+    #  DOWN_LEFT #  DOWN  # DOWN_RIGHT #
+    #            #        #            #
+    ####################################
 
      Tiles UP_LEFT, UP_RIGHT, DOWN_LEFT & DOWN_RIGHT are adjacent to the center. The others are NOT.
      Tiles UP, LEFT, DOWN & RIGHT are neighbors to the center. The others are NOT.
