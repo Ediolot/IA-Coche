@@ -17,13 +17,11 @@
 #include "../include/images.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
-const bool   accumulative_rivers = false;
 const double FPS         = 60;
 const double scrollSpeed = 650;
 const double map_separation    = 0.05;
 const double tiles_separation  = 0.06;
-const uint   mapsize     = 60;
-const uint   rivers      = 2;
+const uint   mapsize     = 20;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
 
@@ -87,7 +85,7 @@ int main(int argc, char *argv[])
     // VARIABLES
     scene main_scene(SCREEN_W, SCREEN_H, mapsize, tiles_separation, map_separation);
 
-    main_scene.generate(rivers, mapsize, accumulative_rivers);
+    main_scene.generate();
 
     // START REDRAW TIMER
     al_start_timer(redraw_timer);

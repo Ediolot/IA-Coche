@@ -55,7 +55,7 @@ class map {
         void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const;
 
         // Generate map elements
-        void generate(const uint rivers, const uint min_size_river, const bool accumulative_rivers);
+        void generate(void);
 
         // Make all tiles neutral
         void neutralizeAllTiles();
@@ -66,13 +66,7 @@ class map {
         // Access a tile's friend
         tile *accessTile(const uint row, const uint col, const dir direction);
 
-    private:
-
-        // Generate a river
-        bool generateRiver(const uint start_tile, const dir direction, const uint min_size, const bool accumulative);
-
-        // Test if a tile is adjacent by the sides to any of the tiles in a vector. Taking into account a possible exception
-        bool riverTargetOverlap(const tile* test, const std::vector<tile*>& v) const;
+        void checkClick();
 };
 
 #endif

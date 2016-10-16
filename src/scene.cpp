@@ -43,9 +43,9 @@ scene::~scene()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void scene::generate(const uint rivers, const uint min_size_river, const bool accumulative_rivers)
+void scene::generate()
 {
-    tile_map_.generate(rivers,min_size_river,accumulative_rivers);
+    tile_map_.generate();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,6 +162,9 @@ void scene::update()
             play_.setImage(isplaying_ ? pause_image : play_image);
         else
             play_.setImage(play_disabled_image);
+
+        // Clicked on map
+        map.checkClick();
     }
 
     // ESC KEY

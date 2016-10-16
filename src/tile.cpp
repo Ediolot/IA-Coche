@@ -97,7 +97,6 @@ void tile::setType(const tileType type)
 
     switch (type)
     {
-        case tileType::WATER: tile_color_ = WATER_TILE_COLOR;   break;
         default:              tile_color_ = NEUTRAL_TILE_COLOR; break;
     }
 }
@@ -107,13 +106,6 @@ void tile::setType(const tileType type)
 bool tile::isBorder() const
 {
     return isAdjacentTo(nullptr);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-bool tile::isWater() const
-{
-    return tile_type_ == tileType::WATER;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
