@@ -5,6 +5,7 @@
 #include "common.hpp"
 #include "map.hpp"
 #include "button.hpp"
+#include "button_image.hpp"
 #include "scrollbar.hpp"
 
 class scene {

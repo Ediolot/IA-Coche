@@ -3,6 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
 
 #include <string>
 #include <cstdio>
@@ -54,7 +55,8 @@ int main(int argc, char *argv[])
         !al_init_font_addon()       ||
         !al_init_ttf_addon()        ||
         !al_install_keyboard()      ||
-        !al_install_mouse())
+        !al_install_mouse()         ||
+        !al_init_image_addon() )
     {
         std::cerr << "Failed to initialize Allegro!" << std::endl;
         return -1;
