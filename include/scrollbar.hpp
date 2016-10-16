@@ -1,3 +1,5 @@
+#ifndef SCROLLBAR_HPP
+#define SCROLLBAR_HPP
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -39,3 +41,5 @@ class scrollbar {
 
         void setValue(const double value);
 };
+
+#endif

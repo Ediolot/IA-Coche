@@ -1,3 +1,5 @@
+#ifndef SELECTOR_NUMERIC
+#define SELECTOR_NUMERIC
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -49,3 +51,5 @@ class selector_numeric {
 
         int getValue() const;
 };
+
+#endif

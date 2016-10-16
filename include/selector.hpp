@@ -1,3 +1,5 @@
+#ifndef SELECTOR_HPP
+#define SELECTOR_HPP
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -47,3 +49,5 @@ class selector {
 
         uint getSelectedIndex() const;
 };
+
+#endif

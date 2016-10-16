@@ -1,3 +1,5 @@
+#ifndef BUTTON_IMAGE
+#define BUTTON_IMAGE
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -46,3 +48,5 @@ class button_image {
 
         bool wasPressed();
 };
+
+#endif
