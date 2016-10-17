@@ -35,6 +35,7 @@
 #include "utility.hpp"
 #include "tile.hpp"
 #include "mouse.hpp"
+#include "mazeGenerator.hpp"
 
 class map {
 
@@ -51,9 +52,11 @@ class map {
         double cy_;
         double tile_size_;
 
+        mazeGenerator generator_;
+
     public:
 
-        map(const uint rows, const uint cols, const double separation);
+        map(const uint rows, const uint cols, const double obstacles, const double separation);
         virtual ~map();
 
         void rebuild(const uint rows, const uint cols);
@@ -62,7 +65,7 @@ class map {
         void appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double tile_size, const double max_x, const double max_y);
 
         // Generate map elements
-        void generate(void);
+        void generate(const double obstacles);
 
         // Make all tiles neutral
         void neutralizeAllTiles();

@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 scene::scene(const double screen_w, const double screen_h, const double tiles_separation, const double map_separation):
-    tile_map_(20, 20, tiles_separation),
+    tile_map_(20, 20, 0.2, tiles_separation),
     map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
@@ -30,7 +30,7 @@ scene::scene(const double screen_w, const double screen_h, const double tiles_se
     height_("Grid height", ubuntu_mono_font_40, 1, 100, 20),
 
     speed_(scroll::VERTICAL),
-    obstacles_(scroll::HORIZONTAL)
+    obstacles_(scroll::HORIZONTAL, 0.2)
 {
     resize(screen_w_, screen_h_);
 }
@@ -39,13 +39,6 @@ scene::scene(const double screen_w, const double screen_h, const double tiles_se
 
 scene::~scene()
 {}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void scene::generate()
-{
-    tile_map_.generate();
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -152,7 +145,13 @@ void scene::update()
 
         double speed = speed_.getValue();
 
-        if (random_.wasPressed()) tile_map_.rebuild(width_.getValue(), height_.getValue());
+        if (random_.wasPressed())
+        {
+            inc_x_ = inc_y_ = 0;
+            zoom_ = 1;
+            tile_map_.rebuild(width_.getValue(), height_.getValue());
+            tile_map_.generate(obstacles_.getValue());
+        }
         if (play_.wasPressed()    ) isplaying_  = !isplaying_;
         if (tracking_.wasPressed()) istracking_ = !istracking_;
         if (speed < 0.001         ) isplaying_  = false;

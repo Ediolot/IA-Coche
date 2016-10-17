@@ -84,8 +84,6 @@ int main(int argc, char *argv[])
     // VARIABLES
     scene main_scene(SCREEN_W, SCREEN_H, tiles_separation, map_separation);
 
-    main_scene.generate();
-
     // START REDRAW TIMER
     al_start_timer(redraw_timer);
 

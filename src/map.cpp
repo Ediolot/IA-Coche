@@ -2,16 +2,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint rows, const uint cols, const double separation):
+map::map(const uint rows, const uint cols, const double obstacles, const double separation):
     tiles_(),
     tiles_separation_(separation),
     rows_(0),
     cols_(0),
     cx_(0),
     cy_(0),
-    tile_size_(0)
+    tile_size_(0),
+    generator_()
 {
     rebuild(rows, cols);
+    generate(obstacles);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,8 +98,13 @@ tile *map::accessTile(const uint row, const uint col, const dir direction)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::generate()
-{}
+void map::generate(const double obstacles)
+{
+    generator_.randomize(rows_, cols_, obstacles);
+
+    for (uint i=0; i<(rows_*cols_); ++i)
+        tiles_[i].setType(generator_.getPos(i/cols_, i%cols_) ? tileType::WATER : tileType::NEUTRAL);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

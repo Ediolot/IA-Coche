@@ -57,9 +57,6 @@ class scene {
         scene(const double screen_w, const double screen_h, const double tiles_separation, const double map_separation);
         virtual ~scene();
 
-        // Genera los elementos de la escena
-        void generate();
-
         // Dibuja los elementos de la escena
         void draw();
 

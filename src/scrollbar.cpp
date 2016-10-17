@@ -1,9 +1,9 @@
 #include "../include/scrollbar.hpp"
 
 
-scrollbar::scrollbar(const scroll type):
+scrollbar::scrollbar(const scroll type, const double value):
     type_(type),
-    value_(0),
+    value_(value),
     x_(0),
     y_(0),
     w_(0),

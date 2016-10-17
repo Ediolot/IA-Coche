@@ -27,7 +27,7 @@ class scrollbar {
 
     public:
 
-        scrollbar(const scroll type);
+        scrollbar(const scroll type, const double value = 0);
 
         ~scrollbar();
 
