@@ -11,6 +11,8 @@
 
 ///////////////// GLOBAL IMAGES ///////////////
 extern ALLEGRO_BITMAP *arrow_image;
+extern ALLEGRO_BITMAP *floor_image;
+extern ALLEGRO_BITMAP *wall_image;
 extern ALLEGRO_BITMAP *pause_disabled_image;
 extern ALLEGRO_BITMAP *pause_image;
 extern ALLEGRO_BITMAP *play_disabled_image;
@@ -24,6 +26,8 @@ extern ALLEGRO_BITMAP *tracking_image;
 
 ///////////////// IMAGES PATHS ////////////////
 extern const char arrow_path[];
+extern const char floor_path[];
+extern const char wall_path[];
 extern const char pause_disabled_path[];
 extern const char pause_path[];
 extern const char play_disabled_path[];

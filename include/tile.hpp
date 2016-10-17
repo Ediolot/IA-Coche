@@ -45,7 +45,8 @@ class tile {
 
         // Append the tile's vertices points to a vector
         void appendVertices(
-            std::vector<ALLEGRO_VERTEX> &v,
+            std::vector<ALLEGRO_VERTEX> &floor,
+            std::vector<ALLEGRO_VERTEX> &obs, 
             const double cx,
             const double cy,
             const double width,

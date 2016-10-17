@@ -19,8 +19,9 @@ class mazeGenerator {
         mazeGenerator();
         virtual ~mazeGenerator();
 
-        int getrows() const;
-        int getcols() const;
+        uint getRows() const;
+        uint getCols() const;
+        double getObs() const;
 
         const std::vector< std::vector<bool> >& getMaze() const;
         const std::vector< std::vector<bool> >& randomize(const uint rows, const uint cols, const double obs, const uint seed=0);

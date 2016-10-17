@@ -44,7 +44,7 @@ scene::~scene()
 
 void scene::draw()
 {
-    std::vector<ALLEGRO_VERTEX> vertices;
+    std::vector<ALLEGRO_VERTEX> vertices_text1, vertices_text2;
 
     double draw_w = screen_w_-60;
     double cx =    draw_w/2.0 + inc_x_;
@@ -54,7 +54,7 @@ void scene::draw()
     double sq_size = (w_size*tile_map_.getNRows() > screen_h_ ? h_size : w_size)*zoom_*(1-map_separation_);
 
     if (!show_menu_)
-        tile_map_.appendVertices(vertices, cx, cy, sq_size, draw_w, screen_h_);
+        tile_map_.appendVertices(vertices_text1, vertices_text2, cx, cy, sq_size, draw_w, screen_h_);
 
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
@@ -65,7 +65,8 @@ void scene::draw()
     // DRAW
     if (!show_menu_)
     {
-        al_draw_prim(vertices.data(), nullptr, nullptr, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
+        al_draw_prim(vertices_text1.data(), nullptr, floor_image, 0, vertices_text1.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
+        al_draw_prim(vertices_text2.data(), nullptr, wall_image, 0, vertices_text2.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
     }
 
@@ -76,7 +77,7 @@ void scene::draw()
     if (show_menu_)
         drawMenu();
     else
-        drawSimMenu(vertices.size()/3);
+        drawSimMenu((vertices_text1.size()+vertices_text2.size())/3);
 
 }
 

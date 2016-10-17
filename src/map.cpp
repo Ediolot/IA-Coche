@@ -47,7 +47,7 @@ void map::rebuild(const uint rows, const uint cols)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double tile_size, const double max_x, const double max_y)
+void map::appendVertices(std::vector<ALLEGRO_VERTEX> &floor, std::vector<ALLEGRO_VERTEX> &obs, const double cx, const double cy, const double tile_size, const double max_x, const double max_y)
 {
     tile_size_ = tile_size;
     cx_ = cx;
@@ -59,7 +59,8 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
     const double top_corner_y  = cy_ - (height/2) + tile_size_/2;
 
     // Reserve spaces for all the tiles in the vector
-    v.reserve(v.size() + 4*rows_*cols_);
+    floor.reserve(floor.size() + 4*rows_*cols_);
+    obs.reserve(obs.size() + 4*rows_*cols_);
 
     for (uint i=0; i<rows_; ++i)
         for (uint j=0; j<cols_; ++j)
@@ -67,7 +68,7 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
             double x = left_corner_x + tile_size_*j;
             double y = top_corner_y + tile_size_*i;
 
-            tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_, tiles_separation_, max_x, max_y);
+            tiles_[i*cols_+j].appendVertices(floor, obs, x, y, tile_size_, tiles_separation_, max_x, max_y);
         }
 }
 

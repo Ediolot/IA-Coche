@@ -10,14 +10,19 @@ mazeGenerator::mazeGenerator():
 mazeGenerator::~mazeGenerator()
 {}
 
-int mazeGenerator::getrows() const
+uint mazeGenerator::getRows() const
 {
   return rows_;
 }
 
-int mazeGenerator::getcols() const
+uint mazeGenerator::getCols() const
 {
   return cols_;
+}
+
+double mazeGenerator::getObs() const
+{
+    return obs_;
 }
 
 const std::vector< std::vector<bool> >& mazeGenerator::randomize(const uint rows, const uint cols, const double obs, const uint seed)

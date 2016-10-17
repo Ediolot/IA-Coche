@@ -20,7 +20,7 @@
 const double FPS         = 60;
 const double scrollSpeed = 650;
 const double map_separation    = 0.08;
-const double tiles_separation  = 0.06;
+const double tiles_separation  = 0.0;
 const int    SCREEN_W    = 800;
 const int    SCREEN_H    = 700;
 

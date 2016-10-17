@@ -27,7 +27,7 @@ BUILDDIR = build
 BINDIR   = bin
 
 # Output #
-NAME = castle_square.out
+NAME = ia.out
 
 ################################################################################
 #--------------------------# OS DEPENDANT VARIABLES #--------------------------#
