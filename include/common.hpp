@@ -28,7 +28,7 @@ extern _mouse mouse;
 const uint VERSION_MAYOR = 0;
 const uint VERSION_MINOR = 1;
 const std::string STAGE  = "Alpha";
-const std::string NAME   = "Castle Square";
+const std::string NAME   = "IA";
 
 ///////////////// DIRECTIONS ////////////////
 

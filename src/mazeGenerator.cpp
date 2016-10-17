@@ -1,35 +1,67 @@
 #include "../include/mazeGenerator.hpp"
 
 mazeGenerator::mazeGenerator():
-    data_(0),
     rows_(0),
-    cols_(0)
-{};
+    cols_(0),
+    obs_(0),
+    maze_()
+{}
 
 mazeGenerator::~mazeGenerator()
 {}
 
-void mazeGenerator::randomize(const uint rows, const uint cols, const double obst, const uint seed)
+int mazeGenerator::getrows() const
 {
-    std::srand(seed==0 ? std::time(nullptr) : seed);
+  return rows_;
+}
+
+int mazeGenerator::getcols() const
+{
+  return cols_;
+}
+
+const std::vector< std::vector<bool> >& mazeGenerator::randomize(const uint rows, const uint cols, const double obs, const uint seed)
+{
     rows_ = rows;
     cols_ = cols;
-    uint obst_n = rows*cols*obst;
+    obs_  = obs;
 
-    data_.clear();
-    data_.resize(rows*cols, false);
+    std::srand(seed ? seed : time(NULL));
 
-    for (uint i=0; i<obst_n; ++i)
+    maze_.clear();
+    maze_.resize(rows, std::vector<bool>(cols, false));
+
+    uint obs_n = obs_>1 ? 1 : rows_*cols_*obs_;
+
+    for(uint i=0; i<obs_n ; ++i)
     {
-        uint pos;
-        do
-            pos = (std::rand() / double(RAND_MAX)) * double(rows_*cols_);
-        while (data_[pos]);
-        data_[pos] = true;
+        uint rand_i = std::rand() % rows_;
+        uint rand_j = std::rand() % cols_;
+
+        if (maze_[rand_i][rand_j])
+            i--;
+        else
+            maze_[rand_i][rand_j] = true;
+    }
+
+    return maze_;
+}
+
+const std::vector< std::vector<bool> >& mazeGenerator::getMaze() const
+{
+    return maze_;
+}
+
+void mazeGenerator::show() const
+{
+    for (const std::vector<bool> &row : maze_)
+    {
+        for (bool p : row) std::cout << p;
+        std::cout << std::endl;
     }
 }
 
 bool mazeGenerator::getPos(const uint row, const uint col) const
 {
-    return data_[row*cols_ + col];
+    return maze_[row][col];
 }
