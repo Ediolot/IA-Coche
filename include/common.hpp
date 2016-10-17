@@ -68,6 +68,6 @@ enum scroll {
 #define GRAY                al_map_rgb( 26, 26, 26)
 #define BACKGROUND_COLOR    al_map_rgb(226,230,235)
 #define NEUTRAL_TILE_COLOR  al_map_rgb( 63, 64, 65)
-#define WATER_TILE_COLOR    al_map_rgb(  0,137,123)
+#define WATER_TILE_COLOR    al_map_rgb(200,100,50)
 
 #endif
