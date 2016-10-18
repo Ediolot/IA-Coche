@@ -63,8 +63,7 @@ class map {
 
         // Append the map's vertices points to a vector
         void appendVertices(
-            std::vector<ALLEGRO_VERTEX> &floor,
-            std::vector<ALLEGRO_VERTEX> &obs,
+            std::vector<ALLEGRO_VERTEX> &v,
             const double cx,
             const double cy,
             const double tile_size,

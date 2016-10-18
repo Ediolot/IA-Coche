@@ -66,29 +66,27 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &floor, std::vector<ALLEGRO_VERTEX> &obs, const double cx, const double cy, const double width, const double border, const double max_x, const double max_y) const
+void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double border, const double max_x, const double max_y) const
 {
     // The tile is drawed using two triangles
     double border_px = border*width;
     double width_2   = width/2;
 
     ALLEGRO_VERTEX points[8] = {
-        {float((cx - width_2)+border_px), float((cy + width_2)-border_px), 0.0f,  0, 32, PURE_WHITE},
-        {float((cx + width_2)-border_px), float((cy + width_2)-border_px), 0.0f, 32, 32, PURE_WHITE},
-        {float((cx + width_2)-border_px), float((cy - width_2)+border_px), 0.0f, 32,  0, PURE_WHITE},
-        {float((cx - width_2)+border_px), float((cy - width_2)+border_px), 0.0f,  0,  0, PURE_WHITE}
+        {float((cx - width_2)+border_px), float((cy - width_2)+border_px), 0.0f, isWater() ? 32 :  96, 160, PURE_WHITE},
+        {float((cx + width_2)-border_px), float((cy - width_2)+border_px), 0.0f, isWater() ? 64 : 128, 160, PURE_WHITE},
+        {float((cx + width_2)-border_px), float((cy + width_2)-border_px), 0.0f, isWater() ? 64 : 128, 192, PURE_WHITE},
+        {float((cx - width_2)+border_px), float((cy + width_2)-border_px), 0.0f, isWater() ? 32 :  96, 192, PURE_WHITE}
     };
-
-    std::vector<ALLEGRO_VERTEX> *v = isWater() ? &obs : &floor;
 
     if (points[0].y >= 0 && points[2].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
     {
-        v->push_back(points[0]);
-        v->push_back(points[1]);
-        v->push_back(points[3]);
-        v->push_back(points[2]);
-        v->push_back(points[1]);
-        v->push_back(points[3]);
+        v.push_back(points[3]);
+        v.push_back(points[2]);
+        v.push_back(points[0]);
+        v.push_back(points[1]);
+        v.push_back(points[2]);
+        v.push_back(points[0]);
     }
 }
 
