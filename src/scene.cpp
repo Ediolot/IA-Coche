@@ -59,9 +59,6 @@ void scene::draw()
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
-    // LOCK
-    al_lock_bitmap(al_get_target_bitmap(), ALLEGRO_PIXEL_FORMAT_ANY, 0);
-
     // DRAW
     if (!show_menu_)
     {
@@ -69,9 +66,6 @@ void scene::draw()
         al_draw_prim(vertices_text2.data(), nullptr, wall_image, 0, vertices_text2.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
     }
-
-    // UNLOCK
-    al_unlock_bitmap(al_get_target_bitmap());
 
     // MENU
     if (show_menu_)
