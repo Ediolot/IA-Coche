@@ -1,7 +1,5 @@
 #include "../include/images.hpp"
 
-/* http://opengameart.org/content/pixel-platformer-tile-set */
-
 ///////////////// GLOBAL FONTS ///////////////
 ALLEGRO_BITMAP *sprute_image = nullptr;
 ALLEGRO_BITMAP *arrow_image = nullptr;

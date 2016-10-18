@@ -17,12 +17,11 @@
 #include "../include/images.hpp"
 
 ///////////////// DEFAULT OPTIONS /////////////////
-const double FPS         = 60;
-const double scrollSpeed = 650;
+const double FPS               = 60;
+const double scrollSpeed       = 650;
 const double map_separation    = 0.08;
-const double tiles_separation  = 0.0;
-const int    SCREEN_W    = 800;
-const int    SCREEN_H    = 700;
+const int    SCREEN_W          = 800;
+const int    SCREEN_H          = 700;
 
 ////////////////// SCENE RENDER ///////////////////
 void updateMovement(scene &s)
@@ -82,7 +81,7 @@ int main(int argc, char *argv[])
     al_register_event_source(event_queue, al_get_mouse_event_source());
 
     // VARIABLES
-    scene main_scene(SCREEN_W, SCREEN_H, tiles_separation, map_separation);
+    scene main_scene(SCREEN_W, SCREEN_H, map_separation);
 
     // START REDRAW TIMER
     al_start_timer(redraw_timer);

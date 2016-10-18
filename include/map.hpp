@@ -36,6 +36,7 @@
 #include "tile.hpp"
 #include "mouse.hpp"
 #include "mazeGenerator.hpp"
+#include "images.hpp"
 
 class map {
 
@@ -44,7 +45,6 @@ class map {
     private:
 
         std::vector<tile> tiles_;  // Tiles
-        double tiles_separation_;  // Separation between tiles (%)
         uint rows_;
         uint cols_;
 
@@ -56,14 +56,12 @@ class map {
 
     public:
 
-        map(const uint rows, const uint cols, const double obstacles, const double separation);
+        map(const uint rows, const uint cols, const double obstacles);
         virtual ~map();
 
         void rebuild(const uint rows, const uint cols);
 
-        // Append the map's vertices points to a vector
-        void appendVertices(
-            std::vector<ALLEGRO_VERTEX> &v,
+        void draw(
             const double cx,
             const double cy,
             const double tile_size,

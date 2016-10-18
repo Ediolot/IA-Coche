@@ -2,9 +2,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint rows, const uint cols, const double obstacles, const double separation):
+map::map(const uint rows, const uint cols, const double obstacles):
     tiles_(),
-    tiles_separation_(separation),
     rows_(0),
     cols_(0),
     cx_(0),
@@ -47,8 +46,9 @@ void map::rebuild(const uint rows, const uint cols)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double tile_size, const double max_x, const double max_y)
+void map::draw(const double cx, const double cy, const double max_x, const double max_y)
 {
+    std::vector<ALLEGRO_VERTEX> v;
     tile_size_ = tile_size;
     cx_ = cx;
     cy_ = cy;
@@ -67,8 +67,10 @@ void map::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const 
             double x = left_corner_x + tile_size_*j;
             double y = top_corner_y + tile_size_*i;
 
-            tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_, tiles_separation_, max_x, max_y);
+            tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_, max_x, max_y);
         }
+
+    al_draw_prim(v.data(), nullptr, sprute_image, 0, v.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

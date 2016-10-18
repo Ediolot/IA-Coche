@@ -66,17 +66,16 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double border, const double max_x, const double max_y) const
+void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const
 {
     // The tile is drawed using two triangles
-    double border_px = border*width;
     double width_2   = width/2;
 
     ALLEGRO_VERTEX points[8] = {
-        {float((cx - width_2)+border_px), float((cy - width_2)+border_px), 0.0f, isWater() ? 32 :  96, 160, PURE_WHITE},
-        {float((cx + width_2)-border_px), float((cy - width_2)+border_px), 0.0f, isWater() ? 64 : 128, 160, PURE_WHITE},
-        {float((cx + width_2)-border_px), float((cy + width_2)-border_px), 0.0f, isWater() ? 64 : 128, 192, PURE_WHITE},
-        {float((cx - width_2)+border_px), float((cy + width_2)-border_px), 0.0f, isWater() ? 32 :  96, 192, PURE_WHITE}
+        {float(cx - width_2), float(cy - width_2), 0.f, isWater() ? 32.f :  96.f, 160.f, PURE_WHITE},
+        {float(cx + width_2), float(cy - width_2), 0.f, isWater() ? 63.f : 127.f, 160.f, PURE_WHITE},
+        {float(cx + width_2), float(cy + width_2), 0.f, isWater() ? 63.f : 127.f, 191.f, PURE_WHITE},
+        {float(cx - width_2), float(cy + width_2), 0.f, isWater() ? 32.f :  96.f, 191.f, PURE_WHITE}
     };
 
     if (points[0].y >= 0 && points[2].y <= max_y && points[0].x <= max_x && points[2].x >= 0)

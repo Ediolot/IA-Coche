@@ -54,7 +54,7 @@ class scene {
         scrollbar obstacles_;
 
     public:
-        scene(const double screen_w, const double screen_h, const double tiles_separation, const double map_separation);
+        scene(const double screen_w, const double screen_h, const double map_separation);
         virtual ~scene();
 
         // Dibuja los elementos de la escena

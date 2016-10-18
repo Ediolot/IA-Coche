@@ -2,8 +2,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-scene::scene(const double screen_w, const double screen_h, const double tiles_separation, const double map_separation):
-    tile_map_(20, 20, 0.2, tiles_separation),
+scene::scene(const double screen_w, const double screen_h, const double map_separation):
+    tile_map_(250, 250, 0.2),
     map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
@@ -26,8 +26,8 @@ scene::scene(const double screen_w, const double screen_h, const double tiles_se
 
     algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
 
-    width_("Grid width ", ubuntu_mono_font_40, 1, 100, 20),
-    height_("Grid height", ubuntu_mono_font_40, 1, 100, 20),
+    width_("Grid width ", ubuntu_mono_font_40, 1, 250, 20),
+    height_("Grid height", ubuntu_mono_font_40, 1, 250, 20),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL, 0.2)
@@ -53,16 +53,13 @@ void scene::draw()
     double w_size = screen_w_/tile_map_.getNCols();
     double sq_size = (w_size*tile_map_.getNRows() > screen_h_ ? h_size : w_size)*zoom_*(1-map_separation_);
 
-    if (!show_menu_)
-        tile_map_.appendVertices(vertices, cx, cy, sq_size, draw_w, screen_h_);
-
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
     // DRAW
     if (!show_menu_)
     {
-        al_draw_prim(vertices.data(), nullptr, sprute_image, 0, vertices.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
+        tile_map_.draw(cx, cy, sq_size, draw_w, screen_h_);
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
     }
 
