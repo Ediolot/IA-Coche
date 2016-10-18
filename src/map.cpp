@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint rows, const uint cols, const double obstacles):
+map::map(const uint rows, const uint cols, const double tile_size, const double obstacles):
     tiles_(),
     rows_(0),
     cols_(0),
@@ -11,7 +11,7 @@ map::map(const uint rows, const uint cols, const double obstacles):
     tile_size_(0),
     generator_()
 {
-    rebuild(rows, cols);
+    rebuild(rows, cols, tile_size);
     generate(obstacles);
 }
 
@@ -46,17 +46,11 @@ void map::rebuild(const uint rows, const uint cols)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::draw(const double cx, const double cy, const double max_x, const double max_y)
+void map::draw()
 {
     std::vector<ALLEGRO_VERTEX> v;
-    tile_size_ = tile_size;
-    cx_ = cx;
-    cy_ = cy;
-
-    const double width = tile_size_*cols_;
-    const double height = tile_size_*rows_;
-    const double left_corner_x = cx_ - (width/2)  + tile_size_/2;
-    const double top_corner_y  = cy_ - (height/2) + tile_size_/2;
+    const double left_corner_x = cx_ - (width_/2)  + tile_size_/2;
+    const double top_corner_y  = cy_ - (height_/2) + tile_size_/2;
 
     // Reserve spaces for all the tiles in the vector
     v.reserve(v.size() + 4*rows_*cols_);
@@ -64,10 +58,15 @@ void map::draw(const double cx, const double cy, const double max_x, const doubl
     for (uint i=0; i<rows_; ++i)
         for (uint j=0; j<cols_; ++j)
         {
-            double x = left_corner_x + tile_size_*j;
-            double y = top_corner_y + tile_size_*i;
+            const double x = left_corner_x + tile_size_*j;
+            const double y = top_corner_y  + tile_size_*i;
 
-            tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_, max_x, max_y);
+            if ((x+tiles_size_/2) >= 0     &&
+                (y+tiles_size_/2) <= max_y &&
+                (x-tiles_size_/2) <= max_x &&
+                (y-tiles_size_/2) >= 0)
+
+                tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_);
         }
 
     al_draw_prim(v.data(), nullptr, sprute_image, 0, v.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
@@ -118,12 +117,16 @@ void map::neutralizeAllTiles()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::checkClick()
+void map::update(const double cx, const double cy, const double max_x, const double max_y, const double tile_size)
 {
+    tile_size_ = tile_size;
+    width_  = tile_size_*cols_;
+    height_ = tile_size_*rows_;
+    cx_ = cx;
+    cy_ = cy;
+
     if (mouse.isPressed(1) || mouse.isPressed(2))
     {
-        const double width = tile_size_*cols_;
-        const double height = tile_size_*rows_;
         const double left_corner_x = cx_ - (width/2)  + tile_size_/2;
         const double top_corner_y  = cy_ - (height/2) + tile_size_/2;
         int j = std::round((mouse.getX()-left_corner_x)/tile_size_);

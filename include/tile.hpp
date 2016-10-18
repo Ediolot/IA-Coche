@@ -48,9 +48,7 @@ class tile {
             std::vector<ALLEGRO_VERTEX> &v,
             const double cx,
             const double cy,
-            const double width,
-            const double max_x,
-            const double max_y
+            const double width
         ) const;
 
         // Change the tile color

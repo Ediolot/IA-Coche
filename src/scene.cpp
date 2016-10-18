@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 scene::scene(const double screen_w, const double screen_h, const double map_separation):
-    tile_map_(250, 250, 0.2),
+    tile_map_(250, 250, 0.2, 0),
     map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
@@ -46,12 +46,14 @@ void scene::draw()
 {
     std::vector<ALLEGRO_VERTEX> vertices;
 
-    double draw_w = screen_w_-60;
-    double cx =    draw_w/2.0 + inc_x_;
-    double cy = screen_h_/2.0 + inc_y_;
-    double h_size = screen_h_/tile_map_.getNRows();
-    double w_size = screen_w_/tile_map_.getNCols();
-    double sq_size = (w_size*tile_map_.getNRows() > screen_h_ ? h_size : w_size)*zoom_*(1-map_separation_);
+    double panel_w = 60;
+    double panel_x = screen_h_ - panel_w;
+    double cx      = draw_w   /2.0 + inc_x_;
+    double cy      = screen_h_/2.0 + inc_y_;
+
+    double cols_size = screen_h_/tile_map_.getNRows();
+    double rows_size = screen_w_/tile_map_.getNCols();
+    double tile_size = (screen_w_ > screen_h_ ? cols_size : rows_size)*(1-map_separation_);
 
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
@@ -59,15 +61,15 @@ void scene::draw()
     // DRAW
     if (!show_menu_)
     {
-        tile_map_.draw(cx, cy, sq_size, draw_w, screen_h_);
-        al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
+        tile_map_.draw(cx, cy, panel_x, screen_h_, tile_size);
+        al_draw_filled_rectangle(panel_x, 0, screen_w_, screen_h_, PURE_WHITE);
     }
 
     // MENU
     if (show_menu_)
         drawMenu();
     else
-        drawSimMenu(vertices.size());
+        drawSimMenu();
 
 }
 
@@ -88,7 +90,6 @@ void scene::drawSimMenu(const uint triangles)
         mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 
     // TEXT & DEBUG
-    al_draw_text(caviar_font_16, BLACK, 100, 10,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(triangles)).c_str());
     displayFPS(caviar_font_16);
 }
 

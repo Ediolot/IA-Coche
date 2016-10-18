@@ -56,18 +56,12 @@ class map {
 
     public:
 
-        map(const uint rows, const uint cols, const double obstacles);
+        map(const uint rows, const uint cols, const double tile_size, const double obstacles);
         virtual ~map();
 
         void rebuild(const uint rows, const uint cols);
 
-        void draw(
-            const double cx,
-            const double cy,
-            const double tile_size,
-            const double max_x,
-            const double max_y
-        );
+        void draw();
 
         // Generate map elements
         void generate(const double obstacles);
@@ -84,7 +78,7 @@ class map {
         uint getNRows() const;
         uint getNCols() const;
 
-        void checkClick();
+        void update(const double cx, const double cy, const double max_x, const double max_y, const double tile_size);
 };
 
 #endif

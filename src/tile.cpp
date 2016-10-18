@@ -66,10 +66,10 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width, const double max_x, const double max_y) const
+void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const double cy, const double width) const
 {
     // The tile is drawed using two triangles
-    double width_2   = width/2;
+    double width_2 = width/2;
 
     ALLEGRO_VERTEX points[8] = {
         {float(cx - width_2), float(cy - width_2), 0.f, isWater() ? 32.f :  96.f, 160.f, PURE_WHITE},
@@ -78,15 +78,12 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
         {float(cx - width_2), float(cy + width_2), 0.f, isWater() ? 32.f :  96.f, 191.f, PURE_WHITE}
     };
 
-    if (points[0].y >= 0 && points[2].y <= max_y && points[0].x <= max_x && points[2].x >= 0)
-    {
-        v.push_back(points[3]);
-        v.push_back(points[2]);
-        v.push_back(points[0]);
-        v.push_back(points[1]);
-        v.push_back(points[2]);
-        v.push_back(points[0]);
-    }
+    v.push_back(points[3]);
+    v.push_back(points[2]);
+    v.push_back(points[0]);
+    v.push_back(points[1]);
+    v.push_back(points[2]);
+    v.push_back(points[0]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
