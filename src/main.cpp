@@ -16,22 +16,6 @@
 #include "../include/mouse.hpp"
 #include "../include/images.hpp"
 
-///////////////// DEFAULT OPTIONS /////////////////
-const double FPS               = 60;
-const double scrollSpeed       = 650;
-const double map_separation    = 0.08;
-const int    SCREEN_W          = 800;
-const int    SCREEN_H          = 700;
-
-////////////////// SCENE RENDER ///////////////////
-void updateMovement(scene &s)
-{
-    if (keysPress[ALLEGRO_KEY_W]) s.moveY(+scrollSpeed/FPS);
-    if (keysPress[ALLEGRO_KEY_S]) s.moveY(-scrollSpeed/FPS);
-    if (keysPress[ALLEGRO_KEY_A]) s.moveX(+scrollSpeed/FPS);
-    if (keysPress[ALLEGRO_KEY_D]) s.moveX(-scrollSpeed/FPS);
-}
-
 ////////////////////// MAIN ///////////////////////
 int main(int argc, char *argv[])
 {
@@ -120,8 +104,6 @@ int main(int argc, char *argv[])
         // Update screen
         if (redraw && al_is_event_queue_empty(event_queue)) {
             redraw = false;
-
-            updateMovement(main_scene);
             main_scene.update();
             main_scene.draw();
             al_flip_display();

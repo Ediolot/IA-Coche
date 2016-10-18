@@ -8,6 +8,7 @@
 #include <allegro5/allegro.h>
 #include <string>
 #include "mouse.hpp"
+#include "config.hpp"
 
 typedef unsigned int uint;
 
@@ -22,13 +23,6 @@ extern bool keysPress[ALLEGRO_KEY_MAX];
 ///////////////// MOUSE ////////////////
 
 extern _mouse mouse;
-
-///////////////// VERSION ////////////////
-
-const uint VERSION_MAYOR = 0;
-const uint VERSION_MINOR = 1;
-const std::string STAGE  = "Alpha";
-const std::string NAME   = "IA";
 
 ///////////////// DIRECTIONS ////////////////
 

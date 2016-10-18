@@ -20,11 +20,6 @@ class scene {
         double map_separation_; // Tiles map's separation from the borders of the window
         double screen_w_;
         double screen_h_;
-        double inc_x_;
-        double inc_y_;
-        double zoom_;
-
-        double last_mouse_z_;
 
         bool show_menu_;
         bool isplaying_;
@@ -69,7 +64,7 @@ class scene {
 
     private:
         void drawMenu();
-        void drawSimMenu(const uint triangles);
+        void drawSim();
 };
 
 #endif

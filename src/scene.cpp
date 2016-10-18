@@ -3,14 +3,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 scene::scene(const double screen_w, const double screen_h, const double map_separation):
-    tile_map_(250, 250, 0.2, 0),
+    tile_map_(),
     map_separation_(map_separation),
     screen_w_(screen_w),
     screen_h_(screen_h),
-    inc_x_(0),
-    inc_y_(0),
-    zoom_(1),
-    last_mouse_z_(0),
     show_menu_(false),
     isplaying_(false),
     istracking_(false),
@@ -26,13 +22,14 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
 
     algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
 
-    width_("Grid width ", ubuntu_mono_font_40, 1, 250, 20),
-    height_("Grid height", ubuntu_mono_font_40, 1, 250, 20),
+    width_("Grid width ", ubuntu_mono_font_40, 1, 250, STARTING_SIZE_W),
+    height_("Grid height", ubuntu_mono_font_40, 1, 250, STARTING_SIZE_H),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL, 0.2)
 {
     resize(screen_w_, screen_h_);
+    tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,39 +41,23 @@ scene::~scene()
 
 void scene::draw()
 {
-    std::vector<ALLEGRO_VERTEX> vertices;
-
-    double panel_w = 60;
-    double panel_x = screen_h_ - panel_w;
-    double cx      = draw_w   /2.0 + inc_x_;
-    double cy      = screen_h_/2.0 + inc_y_;
-
-    double cols_size = screen_h_/tile_map_.getNRows();
-    double rows_size = screen_w_/tile_map_.getNCols();
-    double tile_size = (screen_w_ > screen_h_ ? cols_size : rows_size)*(1-map_separation_);
-
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
-
-    // DRAW
-    if (!show_menu_)
-    {
-        tile_map_.draw(cx, cy, panel_x, screen_h_, tile_size);
-        al_draw_filled_rectangle(panel_x, 0, screen_w_, screen_h_, PURE_WHITE);
-    }
 
     // MENU
     if (show_menu_)
         drawMenu();
     else
-        drawSimMenu();
-
+        drawSim();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void scene::drawSimMenu(const uint triangles)
+void scene::drawSim()
 {
+    tile_map_.draw();
+    al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
+
     tracking_.draw();
     restart_.draw();
     step_.draw();
@@ -134,16 +115,11 @@ void scene::update()
         speed_.update();
         tracking_.update();
         step_.update();
+        tile_map_.update();
 
         double speed = speed_.getValue();
 
-        if (random_.wasPressed())
-        {
-            inc_x_ = inc_y_ = 0;
-            zoom_ = 1;
-            tile_map_.rebuild(width_.getValue(), height_.getValue());
-            tile_map_.generate(obstacles_.getValue());
-        }
+        if (random_.wasPressed()  ) tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
         if (play_.wasPressed()    ) isplaying_  = !isplaying_;
         if (tracking_.wasPressed()) istracking_ = !istracking_;
         if (speed < 0.001         ) isplaying_  = false;
@@ -155,14 +131,6 @@ void scene::update()
             play_.setImage(isplaying_ ? pause_image : play_image);
         else
             play_.setImage(play_disabled_image);
-
-        // Clicked on map
-        tile_map_.checkClick();
-
-        // ZOOM
-        if (mouse.insideBox(0,0,screen_w_-60,screen_h_))
-            zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
-        zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
     }
 
     // ESC KEY
@@ -173,23 +141,6 @@ void scene::update()
         show_menu_ = !show_menu_;
         esc_was_pressed_ = false;
     }
-
-
-    last_mouse_z_ = mouse.getZ();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void scene::moveX(const double x)
-{
-    inc_x_ += x;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void scene::moveY(const double y)
-{
-    inc_y_ += y;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +149,13 @@ void scene::resize(const double w, const double h)
 {
     screen_w_ = w;
     screen_h_ = h;
+
+    tile_map_.moveTo(
+        (screen_w_-60)/2.0,
+        screen_h_/2.0,
+        (screen_w_-60),
+        screen_h_
+    );
 
     width_.moveTo(150, 130);
     height_.moveTo(150, 220);

@@ -38,7 +38,11 @@ class _mouse {
 
         void realase(const ALLEGRO_EVENT &ev);
 
-        bool isPressed(uint button) const;
+        bool isPressed(uint button) const; // TODO change pressed por down
+
+        bool leftDown() const;
+        bool rightDown() const;
+        bool centerDown() const;
 
         bool insideBox(const double x1, const double y1, const double x2, const double y2) const;
 

@@ -2,17 +2,27 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-map::map(const uint rows, const uint cols, const double tile_size, const double obstacles):
+map::map():
+    map(0,0,0)
+{}
+
+////////////////////////////////////////////////////////////////////////////////
+
+map::map(const uint rows, const uint cols, const double obstacles):
     tiles_(),
     rows_(0),
     cols_(0),
+    obstacles_(0),
     cx_(0),
     cy_(0),
+    width_(0),
+    height_(0),
     tile_size_(0),
+    zoom_(1),
+    last_mouse_z_(0),
     generator_()
 {
-    rebuild(rows, cols, tile_size);
-    generate(obstacles);
+    rebuild(rows, cols, obstacles);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,10 +32,14 @@ map::~map()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::rebuild(const uint rows, const uint cols)
+void map::rebuild(const uint rows, const uint cols, const double obstacles)
 {
     rows_ = rows;
     cols_ = cols;
+
+    inc_x_ = 0;
+    inc_y_ = 0;
+    zoom_ = 1;
 
     tiles_.clear();
     tiles_.resize(rows*cols);
@@ -42,6 +56,9 @@ void map::rebuild(const uint rows, const uint cols)
             tiles_[i*cols_+j].addFriend( accessTile(i, j, dir::LEFT) , dir::LEFT);
             tiles_[i*cols_+j].addFriend( accessTile(i, j, dir::DOWN) , dir::DOWN);
         }
+
+    generate(obstacles);
+    moveTo(cx_, cy_, width_, height_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,25 +66,29 @@ void map::rebuild(const uint rows, const uint cols)
 void map::draw()
 {
     std::vector<ALLEGRO_VERTEX> v;
-    const double left_corner_x = cx_ - (width_/2)  + tile_size_/2;
-    const double top_corner_y  = cy_ - (height_/2) + tile_size_/2;
+
+    const double p_x = cx_-(rows_ - 1)*tile_size_*zoom_/2; // Left top corner coord.
+    const double p_y = cy_-(cols_ - 1)*tile_size_*zoom_/2;
 
     // Reserve spaces for all the tiles in the vector
     v.reserve(v.size() + 4*rows_*cols_);
 
     for (uint i=0; i<rows_; ++i)
+    {
         for (uint j=0; j<cols_; ++j)
         {
-            const double x = left_corner_x + tile_size_*j;
-            const double y = top_corner_y  + tile_size_*i;
+            const double x = p_x + tile_size_*j*zoom_+inc_x_;
+            const double y = p_y + tile_size_*i*zoom_+inc_y_;
+            const double max_x = cx_ + width_ /2;
+            const double max_y = cy_ + height_/2;
 
-            if ((x+tiles_size_/2) >= 0     &&
-                (y+tiles_size_/2) <= max_y &&
-                (x-tiles_size_/2) <= max_x &&
-                (y-tiles_size_/2) >= 0)
+            if ((x+tile_size_) >= 0     &&
+                (x-tile_size_) <= max_x &&
+                (y-tile_size_) <= max_y)
 
-                tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_);
+                tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_*zoom_);
         }
+    }
 
     al_draw_prim(v.data(), nullptr, sprute_image, 0, v.size(), ALLEGRO_PRIM_TRIANGLE_LIST);
 }
@@ -101,6 +122,7 @@ tile *map::accessTile(const uint row, const uint col, const dir direction)
 
 void map::generate(const double obstacles)
 {
+    obstacles_ = obstacles;
     generator_.randomize(rows_, cols_, obstacles);
 
     for (uint i=0; i<(rows_*cols_); ++i)
@@ -117,25 +139,47 @@ void map::neutralizeAllTiles()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::update(const double cx, const double cy, const double max_x, const double max_y, const double tile_size)
+void map::moveTo(const double cx, const double cy, const double width, const double height)
 {
-    tile_size_ = tile_size;
-    width_  = tile_size_*cols_;
-    height_ = tile_size_*rows_;
+    double cols_size = width/rows_;
+    double rows_size = height/cols_;
+    tile_size_ = (width < height ? cols_size : rows_size);
+
     cx_ = cx;
     cy_ = cy;
+    width_ = width;
+    height_ = height;
+}
 
-    if (mouse.isPressed(1) || mouse.isPressed(2))
+////////////////////////////////////////////////////////////////////////////////
+
+void map::update()
+{
+    if (mouse.insideBox(cx_-width_/2,cy_-height_/2,width_,height_))
     {
-        const double left_corner_x = cx_ - (width/2)  + tile_size_/2;
-        const double top_corner_y  = cy_ - (height/2) + tile_size_/2;
-        int j = std::round((mouse.getX()-left_corner_x)/tile_size_);
-        int i = std::round((mouse.getY()-top_corner_y)/tile_size_);
+        zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
+        zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
 
-        tile *t;
-        if (i>=0 && j>=0 && (t = accessTile(i,j)))
-            t->setType(mouse.isPressed(1) ? tileType::WATER : tileType::NEUTRAL);
+        if (mouse.leftDown() || mouse.rightDown())
+        {
+            const double p_x = cx_-(rows_ - 1)*tile_size_*zoom_/2 + inc_x_; // Left top corner coord.
+            const double p_y = cy_-(cols_ - 1)*tile_size_*zoom_/2 + inc_y_;
+
+            int j = std::round((mouse.getX()-p_x)/(tile_size_*zoom_));
+            int i = std::round((mouse.getY()-p_y)/(tile_size_*zoom_));
+
+            tile *t;
+            if (i>=0 && j>=0 && (t = accessTile(i,j)))
+                t->setType(mouse.leftDown() ? tileType::WATER : tileType::NEUTRAL);
+        }
+
+        if (keysPress[ALLEGRO_KEY_W]) inc_y_ += scrollSpeed/FPS;
+        if (keysPress[ALLEGRO_KEY_S]) inc_y_ -= scrollSpeed/FPS;
+        if (keysPress[ALLEGRO_KEY_A]) inc_x_ += scrollSpeed/FPS;
+        if (keysPress[ALLEGRO_KEY_D]) inc_x_ -= scrollSpeed/FPS;
     }
+
+    last_mouse_z_ = mouse.getZ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

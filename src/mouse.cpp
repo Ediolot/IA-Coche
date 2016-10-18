@@ -91,3 +91,18 @@ bool _mouse::isPressed(uint button) const
         default: return false;
     }
 }
+
+bool _mouse::leftDown() const
+{
+    return button_1_;
+}
+
+bool _mouse::rightDown() const
+{
+    return button_2_;
+}
+
+bool _mouse::centerDown() const
+{
+    return button_3_;
+}
