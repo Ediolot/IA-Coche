@@ -63,9 +63,9 @@ class label {
 
         ~label();
 
-        void resize(const double x, const double y, const double w = 0, const double h = 0);
-        void update();
-        void draw();
+        virtual void resize(const double x, const double y, const double w = 0, const double h = 0);
+        virtual void update();
+        virtual void draw();
 
         /* Executes function when a click is detected in the object area */
         void onMouseClick(const std::function<void()> &f);
