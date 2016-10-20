@@ -59,7 +59,7 @@ class label {
 
         label(const std::string &label,
               ALLEGRO_FONT  *font  = nullptr,
-              ALLEGRO_COLOR *color = nullptr)
+              ALLEGRO_COLOR *color = nullptr);
 
         ~label();
 

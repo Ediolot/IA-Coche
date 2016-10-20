@@ -18,7 +18,21 @@ class button : public label {
 
     public:
 
-        button(const std::string &label, ALLEGRO_FONT *font, const double animation_time);
+        button(const std::string &label,
+              ALLEGRO_BITMAP *img,
+              ALLEGRO_FONT   *font  = nullptr,
+              ALLEGRO_COLOR  *color = nullptr,
+              const double animation_time = .0 );
+
+        button(ALLEGRO_BITMAP *img,
+              ALLEGRO_FONT   *font  = nullptr,
+              ALLEGRO_COLOR  *color = nullptr);
+              const double animation_time = .0 );
+
+        button(const std::string &label,
+              ALLEGRO_FONT  *font  = nullptr,
+              ALLEGRO_COLOR *color = nullptr);
+              const double animation_time = .0 );
 
         ~button();
 
