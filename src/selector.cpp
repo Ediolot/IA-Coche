@@ -1,12 +1,10 @@
 #include "../include/selector.hpp"
 
-selector::selector(const std::string &label, ALLEGRO_FONT *font, const std::vector<std::string>& list):
-    font_(font),
-    label_(label),
+selector::selector(const std::vector<std::string>& list, const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color):
+    label(text, img, font, color),
     list_(list),
     selected_(0),
-    x_(0),
-    y_(0),
+    biggest_item_w_(.0),
     r_mouse_inside_(false),
     r_mouse_pressed_(false),
     r_mouse_realased_(false),
@@ -19,16 +17,23 @@ selector::selector(const std::string &label, ALLEGRO_FONT *font, const std::vect
         if (list[i].size() > list[index].size())
             index = i;
 
-    w_ = al_get_text_width(font_, list[index].c_str());
+    biggest_item_w_ = al_get_text_width(font_, list[index].c_str());
 }
+
+selector::selector(const std::vector<std::string>& list, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color):
+    selector(list, "", img, font, color)
+{}
+
+selector::selector(const std::vector<std::string>& list, const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR *color):
+    selector(list, text, nullptr, font, color)
+{}
 
 selector::~selector()
 {}
 
-void selector::moveTo(const double x, const double y)
+void selector::resize(const double x, const double y, const double w, const double h)
 {
-    x_ = x;
-    y_ = y;
+    label::resize();
 }
 
 void selector::update()

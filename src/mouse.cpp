@@ -91,3 +91,13 @@ bool _mouse::isPressed(uint button) const
         default: return false;
     }
 }
+
+void setShouldBeHand(bool val = true)
+{
+    should_be_hand_ = val;
+}
+
+bool shouldBeHand() const
+{
+    return should_be_hand_;
+}

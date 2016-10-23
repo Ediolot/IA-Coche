@@ -3,6 +3,7 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
 #include <string>
 #include <functional>
 #include "common.hpp"
@@ -20,35 +21,40 @@ enum vAling {
 
 class label {
 
-    private:
+    protected:
 
         ALLEGRO_COLOR *color_;
         ALLEGRO_FONT *font_;
         ALLEGRO_BITMAP *img_;
-        std::string label_;
+        std::string text_;
 
         double x_;
         double y_;
         double w_;
         double h_;
 
-        bool mouse_over_;
-        uint press_state_;
+        double text_x_;
+        double text_y_;
+        double img_x_;
+        double img_y_;
 
-        double label_w_;
-        double label_h_;
+        double text_w_;
+        double text_h_;
         double img_w_;
         double img_h_;
 
         vAling v_aling_;
         hAling h_aling_;
 
+        bool mouse_over_;
+        uint press_state_;
+
         void (*onclick_)();
         void (*onmouseover_)();
 
     public:
 
-        label(const std::string &label,
+        label(const std::string &text,
               ALLEGRO_BITMAP *img,
               ALLEGRO_FONT   *font  = nullptr,
               ALLEGRO_COLOR  *color = nullptr);
@@ -57,7 +63,7 @@ class label {
               ALLEGRO_FONT   *font  = nullptr,
               ALLEGRO_COLOR  *color = nullptr);
 
-        label(const std::string &label,
+        label(const std::string &text,
               ALLEGRO_FONT  *font  = nullptr,
               ALLEGRO_COLOR *color = nullptr);
 
@@ -77,10 +83,15 @@ class label {
         /* Clicked on the last update */
         bool mouseClicked();
 
-        void setLabel(const std::string &label);
+        void setText(const std::string &text);
         void setImg(ALLEGRO_BITMAP *img);
         void setFont(ALLEGRO_FONT *font);
         void setColor(ALLEGRO_FONT *color);
+        void setVerticalTextAling(const vAling v_aling);
+        void setHorizontalTextAling(const hAling h_aling);
+
+        double getMinWidth() const;
+        double getMinHeight() const;
 };
 
 #endif

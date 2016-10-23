@@ -1,12 +1,7 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_primitives.h>
-#include "common.hpp"
-#include "fonts.hpp"
-#include "label"
-#include <string>
+#include "label.hpp"
 
 class button : public label {
 
@@ -18,7 +13,7 @@ class button : public label {
 
     public:
 
-        button(const std::string &label,
+        button(const std::string &text,
               ALLEGRO_BITMAP *img,
               ALLEGRO_FONT   *font  = nullptr,
               ALLEGRO_COLOR  *color = nullptr,
@@ -29,18 +24,15 @@ class button : public label {
               ALLEGRO_COLOR  *color = nullptr);
               const double animation_time = .0 );
 
-        button(const std::string &label,
+        button(const std::string &text,
               ALLEGRO_FONT  *font  = nullptr,
               ALLEGRO_COLOR *color = nullptr);
               const double animation_time = .0 );
 
         ~button();
 
-        void resize(const double x, const double y, const double w = 0, const double h = 0);
-
-        void update();
-
-        void draw();
+        virtual void update();
+        virtual void draw();
 };
 
 #endif
