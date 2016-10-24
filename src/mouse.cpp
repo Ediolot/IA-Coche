@@ -92,12 +92,27 @@ bool _mouse::isPressed(uint button) const
     }
 }
 
-void setShouldBeHand(bool val = true)
+void _mouse::setShouldBeHand(bool val = true)
 {
     should_be_hand_ = val;
 }
 
-bool shouldBeHand() const
+bool _mouse::shouldBeHand() const
 {
     return should_be_hand_;
+}
+
+bool _mouse::leftPressed() const
+{
+    return button_1_;
+}
+
+bool _mouse::rightPressed() const
+{
+    return button_2_;
+}
+
+bool _mouse::centerPressed() const
+{
+    return button_3_;
 }

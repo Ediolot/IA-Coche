@@ -41,6 +41,10 @@ class _mouse {
 
         bool isPressed(uint button) const;
 
+        bool leftPressed() const;
+        bool rightPressed() const;
+        bool centerPressed() const;
+
         bool insideBox(const double x1, const double y1, const double x2, const double y2) const;
 
         void setCursor(const ALLEGRO_SYSTEM_MOUSE_CURSOR id);
