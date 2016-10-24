@@ -92,7 +92,7 @@ bool _mouse::isPressed(uint button) const
     }
 }
 
-void _mouse::setShouldBeHand(bool val = true)
+void _mouse::setShouldBeHand(bool val)
 {
     should_be_hand_ = val;
 }

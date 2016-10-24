@@ -92,11 +92,6 @@ void scene::drawSimMenu(const uint triangles)
     random_.draw();
     speed_.draw();
 
-    if (restart_.mouseOver() || play_.mouseOver() || random_.mouseOver() || step_.mouseOver() || tracking_.mouseOver() )
-        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
-    else
-        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
-
     // TEXT & DEBUG
     al_draw_text(caviar_font_16, BLACK, 100, 10,ALLEGRO_ALIGN_LEFT, ("Triangles: "+std::to_string(triangles)).c_str());
     displayFPS(caviar_font_16);
@@ -112,11 +107,6 @@ void scene::drawMenu()
     width_.draw();
     height_.draw();
 
-    if (quit_.mouseOver() || algorithm_.mouseOverArrow() || width_.mouseOverArrow() || height_.mouseOverArrow())
-        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
-    else
-        mouse.setCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
-
     // TEXT & DEBG
     al_draw_text(caviar_font_16, BLACK, 150, 420, ALLEGRO_ALIGN_LEFT, (std::to_string(int(obstacles_.getValue()*100))+"% Obstacles").c_str());
 }
@@ -125,6 +115,8 @@ void scene::drawMenu()
 
 void scene::update()
 {
+    mouse.setShouldBeHand(false);
+
     if (show_menu_)
     {
         obstacles_.update();
@@ -183,8 +175,8 @@ void scene::update()
         esc_was_pressed_ = false;
     }
 
-
     last_mouse_z_ = mouse.getZ();
+    mouse.setCursor(mouse.shouldBeHand() ? ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK : ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
