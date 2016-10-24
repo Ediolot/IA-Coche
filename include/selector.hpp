@@ -14,18 +14,18 @@ class selector : public numericSelector {
 
     public:
 
-        selector(const std::vector<std::string>& list
+        selector(const std::vector<std::string>& list,
                  const std::string &text,
                  ALLEGRO_BITMAP *img,
                  ALLEGRO_FONT   *font  = nullptr,
                  ALLEGRO_COLOR  *color = nullptr);
 
-        selector(const std::vector<std::string>& list
+        selector(const std::vector<std::string>& list,
                  ALLEGRO_BITMAP *img,
                  ALLEGRO_FONT   *font  = nullptr,
                  ALLEGRO_COLOR  *color = nullptr);
 
-        selector(const std::vector<std::string>& list
+        selector(const std::vector<std::string>& list,
                  const std::string &text,
                  ALLEGRO_FONT  *font  = nullptr,
                  ALLEGRO_COLOR *color = nullptr);
