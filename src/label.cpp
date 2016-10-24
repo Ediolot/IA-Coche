@@ -18,8 +18,8 @@ label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, A
     text_h_(.0),
     img_w_(.0),
     img_h_(.0),
-    v_aling_(vAling::CENTER),
-    h_aling_(hAling::CENTER),
+    v_aling_(dir::CENTER),
+    h_aling_(dir::CENTER),
     mouse_over_(false),
     press_state_(0U),
     onclick_(nullptr),
@@ -54,15 +54,15 @@ void label::resize(const double x, const double y, const double w, const double 
 
     switch (h_aling_)
     {
-        case hAling::LEFT:  img_x_ = 0;                     break;
-        case hAling::RIGHT: img_x_ = w_ - min_w;            break;
-        default:            img_x_ = (w_-text_w_+img_w_)/2; break;
+        case dir::LEFT:  img_x_ = 0;                     break;
+        case dir::RIGHT: img_x_ = w_ - min_w;            break;
+        default:         img_x_ = (w_-text_w_+img_w_)/2; break;
     }
     switch (v_aling_)
     {
-        case vAling::TOP:    img_y_ =    (min_h-img_h_)/2; text_y_ =    (min_h-text_h_)/2; break;
-        case vAling::BOTTOM: img_y_ = h_-(min_h-img_h_)/2; text_y_ = h_-(min_h-text_h_)/2; break;
-        default:             img_y_ =    (h_   -img_h_)/2; text_y_ =    (h_-   text_h_)/2; break;
+        case dir::UP:   img_y_ =    (min_h-img_h_)/2; text_y_ =    (min_h-text_h_)/2; break;
+        case dir::DOWN: img_y_ = h_-(min_h-img_h_)/2; text_y_ = h_-(min_h-text_h_)/2; break;
+        default:        img_y_ =    (h_   -img_h_)/2; text_y_ =    (h_-   text_h_)/2; break;
     }
 
     text_x_ = img_x_ + img_w_;
@@ -147,13 +147,13 @@ void label::setColor(ALLEGRO_COLOR *color)
     color_ = color;
 }
 
-void setVerticalTextAling(const vAling v_aling)
+void setVerticalTextAling(const dir v_aling)
 {
     v_aling_ = v_aling;
     resize(x_, y_, w_, h_);
 }
 
-void setHorizontalTextAling(const hAling h_aling)
+void setHorizontalTextAling(const dir h_aling)
 {
     h_aling_ = h_aling;
     resize(x_, y_, w_, h_);

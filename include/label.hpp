@@ -10,15 +10,6 @@
 #include "fonts.hpp"
 #include "images.hpp"
 
-//TODO mover a common
-enum hAling {
-    LEFT, CENTER, RIGHT
-}
-
-enum vAling {
-    TOP, CENTER, BOT
-}
-
 class label {
 
     protected:
@@ -43,8 +34,8 @@ class label {
         double img_w_;
         double img_h_;
 
-        vAling v_aling_;
-        hAling h_aling_;
+        dir v_aling_;
+        dir h_aling_;
 
         bool mouse_over_;
         uint press_state_;
@@ -87,8 +78,8 @@ class label {
         void setImg(ALLEGRO_BITMAP *img);
         void setFont(ALLEGRO_FONT *font);
         void setColor(ALLEGRO_FONT *color);
-        void setVerticalTextAling(const vAling v_aling);
-        void setHorizontalTextAling(const hAling h_aling);
+        void setVerticalTextAling(const dir v_aling);
+        void setHorizontalTextAling(const dir h_aling);
 
         double getMinWidth() const;
         double getMinHeight() const;
