@@ -108,7 +108,7 @@ void numericSelector::update()
     }
 
     // Right arrow
-    if (!mouse_over_r_)
+    if (!mouse_over_r)
         press_state_r_ = 0;
 
     else
@@ -125,7 +125,7 @@ void numericSelector::update()
     }
 
     // Mouse zoom
-    if (last_mouse_z_ && mouse.insideBox(arrow_l_x, y_, arrow_r_x+(img_w+10), y_+30))
+    if (last_mouse_z_ && mouse.insideBox(arrow_l_x, y_, arrow_r_x+(img_w_+10), y_+30))
         value_ += (mouse.getZ() - last_mouse_z_)*3;
 
     if (value_ > max_) value_ = min_;
