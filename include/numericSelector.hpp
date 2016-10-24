@@ -40,8 +40,8 @@ class numericSelector {
         dir v_aling_;
         dir h_aling_;
 
-        uint press_state_left_;
-        uint press_state_right_;
+        uint press_state_l_;
+        uint press_state_r_;
 
         // NOTE onchange_ ?
 

@@ -19,8 +19,8 @@ numericSelector::numericSelector(const std::string &text, ALLEGRO_BITMAP *img, A
     value_(val),
     v_aling_(dir::CENTER),
     h_aling_(dir::CENTER),
-    press_state_left_(0),
-    press_state_right_(0),
+    press_state_l_(0),
+    press_state_r_(0),
     mouse_over_(false),
     onmouseover_(nullptr),
     last_mouse_z_(.0)
@@ -92,34 +92,34 @@ void numericSelector::update()
 
     // Left arrow
     if (!mouse_over_l)
-        press_state_l = 0;
+        press_state_l_ = 0;
 
     else
     {
-        if (press_state_l==0 && !mouse.leftPressed())
-            press_state_l++;
-        if (press_state_l==1 &&  mouse.leftPressed())
-            press_state_l++;
-        if (press_state_l==2 && !mouse.leftPressed())
+        if (press_state_l_==0 && !mouse.leftPressed())
+            press_state_l_++;
+        if (press_state_l_==1 &&  mouse.leftPressed())
+            press_state_l_++;
+        if (press_state_l_==2 && !mouse.leftPressed())
         {
-            press_state_l=0;
+            press_state_l_=0;
             value_--;
         }
     }
 
     // Right arrow
-    if (!mouse_over_r)
-        press_state_r = 0;
+    if (!mouse_over_r_)
+        press_state_r_ = 0;
 
     else
     {
-        if (press_state_r==0 && !mouse.leftPressed())
-            press_state_r++;
-        if (press_state_r==1 &&  mouse.leftPressed())
-            press_state_r++;
-        if (press_state_r==2 && !mouse.leftPressed())
+        if (press_state_r_==0 && !mouse.leftPressed())
+            press_state_r_++;
+        if (press_state_r_==1 &&  mouse.leftPressed())
+            press_state_r_++;
+        if (press_state_r_==2 && !mouse.leftPressed())
         {
-            press_state_r=0;
+            press_state_r_=0;
             value_++;
         }
     }
