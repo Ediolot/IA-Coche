@@ -185,26 +185,26 @@ void numericSelector::setColor(ALLEGRO_COLOR *color)
     label_.setColor(color);
 }
 
-void setVerticalTextAling(const dir v_aling)
+void numericSelector::setVerticalTextAling(const dir v_aling)
 {
     v_aling_ = v_aling;
     label.setVerticalTextAling(v_aling);
     resize(x_, y_, w_, h_);
 }
 
-void setHorizontalTextAling(const dir h_aling)
+void snumericSelector::setHorizontalTextAling(const dir h_aling)
 {
     h_aling_ = h_aling;
     label.setHorizontalTextAling(h_aling);
     resize(x_, y_, w_, h_);
 }
 
-double getMinWidth() const
+double numericSelector::getMinWidth() const
 {
     return label_.getMinWidth() + img_w_*2 + al_get_text_width(font_, std::to_string(value_).c_string());
 }
 
-double getMinHeight() const
+double numericSelector::getMinHeight() const
 {
     return label_.getMinHeight() > img_h_ ? label_.getMinHeight() : img_h_;
 }
