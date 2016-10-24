@@ -22,12 +22,12 @@ scene::scene(const double screen_w, const double screen_h, const double tiles_se
     step_(step_image),
     tracking_(tracking_image),
 
-    quit_("QUIT", ubuntu_mono_font_40, default_animation_time_),
+    quit_("QUIT", ubuntu_mono_font_40, BLACK, default_animation_time_),
 
-    algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
+    algorithm_({"AAA", "BBBB", "CCCC"}, "Algorithm", ubuntu_mono_font_40, BLACK),
 
-    width_("Grid width ", ubuntu_mono_font_40, 1, 100, 20),
-    height_("Grid height", ubuntu_mono_font_40, 1, 100, 20),
+    width_("Grid width ", ubuntu_mono_font_40, BLACK, 1, 100, 20),
+    height_("Grid height", ubuntu_mono_font_40, BLACK, 1, 100, 20),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL, 0.2)
@@ -208,18 +208,18 @@ void scene::resize(const double w, const double h)
     screen_w_ = w;
     screen_h_ = h;
 
-    width_.moveTo(150, 130);
-    height_.moveTo(150, 220);
-    algorithm_.moveTo(150, 310);
+    width_.resize(150, 130);
+    height_.resize(150, 220);
+    algorithm_.resize(150, 310);
 
-    obstacles_.moveTo(150, 400, screen_w_-300, 5);
-    quit_.moveTo(screen_w_-120, screen_h_-70, 100, 50);
-    speed_.moveTo(screen_w_-30, 50, 5, screen_h_-220);
-    tracking_.moveTo(screen_w_-46, 10, 40, 40);
-    step_.moveTo(screen_w_-45, screen_h_-160, 40, 40);
-    play_.moveTo(screen_w_-45, screen_h_-120, 40, 40);
-    restart_.moveTo(screen_w_-45, screen_h_-80 , 40, 40);
-    random_.moveTo( screen_w_-45, screen_h_-40 , 40, 40);
+    obstacles_.resize(150, 400, screen_w_-300, 5);
+    quit_.resize(screen_w_-120, screen_h_-70, 100, 50);
+    speed_.resize(screen_w_-30, 50, 5, screen_h_-220);
+    tracking_.resize(screen_w_-46, 10, 40, 40);
+    step_.resize(screen_w_-45, screen_h_-160, 40, 40);
+    play_.resize(screen_w_-45, screen_h_-120, 40, 40);
+    restart_.resize(screen_w_-45, screen_h_-80 , 40, 40);
+    random_.resize( screen_w_-45, screen_h_-40 , 40, 40);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

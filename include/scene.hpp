@@ -5,10 +5,9 @@
 #include "common.hpp"
 #include "map.hpp"
 #include "button.hpp"
-#include "button_image.hpp"
 #include "scrollbar.hpp"
 #include "selector.hpp"
-#include "selector_numeric.hpp"
+#include "numericSelector.hpp"
 
 class scene {
 
@@ -32,22 +31,20 @@ class scene {
 
         bool esc_was_pressed_;
 
-        // BUTTONS WITH IMAGES
-        button_image restart_;
-        button_image play_;
-        button_image random_;
-        button_image step_;
-        button_image tracking_;
-
-        // BUTTONS WITH TEXT
+        // BUTTONS
+        button restart_;
+        button play_;
+        button random_;
+        button step_;
+        button tracking_;
         button quit_;
 
         // LIST SELECTORS
         selector algorithm_;
 
         // NUMERIC SELECTORS
-        selector_numeric width_;
-        selector_numeric height_;
+        numericSelector width_;
+        numericSelector height_;
 
         // SCROLLBARS
         scrollbar speed_;
