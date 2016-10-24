@@ -21,12 +21,12 @@ class button : public label {
 
         button(ALLEGRO_BITMAP *img,
               ALLEGRO_FONT   *font  = nullptr,
-              ALLEGRO_COLOR  *color = nullptr);
+              ALLEGRO_COLOR  *color = nullptr,
               const double animation_time = .0 );
 
         button(const std::string &text,
               ALLEGRO_FONT  *font  = nullptr,
-              ALLEGRO_COLOR *color = nullptr);
+              ALLEGRO_COLOR *color = nullptr,
               const double animation_time = .0 );
 
         ~button();
