@@ -66,7 +66,8 @@ int main(int argc, char *argv[])
         !display      ||
         !event_queue  ||
         !loadFonts()  ||
-        !loadImages())
+        !loadImages() ||
+        !loadColors())
     {
         std::cerr << "Failed to create variables!" << std::endl;
         return -1;

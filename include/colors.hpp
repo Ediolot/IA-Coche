@@ -1,0 +1,26 @@
+/*
+    CREATE AND DESTROY GLOBAL VARIABLES FOR THE COLORS
+*/
+
+#ifndef COLORS_HPP
+#define COLORS_HPP
+
+#include <allegro5/allegro.h>
+
+///////////////// GLOBAL COLORS ///////////////
+
+extern ALLEGRO_COLOR PURE_WHITE;
+extern ALLEGRO_COLOR PURE_BLACK;
+extern ALLEGRO_COLOR BLACK;
+extern ALLEGRO_COLOR ORANGE;
+extern ALLEGRO_COLOR ORANGE_STRONG;
+extern ALLEGRO_COLOR LIGHT_GRAY;
+extern ALLEGRO_COLOR GRAY;
+extern ALLEGRO_COLOR BACKGROUND_COLOR;
+extern ALLEGRO_COLOR NEUTRAL_TILE_COLOR;
+extern ALLEGRO_COLOR WATER_TILE_COLOR;
+
+///////////////// FUNCTIONS ///////////////////////
+bool loadColors();
+
+#endif

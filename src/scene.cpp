@@ -22,12 +22,12 @@ scene::scene(const double screen_w, const double screen_h, const double tiles_se
     step_(step_image),
     tracking_(tracking_image),
 
-    quit_("QUIT", ubuntu_mono_font_40, BLACK, default_animation_time_),
+    quit_("QUIT", ubuntu_mono_font_40, &BLACK, default_animation_time_),
 
-    algorithm_({"AAA", "BBBB", "CCCC"}, "Algorithm", ubuntu_mono_font_40, BLACK),
+    algorithm_({"AAA", "BBBB", "CCCC"}, "Algorithm", ubuntu_mono_font_40, &BLACK),
 
-    width_("Grid width ", ubuntu_mono_font_40, BLACK, 1, 100, 20),
-    height_("Grid height", ubuntu_mono_font_40, BLACK, 1, 100, 20),
+    width_("Grid width ", ubuntu_mono_font_40, &BLACK, 1, 100, 20),
+    height_("Grid height", ubuntu_mono_font_40, &BLACK, 1, 100, 20),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL, 0.2)
