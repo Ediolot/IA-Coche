@@ -17,8 +17,8 @@ numericSelector(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font
     max_(max),
     min_(min),
     value_(val),
-    v_aling_(vAling::CENTER),
-    h_aling_(hAling::CENTER),
+    v_aling_(dir::CENTER),
+    h_aling_(dir::CENTER),
     press_state_left_(0),
     press_state_right_(0),
     mouse_over_(false),
@@ -58,15 +58,15 @@ void numericSelector::resize(const double x, const double y, const double w, con
 
     switch (h_aling_)
     {
-        case hAling::LEFT:  selector_x_ = label_w;                break;
-        case hAling::RIGHT: selector_x_ = w_ - min_w + label_w;   break;
+        case dir::LEFT:  selector_x_ = label_w;                break;
+        case dir::RIGHT: selector_x_ = w_ - min_w + label_w;   break;
         default:            selector_x_ = (w_-min_w)/2 + label_w; break;
     }
     switch (v_aling_)
     {
-        case vAling::TOP:    selector_img_y_ =    (min_h-img_h_)/2; selector_text_y_ =    (min_h-text_h_)/2; break;
-        case vAling::BOTTOM: selector_img_y_ = h_-(min_h-img_h_)/2; selector_text_y_ = h_-(min_h-text_h_)/2; break;
-        default:             selector_img_y_ =    (h_   -img_h_)/2; selector_text_y_ =    (h_   -text_h_)/2; break;
+        case dir::UP:   selector_img_y_ =    (min_h-img_h_)/2; selector_text_y_ =    (min_h-text_h_)/2; break;
+        case dir::DOWN: selector_img_y_ = h_-(min_h-img_h_)/2; selector_text_y_ = h_-(min_h-text_h_)/2; break;
+        default:        selector_img_y_ =    (h_   -img_h_)/2; selector_text_y_ =    (h_   -text_h_)/2; break;
     }
 
     label_.resize(x_,y_);
@@ -185,14 +185,14 @@ void label::setColor(ALLEGRO_COLOR *color)
     label_.setColor(color);
 }
 
-void setVerticalTextAling(const vAling v_aling)
+void setVerticalTextAling(const dir v_aling)
 {
     v_aling_ = v_aling;
     label.setVerticalTextAling(v_aling);
     resize(x_, y_, w_, h_);
 }
 
-void setHorizontalTextAling(const hAling h_aling)
+void setHorizontalTextAling(const dir h_aling)
 {
     h_aling_ = h_aling;
     label.setHorizontalTextAling(h_aling);

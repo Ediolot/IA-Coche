@@ -37,8 +37,8 @@ class numericSelector {
         int min_;
         int value_;
 
-        vAling v_aling_;
-        hAling h_aling_;
+        dir v_aling_;
+        dir h_aling_;
 
         uint press_state_left_;
         uint press_state_right_;
@@ -94,8 +94,8 @@ class numericSelector {
         void setImg(ALLEGRO_BITMAP *img);
         void setFont(ALLEGRO_FONT *font);
         void setColor(ALLEGRO_FONT *color);
-        void setVerticalTextAling(const vAling v_aling);
-        void setHorizontalTextAling(const hAling h_aling);
+        void setVerticalTextAling(const dir v_aling);
+        void setHorizontalTextAling(const dir h_aling);
 
         virtual double getMinWidth() const;
         virtual double getMinHeight() const;
