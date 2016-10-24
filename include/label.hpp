@@ -65,9 +65,9 @@ class label {
         virtual void draw();
 
         /* Executes function when a click is detected in the object area */
-        void onMouseClick(const std::function<void()> &f);
+        void onMouseClick(void (*f)());
         /* Executes function when mouse enters the object area */
-        void onMouseOver(const std::function<void()> &f);
+        void onMouseOver(void (*f)());
 
         /* Mouse was over in the last update */
         bool mouseOver();

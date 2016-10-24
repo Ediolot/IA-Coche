@@ -98,17 +98,17 @@ void label::update()
 void label::draw()
 {
     if (img_)
-        al_draw_bitmap(img_, img_x_, img_y_);
+        al_draw_bitmap(img_, img_x_, img_y_, 0);
     if (font_ && color_)
         al_draw_text(font_, *color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
 }
 
-void label::onMouseClick(const std::function<void()> &f)
+void label::onMouseClick(void (*f)())
 {
     onclick_ = f;
 }
 
-void label::onMouseOver(const std::function<void()> &f)
+void label::onMouseOver(void (*f)())
 {
     onmouseover_ = f;
 }
