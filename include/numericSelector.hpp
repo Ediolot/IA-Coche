@@ -93,7 +93,7 @@ class numericSelector {
         void setText(const std::string &text);
         void setImg(ALLEGRO_BITMAP *img);
         void setFont(ALLEGRO_FONT *font);
-        void setColor(ALLEGRO_FONT *color);
+        void setColor(ALLEGRO_COLOR *color);
         void setVerticalTextAling(const dir v_aling);
         void setHorizontalTextAling(const dir h_aling);
 
