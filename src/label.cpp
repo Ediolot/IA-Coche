@@ -129,8 +129,8 @@ void label::setText(const std::string &text)
 void label::setImg(ALLEGRO_BITMAP *img)
 {
     img_ = img;
-    img_w_ = img ? al_get_bitmap_width(image_) : 0;
-    img_h_ = img ? al_get_bitmap_height(image_) : 0;
+    img_w_ = img ? al_get_bitmap_width(img_) : 0;
+    img_h_ = img ? al_get_bitmap_height(img_) : 0;
     resize(x_, y_, w_, h_);
 }
 
@@ -147,24 +147,24 @@ void label::setColor(ALLEGRO_COLOR *color)
     color_ = color;
 }
 
-void setVerticalTextAling(const dir v_aling)
+void label::setVerticalTextAling(const dir v_aling)
 {
     v_aling_ = v_aling;
     resize(x_, y_, w_, h_);
 }
 
-void setHorizontalTextAling(const dir h_aling)
+void label::setHorizontalTextAling(const dir h_aling)
 {
     h_aling_ = h_aling;
     resize(x_, y_, w_, h_);
 }
 
-double getMinWidth() const
+double label::getMinWidth() const
 {
     return text_w_ + img_w_;
 }
 
-double getMinHeight() const
+double label::getMinHeight() const
 {
     return text_h_ > img_h_ ? text_h_ : img_h_;
 }
