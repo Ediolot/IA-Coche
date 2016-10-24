@@ -33,7 +33,7 @@ class selector : public numericSelector {
         ~selector();
 
         virtual void draw();
-        virtual double getMinHeight() const;
+        virtual double getMinWidth() const;
 };
 
 #endif

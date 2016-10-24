@@ -24,19 +24,19 @@ selector::selector(const std::vector<std::string>& list, const std::string &text
 selector::~selector()
 {}
 
-void selector::draw() const
+void selector::draw()
 {
     double text_w = al_get_text_width(font_, list_[value_].c_str());
 
     label_.draw();
-    al_draw_bitmap(arrow_image, selector_x_+5, selector_img_y_);
-    al_draw_bitmap(arrow_image, selector_x_+img_w_+15+text_w, selector_img_y_);
+    al_draw_bitmap(arrow_image, selector_x_+5, selector_img_y_, 0);
+    al_draw_bitmap(arrow_image, selector_x_+img_w_+15+text_w, selector_img_y_, 0);
 
     if (font_ && color_)
-        al_draw_text(font_, color_, selector_x_+text_w/2+img_w_+10, y_,ALLEGRO_ALIGN_CENTER, list_[value_].c_str());
+        al_draw_text(font_, *color_, selector_x_+text_w/2+img_w_+10, y_,ALLEGRO_ALIGN_CENTER, list_[value_].c_str());
 }
 
-double getMinWidth() const
+double selector::getMinWidth() const
 {
     return label_.getMinWidth() + img_w_*2 + biggest_item_w_;
 }
