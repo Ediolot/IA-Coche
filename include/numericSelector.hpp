@@ -85,7 +85,7 @@ class numericSelector {
         int getValue() const;
 
         /* Executes function when mouse enters the object area */
-        void onMouseOver(const std::function<void()> &f);
+        void onMouseOver(void (*f)());
 
         /* Mouse was over in the last update */
         bool mouseOver();

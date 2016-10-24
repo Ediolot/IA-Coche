@@ -150,7 +150,7 @@ int numericSelector::getValue() const
     return value_;
 }
 
-void numericSelector::onMouseOver(const std::function<void()> &f)
+void numericSelector::onMouseOver(void (*f)())
 {
     onmouseover_ = f;
 }
