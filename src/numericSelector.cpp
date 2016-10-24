@@ -75,7 +75,7 @@ void selector_numeric::resize(const double x, const double y, const double w, co
 void selector_numeric::update()
 {
     double arrow_l_x = selector_x_+label_.getMinWidth()+10;
-    double arrow_r_x = arrow_l_x + (img_w+10)*2 + al_get_text_width(font_, std::to_string(value_).c_string());
+    double arrow_r_x = selector_x_+getMinWidth() - (img_w+10);
 
     bool mouse_over_l = mouse.insideBox(arrow_l_x, y_, arrow_l_x+img_w_+10, y_+img_h_);
     bool mouse_over_r = mouse.insideBox(arrow_r_x, y_, arrow_r_x+img_w_+10, y_+img_h_);
@@ -127,8 +127,8 @@ void selector_numeric::update()
     if (last_mouse_z_ && mouse.insideBox(arrow_l_x, y_, arrow_r_x+(img_w+10), y_+30))
         value_ += (mouse.getZ() - last_mouse_z_)*3;
 
-    if (value_ > max_) value_ = max_;
-    if (value_ < min_) value_ = min_;
+    if (value_ > max_) value_ = min_;
+    if (value_ < min_) value_ = max_;
 
     last_mouse_z_ = mouse.getZ();
 }

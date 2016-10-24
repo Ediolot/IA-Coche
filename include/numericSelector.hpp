@@ -13,7 +13,7 @@
 
 class numericSelector {
 
-    private:
+    protected:
 
         ALLEGRO_COLOR *color_;
         ALLEGRO_FONT *font_;
@@ -42,6 +42,8 @@ class numericSelector {
 
         uint press_state_left_;
         uint press_state_right_;
+
+        // NOTE onchange_ ?
 
         bool mouse_over_;
         void (*onmouseover_)();
@@ -72,7 +74,7 @@ class numericSelector {
                         int max = +999,
                         int val = 0);
 
-        ~selector_numeric();
+        ~numericSelector();
 
         virtual void resize(const double x, const double y, const double w = 0, const double h = 0);
 
@@ -81,7 +83,7 @@ class numericSelector {
         virtual void draw();
 
         int getValue() const;
-        
+
         /* Executes function when mouse enters the object area */
         void onMouseOver(const std::function<void()> &f);
 
@@ -95,8 +97,8 @@ class numericSelector {
         void setVerticalTextAling(const vAling v_aling);
         void setHorizontalTextAling(const hAling h_aling);
 
-        double getMinWidth() const;
-        double getMinHeight() const;
+        virtual double getMinWidth() const;
+        virtual double getMinHeight() const;
 };
 
 #endif
