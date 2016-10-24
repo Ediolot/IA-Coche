@@ -17,8 +17,9 @@ class numericSelector {
 
         ALLEGRO_COLOR *color_;
         ALLEGRO_FONT *font_;
-
         label label_;
+
+        bool show_;
 
         double x_;
         double y_;
@@ -43,11 +44,7 @@ class numericSelector {
         uint press_state_l_;
         uint press_state_r_;
 
-        // NOTE onchange_ ?
-
         bool mouse_over_;
-        void (*onmouseover_)();
-
         double last_mouse_z_;
 
     public:
@@ -84,9 +81,6 @@ class numericSelector {
 
         int getValue() const;
 
-        /* Executes function when mouse enters the object area */
-        void onMouseOver(void (*f)());
-
         /* Mouse was over in the last update */
         bool mouseOver();
 
@@ -99,6 +93,9 @@ class numericSelector {
 
         virtual double getMinWidth() const;
         virtual double getMinHeight() const;
+
+        void show();
+        void hide();
 };
 
 #endif

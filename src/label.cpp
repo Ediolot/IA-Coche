@@ -6,6 +6,7 @@ label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, A
     font_(nullptr),
     img_(nullptr),
     text_(text),
+    show_(true),
     x_(.0),
     y_(.0),
     w_(.0),
@@ -22,8 +23,7 @@ label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, A
     h_aling_(dir::CENTER),
     mouse_over_(false),
     press_state_(0U),
-    onclick_(nullptr),
-    onmouseover_(nullptr)
+    clicks_(0)
 {
     setText(text);
     setFont(font);
@@ -70,13 +70,14 @@ void label::resize(const double x, const double y, const double w, const double 
 
 void label::update()
 {
-    bool mouse_over = mouse.insideBox(x_, y_, x_+w_, y_+h_);
+    if (!show_)
+    {
+        mouse_over_ = false;
+        press_state_ = 0;
+        return;
+    }
 
-    if (mouse_over && !mouse_over_ && onmouseover_)
-        onmouseover_();
-
-    mouse_over_ = mouse_over;
-
+    mouse_over_ = mouse.insideBox(x_, y_, x_+w_, y_+h_);
 
     if (!mouse_over_)
         press_state_ = 0;
@@ -90,32 +91,30 @@ void label::update()
         if (press_state_==2 && !mouse.leftPressed())
         {
             press_state_=0;
-            if (onclick_) onclick_();
+            clicks_++;
         }
     }
 }
 
 void label::draw()
 {
+    if (!show_) return;
+
     if (img_)
         al_draw_bitmap(img_, img_x_, img_y_, 0);
     if (font_ && color_)
         al_draw_text(font_, *color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
 }
 
-void label::onMouseClick(void (*f)())
-{
-    onclick_ = f;
-}
-
-void label::onMouseOver(void (*f)())
-{
-    onmouseover_ = f;
-}
-
 bool label::mouseOver()
 {
     return mouse_over_;
+}
+
+bool label::mouseClicked()
+{
+    if (!clicks_) return 0;
+    return clicks_--;
 }
 
 void label::setText(const std::string &text)
@@ -167,4 +166,14 @@ double label::getMinWidth() const
 double label::getMinHeight() const
 {
     return text_h_ > img_h_ ? text_h_ : img_h_;
+}
+
+void label::show()
+{
+    show_ = true;
+}
+
+void label::hide()
+{
+    show_ = false;
 }

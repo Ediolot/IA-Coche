@@ -13,6 +13,8 @@ class scrollbar {
 
         scroll type_;
 
+        bool show_;
+
         double value_;
 
         double x_;
@@ -40,6 +42,9 @@ class scrollbar {
         double getValue() const;
 
         void setValue(const double value);
+
+        void show();
+        void hide();
 };
 
 #endif

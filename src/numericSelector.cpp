@@ -4,6 +4,7 @@ numericSelector::numericSelector(const std::string &text, ALLEGRO_BITMAP *img, A
     color_(nullptr),
     font_(nullptr),
     label_(text, img, font_, color_),
+    show_(true),
     x_(.0),
     y_(.0),
     w_(.0),
@@ -22,7 +23,6 @@ numericSelector::numericSelector(const std::string &text, ALLEGRO_BITMAP *img, A
     press_state_l_(0),
     press_state_r_(0),
     mouse_over_(false),
-    onmouseover_(nullptr),
     last_mouse_z_(.0)
 {
     text_h_ = al_get_font_line_height(font_);
@@ -75,17 +75,22 @@ void numericSelector::resize(const double x, const double y, const double w, con
 
 void numericSelector::update()
 {
+    if (!show_)
+    {
+        mouse_over_ = false;
+        press_state_l_ = 0;
+        press_state_r_ = 0;
+        last_mouse_z_ = mouse.getZ();
+        return;
+    }
+
     double arrow_l_x = selector_x_+label_.getMinWidth()+10;
     double arrow_r_x = selector_x_+getMinWidth() - (img_w_+10);
 
     bool mouse_over_l = mouse.insideBox(arrow_l_x, y_, arrow_l_x+img_w_+10, y_+img_h_);
     bool mouse_over_r = mouse.insideBox(arrow_r_x, y_, arrow_r_x+img_w_+10, y_+img_h_);
-    bool mouse_over   = mouse.insideBox(x_, y_, x_+w_, y_+h_);
 
-    if (mouse_over && !mouse_over_ && onmouseover_)
-        onmouseover_();
-
-    mouse_over_ = mouse_over;
+    mouse_over_ = mouse.insideBox(x_, y_, x_+w_, y_+h_);
 
     if (mouse_over_r || mouse_over_l)
         mouse.setShouldBeHand();
@@ -136,6 +141,8 @@ void numericSelector::update()
 
 void numericSelector::draw()
 {
+    if (!show_) return;
+
     double text_w = al_get_text_width(font_, std::to_string(value_).c_str());
 
     label_.draw();
@@ -149,11 +156,6 @@ void numericSelector::draw()
 int numericSelector::getValue() const
 {
     return value_;
-}
-
-void numericSelector::onMouseOver(void (*f)())
-{
-    onmouseover_ = f;
 }
 
 bool numericSelector::mouseOver()
@@ -208,4 +210,14 @@ double numericSelector::getMinWidth() const
 double numericSelector::getMinHeight() const
 {
     return label_.getMinHeight() > img_h_ ? label_.getMinHeight() : img_h_;
+}
+
+void numericSelector::show()
+{
+    show_ = true;
+}
+
+void numericSelector::hide()
+{
+    show_ = false;
 }

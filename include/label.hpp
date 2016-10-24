@@ -19,6 +19,8 @@ class label {
         ALLEGRO_BITMAP *img_;
         std::string text_;
 
+        bool show_;
+
         double x_;
         double y_;
         double w_;
@@ -39,9 +41,7 @@ class label {
 
         bool mouse_over_;
         uint press_state_;
-
-        void (*onclick_)();
-        void (*onmouseover_)();
+        uint clicks_;
 
     public:
 
@@ -64,11 +64,6 @@ class label {
         virtual void update();
         virtual void draw();
 
-        /* Executes function when a click is detected in the object area */
-        void onMouseClick(void (*f)());
-        /* Executes function when mouse enters the object area */
-        void onMouseOver(void (*f)());
-
         /* Mouse was over in the last update */
         bool mouseOver();
         /* Clicked on the last update */
@@ -83,6 +78,9 @@ class label {
 
         double getMinWidth() const;
         double getMinHeight() const;
+
+        void show();
+        void hide();
 };
 
 #endif

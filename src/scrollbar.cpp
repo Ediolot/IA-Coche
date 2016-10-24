@@ -26,6 +26,14 @@ void scrollbar::moveTo(const double x, const double y, const double w, const dou
 
 void scrollbar::update()
 {
+    if (!show_)
+    {
+        mouse_inside_ = false;
+        scrolling_ = false;
+        last_mouse_z_ = mouse.getZ();
+        return;
+    }
+
     if (type_==VERTICAL)
         mouse_inside_ = mouse.insideBox(x_-20, y_, x_+w_+20, y_+h_);
     else
@@ -55,6 +63,8 @@ void scrollbar::update()
 
 void scrollbar::draw()
 {
+    if (!show_) return;
+    
     al_draw_filled_rectangle(x_, y_, x_+w_, y_+h_, LIGHT_GRAY);
 
     if (type_==VERTICAL)
@@ -71,4 +81,14 @@ double scrollbar::getValue() const
 void scrollbar::setValue(const double value)
 {
     value_ = value;
+}
+
+void scrollbar::show()
+{
+    show_ = true;
+}
+
+void scrollbar::hide()
+{
+    show_ = false;
 }

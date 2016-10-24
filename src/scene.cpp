@@ -35,7 +35,7 @@ scene::scene(const double screen_w, const double screen_h, const double tiles_se
     resize(screen_w_, screen_h_);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 scene::~scene()
 {}
@@ -117,61 +117,94 @@ void scene::update()
 {
     mouse.setShouldBeHand(false);
 
-    if (show_menu_)
-    {
-        obstacles_.update();
-        quit_.update();
-        algorithm_.update();
-        width_.update();
-        height_.update();
+    obstacles_.update();
+    quit_.update();
+    algorithm_.update();
+    width_.update();
+    height_.update();
+    restart_.update();
+    play_.update();
+    random_.update();
+    speed_.update();
+    tracking_.update();
+    step_.update();
 
-        if (quit_.wasPressed()) quit = true;
+    double speed = speed_.getValue();
+
+    if (speed < 0.001 )
+    {
+        isplaying_ = false;
+        play_.setImg(play_disabled_image);
     }
     else
     {
-        restart_.update();
-        play_.update();
-        random_.update();
-        speed_.update();
-        tracking_.update();
-        step_.update();
+        if (play_.mouseClicked())
+            isplaying_ = !isplaying_;
 
-        double speed = speed_.getValue();
-
-        if (random_.wasPressed())
-        {
-            inc_x_ = inc_y_ = 0;
-            zoom_ = 1;
-            tile_map_.rebuild(width_.getValue(), height_.getValue());
-            tile_map_.generate(obstacles_.getValue());
-        }
-        if (play_.wasPressed()    ) isplaying_  = !isplaying_;
-        if (tracking_.wasPressed()) istracking_ = !istracking_;
-        if (speed < 0.001         ) isplaying_  = false;
-
-        tracking_.setImage(istracking_   ? tracking_image : tracking_disabled_image);
-        step_.setImage(speed < 0.001 ? step_image : step_disabled_image);
-
-        if (speed > 0.001)
-            play_.setImage(isplaying_ ? pause_image : play_image);
-        else
-            play_.setImage(play_disabled_image);
-
-        // Clicked on map
-        tile_map_.checkClick();
-
-        // ZOOM
-        if (mouse.insideBox(0,0,screen_w_-60,screen_h_))
-            zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
-        zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
+        play_.setImg(isplaying_ ? pause_image : play_image);
     }
+
+    if (quit_.mouseClicked())
+        quit=true;
+
+    if (tracking_.mouseClicked())
+        istracking_ = !istracking_;
+
+    if (random_.mouseClicked())
+    {
+        inc_x_ = inc_y_ = 0;
+        zoom_ = 1;
+        tile_map_.rebuild(width_.getValue(), height_.getValue());
+        tile_map_.generate(obstacles_.getValue());
+    }
+
+    tracking_.setImg(istracking_   ? tracking_image : tracking_disabled_image);
+    step_.setImg(speed < 0.001 ? step_image : step_disabled_image);
+
+    // Clicked on map
+    tile_map_.checkClick();
+
+    // ZOOM
+    if (mouse.insideBox(0,0,screen_w_-60,screen_h_))
+        zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
+    zoom_ = zoom_ < 0.1 ? 0.1 : zoom_;
 
     // ESC KEY
     if (keysPress[ALLEGRO_KEY_ESCAPE])
         esc_was_pressed_ = true;
     else if (esc_was_pressed_)
     {
-        show_menu_ = !show_menu_;
+        if (show_menu_)
+        {
+            show_menu_ = false;
+            obstacles_.hide();
+            quit_.hide();
+            algorithm_.hide();
+            width_.hide();
+            height_.hide();
+            tracking_.show();
+            restart_.show();
+            step_.show();
+            play_.show();
+            random_.show();
+            speed_.show();
+        }
+        else
+        {
+            show_menu_ = true;
+            obstacles_.show();
+            quit_.show();
+            algorithm_.show();
+            width_.show();
+            height_.show();
+            tracking_.hide();
+            restart_.hide();
+            step_.hide();
+            play_.hide();
+            random_.hide();
+            speed_.hide();
+        }
+
         esc_was_pressed_ = false;
     }
 
@@ -204,9 +237,9 @@ void scene::resize(const double w, const double h)
     height_.resize(150, 220);
     algorithm_.resize(150, 310);
 
-    obstacles_.resize(150, 400, screen_w_-300, 5);
+    obstacles_.moveTo(150, 400, screen_w_-300, 5);
+    speed_.moveTo(screen_w_-30, 50, 5, screen_h_-220);
     quit_.resize(screen_w_-120, screen_h_-70, 100, 50);
-    speed_.resize(screen_w_-30, 50, 5, screen_h_-220);
     tracking_.resize(screen_w_-46, 10, 40, 40);
     step_.resize(screen_w_-45, screen_h_-160, 40, 40);
     play_.resize(screen_w_-45, screen_h_-120, 40, 40);
