@@ -1,6 +1,6 @@
 #include "../include/numericSelector.hpp"
 
-numericSelector(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color, int min, int max, int val):
+numericSelector::numericSelector(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color, int min, int max, int val):
     color_(nullptr),
     font_(nullptr),
     label_(text, img, font_, color_),
@@ -12,8 +12,8 @@ numericSelector(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font
     selector_text_y_(.0),
     selector_img_y_(.0),
     text_h_(.0),
-    img_h_(.0),
     img_w_(.0),
+    img_h_(.0),
     max_(max),
     min_(min),
     value_(val),
@@ -26,17 +26,17 @@ numericSelector(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font
     last_mouse_z_(.0)
 {
     text_h_ = al_get_font_line_height(font_);
-    img_x_ = al_get_bitmap_width(arrow_image);
+    img_w_ = al_get_bitmap_width(arrow_image);
     img_h_ = al_get_bitmap_height(arrow_image);
     setFont(font);
     setColor(color);
 }
 
-numericSelector(ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color, int min, int max, int val):
+numericSelector::numericSelector(ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color, int min, int max, int val):
     numericSelector("", img, font, color, min, max, val)
 {}
 
-numericSelector(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR *color, int min, int max, int val):
+numericSelector::numericSelector(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR *color, int min, int max, int val):
     numericSelector(text, nullptr, font, color, min, max, val)
 {}
 
@@ -150,36 +150,36 @@ int numericSelector::getValue() const
     return value_;
 }
 
-void label::onMouseOver(const std::function<void()> &f)
+void numericSelector::onMouseOver(const std::function<void()> &f)
 {
     onmouseover_ = f;
 }
 
-bool label::mouseOver()
+bool numericSelector::mouseOver()
 {
     return mouse_over_;
 }
 
-void label::setText(const std::string &text)
+void numericSelector::setText(const std::string &text)
 {
     label_.setText(text);
     resize(x_, y_, w_, h_)
 }
 
-void label::setImg(ALLEGRO_BITMAP *img)
+void numericSelector::setImg(ALLEGRO_BITMAP *img)
 {
     label_.setImg(img);
     resize(x_, y_, w_, h_);
 }
 
-void label::setFont(ALLEGRO_FONT *font)
+void numericSelector::setFont(ALLEGRO_FONT *font)
 {
     font_ = font;
     label_.setFont(font);
     resize(x_, y_, w_, h_);
 }
 
-void label::setColor(ALLEGRO_COLOR *color)
+void numericSelector::setColor(ALLEGRO_COLOR *color)
 {
     color_ = color;
     label_.setColor(color);
