@@ -45,6 +45,7 @@ numericSelector::~numericSelector()
 
 void numericSelector::resize(const double x, const double y, const double w, const double h)
 {
+    double label_w = label_.getMinWidth();
     double min_w   = getMinWidth();
     double min_h   = getMinHeight();
 
@@ -60,7 +61,7 @@ void numericSelector::resize(const double x, const double y, const double w, con
     {
         case dir::LEFT:  selector_x_ = label_w;                break;
         case dir::RIGHT: selector_x_ = w_ - min_w + label_w;   break;
-        default:            selector_x_ = (w_-min_w)/2 + label_w; break;
+        default:         selector_x_ = (w_-min_w)/2 + label_w; break;
     }
     switch (v_aling_)
     {
@@ -75,7 +76,7 @@ void numericSelector::resize(const double x, const double y, const double w, con
 void numericSelector::update()
 {
     double arrow_l_x = selector_x_+label_.getMinWidth()+10;
-    double arrow_r_x = selector_x_+getMinWidth() - (img_w+10);
+    double arrow_r_x = selector_x_+getMinWidth() - (img_w_+10);
 
     bool mouse_over_l = mouse.insideBox(arrow_l_x, y_, arrow_l_x+img_w_+10, y_+img_h_);
     bool mouse_over_r = mouse.insideBox(arrow_r_x, y_, arrow_r_x+img_w_+10, y_+img_h_);
@@ -91,35 +92,35 @@ void numericSelector::update()
 
     // Left arrow
     if (!mouse_over_l)
-        press_state_l_ = 0;
+        press_state_l = 0;
 
     else
     {
-        if (press_state_l_==0 && !mouse.leftPressed())
-            press_state_l_++;
-        if (press_state_l_==1 &&  mouse.leftPressed())
-            press_state_l_++;
-        if (press_state_l_==2 && !mouse.leftPressed())
+        if (press_state_l==0 && !mouse.leftPressed())
+            press_state_l++;
+        if (press_state_l==1 &&  mouse.leftPressed())
+            press_state_l++;
+        if (press_state_l==2 && !mouse.leftPressed())
         {
-            press_state_l_=0;
-            value--;
+            press_state_l=0;
+            value_--;
         }
     }
 
     // Right arrow
     if (!mouse_over_r)
-        press_state_r_ = 0;
+        press_state_r = 0;
 
     else
     {
-        if (press_state_r_==0 && !mouse.leftPressed())
-            press_state_r_++;
-        if (press_state_r_==1 &&  mouse.leftPressed())
-            press_state_r_++;
-        if (press_state_r_==2 && !mouse.leftPressed())
+        if (press_state_r==0 && !mouse.leftPressed())
+            press_state_r++;
+        if (press_state_r==1 &&  mouse.leftPressed())
+            press_state_r++;
+        if (press_state_r==2 && !mouse.leftPressed())
         {
-            press_state_r_=0;
-            value++;
+            press_state_r=0;
+            value_++;
         }
     }
 
@@ -135,11 +136,11 @@ void numericSelector::update()
 
 void numericSelector::draw()
 {
-    double text_w = al_get_text_width(font_, std::to_string(value_).c_string());
+    double text_w = al_get_text_width(font_, std::to_string(value_).c_str());
 
     label_.draw();
-    al_draw_bitmap(arrow_image, selector_x_+5, selector_img_y_);
-    al_draw_bitmap(arrow_image, selector_x_+img_w_+15+text_w, selector_img_y_);
+    al_draw_bitmap(arrow_image, selector_x_+5, selector_img_y_, 0);
+    al_draw_bitmap(arrow_image, selector_x_+img_w_+15+text_w, selector_img_y_, 0);
 
     if (font_ && color_)
         al_draw_text(font_, *color_, selector_x_+text_w/2+img_w_+10, y_,ALLEGRO_ALIGN_CENTER, std::to_string(value_).c_str());
@@ -163,7 +164,7 @@ bool numericSelector::mouseOver()
 void numericSelector::setText(const std::string &text)
 {
     label_.setText(text);
-    resize(x_, y_, w_, h_)
+    resize(x_, y_, w_, h_);
 }
 
 void numericSelector::setImg(ALLEGRO_BITMAP *img)
@@ -188,20 +189,20 @@ void numericSelector::setColor(ALLEGRO_COLOR *color)
 void numericSelector::setVerticalTextAling(const dir v_aling)
 {
     v_aling_ = v_aling;
-    label.setVerticalTextAling(v_aling);
+    label_.setVerticalTextAling(v_aling);
     resize(x_, y_, w_, h_);
 }
 
-void snumericSelector::setHorizontalTextAling(const dir h_aling)
+void numericSelector::setHorizontalTextAling(const dir h_aling)
 {
     h_aling_ = h_aling;
-    label.setHorizontalTextAling(h_aling);
+    label_.setHorizontalTextAling(h_aling);
     resize(x_, y_, w_, h_);
 }
 
 double numericSelector::getMinWidth() const
 {
-    return label_.getMinWidth() + img_w_*2 + al_get_text_width(font_, std::to_string(value_).c_string());
+    return label_.getMinWidth() + img_w_*2 + al_get_text_width(font_, std::to_string(value_).c_str());
 }
 
 double numericSelector::getMinHeight() const
