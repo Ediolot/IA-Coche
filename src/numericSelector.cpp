@@ -43,7 +43,7 @@ numericSelector(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR *colo
 numericSelector::~numericSelector()
 {}
 
-void selector_numeric::resize(const double x, const double y, const double w, const double h)
+void numericSelector::resize(const double x, const double y, const double w, const double h)
 {
     double min_w   = getMinWidth();
     double min_h   = getMinHeight();
@@ -72,7 +72,7 @@ void selector_numeric::resize(const double x, const double y, const double w, co
     label_.resize(x_,y_);
 }
 
-void selector_numeric::update()
+void numericSelector::update()
 {
     double arrow_l_x = selector_x_+label_.getMinWidth()+10;
     double arrow_r_x = selector_x_+getMinWidth() - (img_w+10);
@@ -133,7 +133,7 @@ void selector_numeric::update()
     last_mouse_z_ = mouse.getZ();
 }
 
-void selector_numeric::draw()
+void numericSelector::draw()
 {
     double text_w = al_get_text_width(font_, std::to_string(value_).c_string());
 
@@ -142,10 +142,10 @@ void selector_numeric::draw()
     al_draw_bitmap(arrow_image, selector_x_+img_w_+15+text_w, selector_img_y_);
 
     if (font_ && color_)
-        al_draw_text(font_, color_, selector_x_+text_w/2+img_w_+10, y_,ALLEGRO_ALIGN_CENTER, std::to_string(value_).c_str());
+        al_draw_text(font_, *color_, selector_x_+text_w/2+img_w_+10, y_,ALLEGRO_ALIGN_CENTER, std::to_string(value_).c_str());
 }
 
-int selector_numeric::getValue() const
+int numericSelector::getValue() const
 {
     return value_;
 }

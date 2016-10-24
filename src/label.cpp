@@ -100,7 +100,7 @@ void label::draw()
     if (img_)
         al_draw_bitmap(img_, img_x_, img_y_);
     if (font_ && color_)
-        al_draw_text(font_, color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
+        al_draw_text(font_, *color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
 }
 
 void label::onMouseClick(const std::function<void()> &f)

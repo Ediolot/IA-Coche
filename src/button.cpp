@@ -42,7 +42,7 @@ void button::draw()
         if (!mouse_over_ && line_size_ >       0) line_size_ -= elapsed * label_w / animation_time_;
 
         if (line_size_ > 0)
-            al_draw_line(img_x_, y_+label_h+20, img_x_+label_w, y_+label_h+2, color_, 2);
+            al_draw_line(img_x_, y_+label_h+20, img_x_+label_w, y_+label_h+2, *color_, 2);
     }
     last_time_called_ = current_time;
 }
