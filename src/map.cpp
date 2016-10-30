@@ -133,7 +133,12 @@ void map::generate(const double obstacles)
     generator_.randomize(rows_, cols_, obstacles);
 
     for (uint i=0; i<(rows_*cols_); ++i)
-        tiles_[i].setType(generator_.getPos(i/cols_, i%cols_) ? tile::type::WALL : tile::type::NEUTRAL);
+    {
+        if (generator_.getPos(i/cols_, i%cols_) && !(std::rand() % monsters_percent))
+            tiles_[i].setRandomMonsterType();
+        else
+            tiles_[i].setType(generator_.getPos(i/cols_, i%cols_) ? tile::type::WALL : tile::type::NEUTRAL);
+    }
 
     tile *t = &tiles_[generator_.randomRow()*cols_ + generator_.randomCol()];
     t->setType(tile::type::ORIGIN);
@@ -213,7 +218,7 @@ void map::update()
                 else if (!t->isOrigin() && !t->isChest())
                 {
                          if (keysPress[ALLEGRO_KEY_1]) t->setType(tile::type::WALL);
-                    else if (keysPress[ALLEGRO_KEY_2]) t->setType(tile::type::MONSTER);
+                    else if (keysPress[ALLEGRO_KEY_2]) t->setRandomMonsterType();
                     else                               t->setType(tile::type::NEUTRAL);
                 }
             }

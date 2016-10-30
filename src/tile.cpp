@@ -82,11 +82,14 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
     {
         switch (tile_type_)
         {
-            case tile::type::WALL:    texture_x =  0; texture_y =  0; break;
-            case tile::type::MONSTER: texture_x =  0; texture_y = 64; break;
-            case tile::type::CHEST:   texture_x =  0; texture_y = 96; break;
-            case tile::type::ORIGIN:  texture_x = 33; texture_y = 32; break;
-            default:                  texture_x = 33; texture_y =  0; break;
+            case tile::type::WALL:     texture_x =   0; texture_y =  0; break;
+            case tile::type::MONSTER1: texture_x =   0; texture_y = 64; break;
+            case tile::type::MONSTER2: texture_x =  32; texture_y = 64; break;
+            case tile::type::MONSTER3: texture_x =  64; texture_y = 64; break;
+            case tile::type::MONSTER4: texture_x =  96; texture_y = 64; break;
+            case tile::type::CHEST:    texture_x =   0; texture_y = 96; break;
+            case tile::type::ORIGIN:   texture_x =  33; texture_y = 32; break;
+            default:                   texture_x =  33; texture_y =  0; break;
         }
     }
 
@@ -114,6 +117,19 @@ void tile::setType(const tile::type type)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void tile::setRandomMonsterType()
+{
+    switch (std::rand() % 4)
+    {
+        case 0:  tile_type_ = tile::type::MONSTER1; break;
+        case 1:  tile_type_ = tile::type::MONSTER2; break;
+        case 2:  tile_type_ = tile::type::MONSTER3; break;
+        default: tile_type_ = tile::type::MONSTER4; break;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 bool tile::isWall() const
 {
     return tile_type_ == tile::type::WALL;
@@ -123,7 +139,10 @@ bool tile::isWall() const
 
 bool tile::isMonster() const
 {
-    return tile_type_ == tile::type::MONSTER;
+    return tile_type_ == tile::type::MONSTER1 ||
+           tile_type_ == tile::type::MONSTER2 ||
+           tile_type_ == tile::type::MONSTER3 ||
+           tile_type_ == tile::type::MONSTER4 ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

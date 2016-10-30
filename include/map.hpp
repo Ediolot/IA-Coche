@@ -41,6 +41,7 @@
 class map {
 
     const uint SENTINEL_MAX = 20; // Prevent infinite loops when generating the sceneario
+    const uint monsters_percent = 20; // Porcentaje de obstáculos que son mostruos
 
     private:
 

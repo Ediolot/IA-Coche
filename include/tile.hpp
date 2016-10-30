@@ -9,6 +9,7 @@
 #include <vector>
 #include <cmath>
 #include <utility>
+#include <cstdlib>
 #include "fonts.hpp"
 #include "common.hpp"
 #include "utility.hpp"
@@ -20,7 +21,10 @@ class tile {
         enum type {
             NEUTRAL,
             WALL,
-            MONSTER,
+            MONSTER1,
+            MONSTER2,
+            MONSTER3,
+            MONSTER4,
             CHEST,
             ORIGIN
         };
@@ -79,6 +83,8 @@ class tile {
 
         // Change the tile color
         void setType(const tile::type type);
+
+        void setRandomMonsterType();
 };
 
 
