@@ -11,11 +11,18 @@ class scrollbar {
 
     /* NOTE Not updated, but good enough to work */
 
+    public:
+
+    enum type {
+        VERTICAL,
+        HORIZONTAL
+    };
+
     private:
 
         bool show_;
 
-        scroll type_;
+        scrollbar::type type_;
         double value_;
 
         double x_;
@@ -30,7 +37,7 @@ class scrollbar {
 
     public:
 
-        scrollbar(const scroll type, const double value = 0);
+        scrollbar(const scrollbar::type type, const double value = 0);
 
         ~scrollbar();
 

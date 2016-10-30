@@ -26,8 +26,8 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     width_( "Grid width ", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_W),
     height_("Grid height", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_H),
 
-    speed_(scroll::VERTICAL),
-    obstacles_(scroll::HORIZONTAL, 0.2)
+    speed_(scrollbar::type::VERTICAL),
+    obstacles_(scrollbar::type::HORIZONTAL, 0.2)
 {
     resize(screen_w_, screen_h_);
     tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());

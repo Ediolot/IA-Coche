@@ -38,13 +38,6 @@ enum dir {
     CENTER
 };
 
-///////////// SCROLLBAR TYPE /////////////
-
-enum scroll {
-    VERTICAL,
-    HORIZONTAL
-};
-
 ///////////////// COLORS /////////////////
 #define PURE_WHITE          al_map_rgb(255,255,255)
 #define PURE_BLACK          al_map_rgb(  0,  0,  0)

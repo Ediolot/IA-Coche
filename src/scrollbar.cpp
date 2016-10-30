@@ -2,7 +2,7 @@
 #include "../include/scrollbar.hpp"
 
 
-scrollbar::scrollbar(const scroll type, const double value):
+scrollbar::scrollbar(const scrollbar::type type, const double value):
     show_(true),
     type_(type),
     value_(value),
