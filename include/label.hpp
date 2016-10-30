@@ -77,7 +77,7 @@ class label {
         double getMinWidth() const;
         double getMinHeight() const;
 
-        void show();
+        void show(bool show = true);
         void hide();
 };
 

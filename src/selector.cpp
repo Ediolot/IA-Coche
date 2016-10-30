@@ -29,6 +29,8 @@ selector::~selector()
 
 void selector::draw()
 {
+    if (!show_) return;
+    
     double text_w = font_ ? al_get_text_width(font_, list_[value_].c_str()) : 0;
 
     label_.draw();

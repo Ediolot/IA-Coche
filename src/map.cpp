@@ -176,7 +176,11 @@ void map::resize(const double cx, const double cy, const double width, const dou
 
 void map::update()
 {
-    if (!show_) return;
+    if (!show_)
+    {
+        last_mouse_z_ = mouse.getZ();
+        return;
+    }
 
     if (mouse.insideBox(cx_-width_/2,cy_-height_/2,width_,height_))
     {
@@ -240,9 +244,9 @@ uint map::getNCols() const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::show()
+void map::show(bool show)
 {
-    show_ = true;
+    show_ = show;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

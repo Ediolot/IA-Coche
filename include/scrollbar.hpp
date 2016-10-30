@@ -44,7 +44,7 @@ class scrollbar {
 
         void setValue(const double value);
 
-        void show();
+        void show(bool show);
         void hide();
 };
 

@@ -97,7 +97,6 @@ void label::update()
     }
 }
 
-#include <iostream>
 void label::draw()
 {
     if (!show_) return;
@@ -171,9 +170,9 @@ double label::getMinHeight() const
     return text_h_ > img_h_ ? text_h_ : img_h_;
 }
 
-void label::show()
+void label::show(bool show)
 {
-    show_ = true;
+    show_ = show;
 }
 
 void label::hide()

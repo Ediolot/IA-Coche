@@ -95,7 +95,7 @@ class map {
         void resize(const double cx, const double cy, const double width, const double height);
         void update();
 
-        void show();
+        void show(bool show = true);
         void hide();
 };
 

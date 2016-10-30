@@ -94,7 +94,7 @@ class numericSelector {
         virtual double getMinWidth() const;
         virtual double getMinHeight() const;
 
-        void show();
+        void show(bool show);
         void hide();
 };
 

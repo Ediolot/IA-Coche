@@ -85,9 +85,9 @@ void scrollbar::setValue(const double value)
     value_ = value;
 }
 
-void scrollbar::show()
+void scrollbar::show(bool show)
 {
-    show_ = true;
+    show_ = show;
 }
 
 void scrollbar::hide()

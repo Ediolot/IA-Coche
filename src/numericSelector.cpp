@@ -72,7 +72,7 @@ void numericSelector::resize(const double x, const double y, const double w, con
 
     label_.resize(x_,y_);
 }
-#include <iostream>
+
 void numericSelector::update()
 {
     if (!show_)
@@ -212,9 +212,9 @@ double numericSelector::getMinHeight() const
     return label_.getMinHeight() > img_h_ ? label_.getMinHeight() : img_h_;
 }
 
-void numericSelector::show()
+void numericSelector::show(bool show)
 {
-    show_ = true;
+    show_ = show;
 }
 
 void numericSelector::hide()

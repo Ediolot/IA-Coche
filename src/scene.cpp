@@ -73,36 +73,18 @@ void scene::draw()
 
 void scene::showMenu(bool show)
 {
-    if (show)
-    {
-        obstacles_.show();
-        quit_.show();
-        algorithm_.show();
-        width_.show();
-        height_.show();
-        restart_.hide();
-        play_.hide();
-        random_.hide();
-        speed_.hide();
-        tracking_.hide();
-        step_.hide();
-        tile_map_.hide();
-    }
-    else
-    {
-        obstacles_.hide();
-        quit_.hide();
-        algorithm_.hide();
-        width_.hide();
-        height_.hide();
-        restart_.show();
-        play_.show();
-        random_.show();
-        speed_.show();
-        tracking_.show();
-        step_.show();
-        tile_map_.show();
-    }
+    obstacles_.show(show);
+    quit_.show(show);
+    algorithm_.show(show);
+    width_.show(show);
+    height_.show(show);
+    obstacles_text_.show(show);
+    play_.show(!show);
+    random_.show(!show);
+    speed_.show(!show);
+    tracking_.show(!show);
+    step_.show(!show);
+    tile_map_.show(!show);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
