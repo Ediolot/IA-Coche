@@ -84,11 +84,11 @@ void label::update()
 
     else
     {
-        if (press_state_==0 && !mouse.leftPressed())
+        if (press_state_==0 && !mouse.leftDown())
             press_state_++;
-        if (press_state_==1 &&  mouse.leftPressed())
+        if (press_state_==1 &&  mouse.leftDown())
             press_state_++;
-        if (press_state_==2 && !mouse.leftPressed())
+        if (press_state_==2 && !mouse.leftDown())
         {
             press_state_=0;
             clicks_++;
