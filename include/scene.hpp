@@ -28,11 +28,11 @@ class scene {
         bool esc_was_pressed_;
 
         // BUTTONS WITH IMAGES
-        button_image restart_;
-        button_image play_;
-        button_image random_;
-        button_image step_;
-        button_image tracking_;
+        button restart_;
+        button play_;
+        button random_;
+        button step_;
+        button tracking_;
 
         // BUTTONS WITH TEXT
         button quit_;

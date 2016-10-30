@@ -106,3 +106,13 @@ bool _mouse::centerDown() const
 {
     return button_3_;
 }
+
+void _mouse::setShouldBeHand(bool val)
+{
+    should_be_hand_ = val;
+}
+
+bool _mouse::shouldBeHand() const
+{
+    return should_be_hand_;
+}

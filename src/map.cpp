@@ -33,7 +33,7 @@ map::~map()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-
+#include <iostream>
 void map::rebuild(const uint rows, const uint cols, const double obstacles)
 {
     if (!rows || !cols) return;
@@ -44,7 +44,7 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
     inc_x_ = 0;
     inc_y_ = 0;
     zoom_ = 1;
-
+    
     tiles_.clear();
     tiles_.resize(rows*cols);
     for (uint i=0; i<rows_; ++i)
@@ -147,9 +147,12 @@ void map::generate(const double obstacles)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void map::neutralizeAllTiles()
+void map::clearAllTiles()
 {
-    for (tile &i : tiles_) i.setType(tile::type::NEUTRAL);
+    for (tile &i : tiles_) {
+        i.containsPlayer(false);
+        i.setType(tile::type::NEUTRAL);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

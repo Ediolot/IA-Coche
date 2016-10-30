@@ -5,7 +5,8 @@
 tile::tile():
     neighbors_(4, nullptr),
     adjacents_(4, nullptr),
-    tile_type_(tile::type::NEUTRAL)
+    tile_type_(tile::type::NEUTRAL),
+    contains_player_(false)
 {}
 
 ////////////////////////////////////////////////////////////////////////////////

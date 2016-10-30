@@ -7,6 +7,7 @@ class _mouse {
 
     private:
 
+        bool should_be_hand_;
         bool inside_screen_;
         bool button_1_;
         bool button_2_;
@@ -49,6 +50,9 @@ class _mouse {
         void setCursor(const ALLEGRO_SYSTEM_MOUSE_CURSOR id);
 
         ALLEGRO_SYSTEM_MOUSE_CURSOR getCursor() const;
+
+        void setShouldBeHand(bool val = true);
+        bool shouldBeHand() const;
 };
 
 #endif

@@ -16,18 +16,16 @@ class button : public label {
         button(const std::string &text,
               ALLEGRO_BITMAP *img,
               ALLEGRO_COLOR  color,
-              ALLEGRO_FONT   *font  = nullptr,
-              const double animation_time = .0 );
+              ALLEGRO_FONT   *font,
+              const double animation_time = .0);
 
         button(ALLEGRO_BITMAP *img,
-              ALLEGRO_COLOR  color,
-              ALLEGRO_FONT   *font  = nullptr,
-              const double animation_time = .0 );
+              const double animation_time = .0);
 
         button(const std::string &text,
               ALLEGRO_COLOR  color,
-              ALLEGRO_FONT  *font  = nullptr,
-              const double animation_time = .0 );
+              ALLEGRO_FONT  *font,
+              const double animation_time = .0);
 
         ~button();
 

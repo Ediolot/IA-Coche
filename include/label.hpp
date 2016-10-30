@@ -48,15 +48,13 @@ class label {
         label(const std::string &text,
               ALLEGRO_BITMAP *img,
               ALLEGRO_COLOR color,
-              ALLEGRO_FONT *font = nullptr);
+              ALLEGRO_FONT *font);
 
-        label(ALLEGRO_BITMAP *img,
-              ALLEGRO_COLOR color,
-              ALLEGRO_FONT *font = nullptr);
+        label(ALLEGRO_BITMAP *img);
 
         label(const std::string &text,
               ALLEGRO_COLOR color,
-              ALLEGRO_FONT *font = nullptr);
+              ALLEGRO_FONT *font);
 
         ~label();
 

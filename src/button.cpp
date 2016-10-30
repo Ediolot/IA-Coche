@@ -9,8 +9,8 @@ button::button(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_COLOR color
     last_time_called_(0)
 {}
 
-button::button(ALLEGRO_BITMAP *img, ALLEGRO_COLOR color, ALLEGRO_FONT *font, const double animation_time):
-    button("", img, color, font, animation_time)
+button::button(ALLEGRO_BITMAP *img, const double animation_time):
+    button("", img, al_map_rgb(0,0,0), nullptr, animation_time)
 {}
 
 button::button(const std::string &text, ALLEGRO_COLOR color, ALLEGRO_FONT *font, const double animation_time):
@@ -23,13 +23,15 @@ button::~button()
 void button::update()
 {
     label::update();
-    if (mouse_over_ && press_state_==0 && !mouse.leftDown())
+    if (mouse_over_)
         mouse.setShouldBeHand();
 }
 
 void button::draw()
 {
     label::draw();
+
+    if (animation_time_==0) return;
 
     // ANIMATION
     double current_time = al_get_time();
@@ -43,7 +45,7 @@ void button::draw()
         if (!mouse_over_ && line_size_ >       0) line_size_ -= elapsed * label_w / animation_time_;
 
         if (line_size_ > 0)
-            al_draw_line(img_x_, y_+label_h+20, img_x_+label_w, y_+label_h+2, color_, 2);
+            al_draw_line(img_x_+label_w/2-line_size_/2, y_+label_h+20, img_x_+label_w/2+line_size_/2, y_+label_h+20, color_, 2);
     }
     last_time_called_ = current_time;
 }

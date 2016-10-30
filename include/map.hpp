@@ -79,7 +79,7 @@ class map {
         void generate(const double obstacles);
 
         // Make all tiles neutral
-        void neutralizeAllTiles();
+        void clearAllTiles();
 
         // Access a tile
         tile *accessTile(const uint row, const uint col);

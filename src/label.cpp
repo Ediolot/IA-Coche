@@ -2,10 +2,6 @@
 
 
 label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_COLOR color, ALLEGRO_FONT *font):
-    color_(nullptr),
-    font_(nullptr),
-    img_(nullptr),
-    text_(text),
     show_(true),
     x_(.0),
     y_(.0),
@@ -25,18 +21,18 @@ label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_COLOR color, 
     press_state_(0U),
     clicks_(0)
 {
-    setText(text);
     setFont(font);
+    setText(text);
     setColor(color);
     setImg(img);
 }
 
-label::label(ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR color):
-    label("", img, font, color)
+label::label(ALLEGRO_BITMAP *img):
+    label("", img, al_map_rgb(0,0,0), nullptr)
 {}
 
-label::label(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR color):
-    label(text, nullptr, font, color)
+label::label(const std::string &text, ALLEGRO_COLOR color, ALLEGRO_FONT *font):
+    label(text, nullptr, color, font)
 {}
 
 label::~label()
@@ -54,10 +50,11 @@ void label::resize(const double x, const double y, const double w, const double 
 
     switch (h_aling_)
     {
-        case dir::LEFT:  img_x_ = 0;                     break;
-        case dir::RIGHT: img_x_ = w_ - min_w;            break;
-        default:         img_x_ = (w_-text_w_+img_w_)/2; break;
+        case dir::LEFT:  img_x_ = 0;                     text_x_ = img_x_ +img_w_;           break;
+        case dir::RIGHT: img_x_ = w_ - min_w;            text_x_ = img_x_ +img_w_;           break;
+        default:         img_x_ = (w_-text_w_-img_w_)/2; text_x_ = img_x_ +img_w_+text_w_/2; break;
     }
+
     switch (v_aling_)
     {
         case dir::UP:   img_y_ =    (min_h-img_h_)/2; text_y_ =    (min_h-text_h_)/2; break;
@@ -65,7 +62,10 @@ void label::resize(const double x, const double y, const double w, const double 
         default:        img_y_ =    (h_   -img_h_)/2; text_y_ =    (h_-   text_h_)/2; break;
     }
 
-    text_x_ = img_x_ + img_w_;
+    img_x_  += x;
+    img_y_  += y;
+    text_x_ += x;
+    text_y_ += y;
 }
 
 void label::update()
@@ -102,7 +102,7 @@ void label::draw()
 
     if (img_)
         al_draw_bitmap(img_, img_x_, img_y_, 0);
-    if (font_ && color_)
+    if (font_)
         al_draw_text(font_, color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
 }
 
@@ -120,8 +120,9 @@ bool label::mouseClicked()
 void label::setText(const std::string &text)
 {
     text_ = text;
-    text_w_ = al_get_text_width(font_, text_.c_str());
-    text_h_ = al_get_font_line_height(font_);
+    text_w_ = font_ ? al_get_text_width(font_, text_.c_str()) : 0;
+    text_h_ = font_ ? al_get_font_line_height(font_) : 0;
+
     resize(x_, y_, w_, h_);
 }
 
@@ -136,8 +137,8 @@ void label::setImg(ALLEGRO_BITMAP *img)
 void label::setFont(ALLEGRO_FONT *font)
 {
     font_ = font;
-    text_w_ = font ? al_get_text_width(font_, text_.c_str()) : 0;
-    text_h_ = font ? al_get_font_line_height(font_) : 0;
+    text_w_ = font_ ? al_get_text_width(font_, text_.c_str()) : 0;
+    text_h_ = font_ ? al_get_font_line_height(font_) : 0;
     resize(x_, y_, w_, h_);
 }
 
