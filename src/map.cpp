@@ -13,6 +13,7 @@ map::map(const uint rows, const uint cols, const double obstacles):
     rows_(0),
     cols_(0),
     obstacles_(0),
+    show_(true),
     origin_(nullptr),
     goal_(nullptr),
     cx_(0),
@@ -69,6 +70,8 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
 
 void map::draw()
 {
+    if (!show_) return;
+
     std::vector<ALLEGRO_VERTEX> v;
 
     const double p_x = cx_-(rows_ - 1)*tile_size_*zoom_/2; // Left top corner coord.
@@ -173,6 +176,8 @@ void map::resize(const double cx, const double cy, const double width, const dou
 
 void map::update()
 {
+    if (!show_) return;
+
     if (mouse.insideBox(cx_-width_/2,cy_-height_/2,width_,height_))
     {
         zoom_ += (mouse.getZ() - last_mouse_z_)*0.1;
@@ -231,6 +236,20 @@ uint map::getNRows() const
 uint map::getNCols() const
 {
     return cols_;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void map::show()
+{
+    show_ = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void map::hide()
+{
+    show_ = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

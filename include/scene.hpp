@@ -65,8 +65,7 @@ class scene {
         void update();
 
     private:
-        void drawMenu();
-        void drawSim();
+        void showMenu(bool show);
 };
 
 #endif

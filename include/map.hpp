@@ -49,6 +49,8 @@ class map {
         uint cols_;
         double obstacles_;
 
+        bool show_;
+
         tile *origin_;
         tile *goal_;
 
@@ -92,6 +94,9 @@ class map {
 
         void resize(const double cx, const double cy, const double width, const double height);
         void update();
+
+        void show();
+        void hide();
 };
 
 #endif

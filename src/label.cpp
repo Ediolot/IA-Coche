@@ -97,6 +97,7 @@ void label::update()
     }
 }
 
+#include <iostream>
 void label::draw()
 {
     if (!show_) return;

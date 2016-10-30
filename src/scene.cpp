@@ -31,6 +31,7 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
 {
     resize(screen_w_, screen_h_);
     tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
+    showMenu(show_menu_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,41 +46,63 @@ void scene::draw()
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
-    // MENU
-    if (show_menu_)
-        drawMenu();
-    else
-        drawSim();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void scene::drawSim()
-{
-    tile_map_.draw();
-    al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
-
-    tracking_.draw();
-    restart_.draw();
-    step_.draw();
-    play_.draw();
-    random_.draw();
-    speed_.draw();
-
     // TEXT & DEBUG
     displayFPS(caviar_font_16);
-}
 
-////////////////////////////////////////////////////////////////////////////////
+    if (!show_menu_)
+    {
+        tile_map_.draw();
+        al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
+    }
 
-void scene::drawMenu()
-{
     obstacles_.draw();
     quit_.draw();
     algorithm_.draw();
     width_.draw();
     height_.draw();
     obstacles_text_.draw();
+    tracking_.draw();
+    restart_.draw();
+    step_.draw();
+    play_.draw();
+    random_.draw();
+    speed_.draw();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void scene::showMenu(bool show)
+{
+    if (show)
+    {
+        obstacles_.show();
+        quit_.show();
+        algorithm_.show();
+        width_.show();
+        height_.show();
+        restart_.hide();
+        play_.hide();
+        random_.hide();
+        speed_.hide();
+        tracking_.hide();
+        step_.hide();
+        tile_map_.hide();
+    }
+    else
+    {
+        obstacles_.hide();
+        quit_.hide();
+        algorithm_.hide();
+        width_.hide();
+        height_.hide();
+        restart_.show();
+        play_.show();
+        random_.show();
+        speed_.show();
+        tracking_.show();
+        step_.show();
+        tile_map_.show();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,43 +111,35 @@ void scene::update()
 {
     mouse.setShouldBeHand(false);
 
-    if (show_menu_)
-    {
-        obstacles_.update();
-        quit_.update();
-        algorithm_.update();
-        width_.update();
-        height_.update();
+    obstacles_.update();
+    quit_.update();
+    algorithm_.update();
+    width_.update();
+    height_.update();
+    restart_.update();
+    play_.update();
+    random_.update();
+    speed_.update();
+    tracking_.update();
+    step_.update();
+    tile_map_.update();
 
-        obstacles_text_.setText(std::to_string(int(obstacles_.getValue()*100))+"% Obstacles");
+    double speed = speed_.getValue();
 
-        if (quit_.mouseClicked()) quit = true;
-    }
+    if (quit_.mouseClicked()    ) quit = true;
+    if (random_.mouseClicked()  ) tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
+    if (play_.mouseClicked()    ) isplaying_  = !isplaying_;
+    if (tracking_.mouseClicked()) istracking_ = !istracking_;
+    if (speed < 0.001           ) isplaying_  = false;
+
+    obstacles_text_.setText(std::to_string(int(obstacles_.getValue()*100))+"% Obstacles");
+    tracking_.setImg(istracking_   ? tracking_image : tracking_disabled_image);
+    step_.setImg(    speed < 0.001 ? step_image     : step_disabled_image);
+
+    if (speed > 0.001)
+        play_.setImg(isplaying_ ? pause_image : play_image);
     else
-    {
-        restart_.update();
-        play_.update();
-        random_.update();
-        speed_.update();
-        tracking_.update();
-        step_.update();
-        tile_map_.update();
-
-        double speed = speed_.getValue();
-
-        if (random_.mouseClicked()  ) tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
-        if (play_.mouseClicked()    ) isplaying_  = !isplaying_;
-        if (tracking_.mouseClicked()) istracking_ = !istracking_;
-        if (speed < 0.001           ) isplaying_  = false;
-
-        tracking_.setImg(istracking_   ? tracking_image : tracking_disabled_image);
-        step_.setImg(speed < 0.001 ? step_image : step_disabled_image);
-
-        if (speed > 0.001)
-            play_.setImg(isplaying_ ? pause_image : play_image);
-        else
-            play_.setImg(play_disabled_image);
-    }
+        play_.setImg(play_disabled_image);
 
     // ESC KEY
     if (keysPress[ALLEGRO_KEY_ESCAPE])
@@ -132,6 +147,7 @@ void scene::update()
     else if (esc_was_pressed_)
     {
         show_menu_ = !show_menu_;
+        showMenu(show_menu_);
         esc_was_pressed_ = false;
     }
 
