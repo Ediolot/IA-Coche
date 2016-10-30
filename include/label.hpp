@@ -14,7 +14,7 @@ class label {
 
     protected:
 
-        ALLEGRO_COLOR *color_;
+        ALLEGRO_COLOR color_;
         ALLEGRO_FONT *font_;
         ALLEGRO_BITMAP *img_;
         std::string text_;
@@ -47,16 +47,16 @@ class label {
 
         label(const std::string &text,
               ALLEGRO_BITMAP *img,
-              ALLEGRO_FONT   *font  = nullptr,
-              ALLEGRO_COLOR  *color = nullptr);
+              ALLEGRO_COLOR color,
+              ALLEGRO_FONT *font = nullptr);
 
         label(ALLEGRO_BITMAP *img,
-              ALLEGRO_FONT   *font  = nullptr,
-              ALLEGRO_COLOR  *color = nullptr);
+              ALLEGRO_COLOR color,
+              ALLEGRO_FONT *font = nullptr);
 
         label(const std::string &text,
-              ALLEGRO_FONT  *font  = nullptr,
-              ALLEGRO_COLOR *color = nullptr);
+              ALLEGRO_COLOR color,
+              ALLEGRO_FONT *font = nullptr);
 
         ~label();
 
@@ -72,7 +72,7 @@ class label {
         void setText(const std::string &text);
         void setImg(ALLEGRO_BITMAP *img);
         void setFont(ALLEGRO_FONT *font);
-        void setColor(ALLEGRO_COLOR *color);
+        void setColor(ALLEGRO_COLOR color);
         void setVerticalTextAling(const dir v_aling);
         void setHorizontalTextAling(const dir h_aling);
 

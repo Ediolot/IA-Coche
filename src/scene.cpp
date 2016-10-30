@@ -18,7 +18,7 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     step_(step_image),
     tracking_(tracking_image),
 
-    quit_("QUIT", ubuntu_mono_font_40, default_animation_time_),
+    quit_("QUIT", al_map_rgb(0,0,0), ubuntu_mono_font_40),
 
     algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
 

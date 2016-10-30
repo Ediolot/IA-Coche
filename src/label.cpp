@@ -1,7 +1,7 @@
 #include "../include/label.hpp"
 
 
-label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color):
+label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_COLOR color, ALLEGRO_FONT *font):
     color_(nullptr),
     font_(nullptr),
     img_(nullptr),
@@ -31,11 +31,11 @@ label::label(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, A
     setImg(img);
 }
 
-label::label(ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR *color):
+label::label(ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR color):
     label("", img, font, color)
 {}
 
-label::label(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR *color):
+label::label(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR color):
     label(text, nullptr, font, color)
 {}
 
@@ -103,7 +103,7 @@ void label::draw()
     if (img_)
         al_draw_bitmap(img_, img_x_, img_y_, 0);
     if (font_ && color_)
-        al_draw_text(font_, *color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
+        al_draw_text(font_, color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
 }
 
 bool label::mouseOver()
@@ -141,7 +141,7 @@ void label::setFont(ALLEGRO_FONT *font)
     resize(x_, y_, w_, h_);
 }
 
-void label::setColor(ALLEGRO_COLOR *color)
+void label::setColor(ALLEGRO_COLOR color)
 {
     color_ = color;
 }
