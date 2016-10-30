@@ -33,7 +33,7 @@ map::~map()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
+
 void map::rebuild(const uint rows, const uint cols, const double obstacles)
 {
     if (!rows || !cols) return;
@@ -44,7 +44,7 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
     inc_x_ = 0;
     inc_y_ = 0;
     zoom_ = 1;
-    
+
     tiles_.clear();
     tiles_.resize(rows*cols);
     for (uint i=0; i<rows_; ++i)
@@ -62,7 +62,7 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
         }
 
     generate(obstacles);
-    moveTo(cx_, cy_, width_, height_);
+    resize(cx_, cy_, width_, height_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ void map::clearAllTiles()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::moveTo(const double cx, const double cy, const double width, const double height)
+void map::resize(const double cx, const double cy, const double width, const double height)
 {
     double cols_size = width/rows_;
     double rows_size = height/cols_;

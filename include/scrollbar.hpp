@@ -9,10 +9,13 @@
 
 class scrollbar {
 
+    /* NOTE Not updated, but good enough to work */
+
     private:
 
-        scroll type_;
+        bool show_;
 
+        scroll type_;
         double value_;
 
         double x_;
@@ -31,7 +34,7 @@ class scrollbar {
 
         ~scrollbar();
 
-        void moveTo(const double x, const double y, const double w, const double h);
+        void resize(const double x, const double y, const double w, const double h);
 
         void update();
 
@@ -40,6 +43,9 @@ class scrollbar {
         double getValue() const;
 
         void setValue(const double value);
+
+        void show();
+        void hide();
 };
 
 #endif

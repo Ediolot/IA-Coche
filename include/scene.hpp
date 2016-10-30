@@ -36,6 +36,9 @@ class scene {
         // BUTTONS WITH TEXT
         button quit_;
 
+        // LABELS
+        label obstacles_text_;
+
         // LIST SELECTORS
         selector algorithm_;
 
