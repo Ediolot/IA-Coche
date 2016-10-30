@@ -15,7 +15,9 @@ class numericSelector {
 
     protected:
 
-        ALLEGRO_COLOR *color_;
+        const double arrows_margin = 40;
+
+        ALLEGRO_COLOR color_;
         ALLEGRO_FONT *font_;
         label label_;
 

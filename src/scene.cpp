@@ -20,10 +20,10 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
 
     quit_("QUIT", al_map_rgb(0,0,0), ubuntu_mono_font_40, 0.2),
 
-    algorithm_("Algorithm  ", ubuntu_mono_font_40, {"AAA", "BBBB", "CCCC"}),
+    algorithm_({"AAA", "BBBB", "CCCC"}, "Algorithm", ubuntu_mono_font_40, al_map_rgb(0,0,0)),
 
-    width_("Grid width ", ubuntu_mono_font_40, 1, 250, STARTING_SIZE_W),
-    height_("Grid height", ubuntu_mono_font_40, 1, 250, STARTING_SIZE_H),
+    width_( "Grid width ", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_W),
+    height_("Grid height", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_H),
 
     speed_(scroll::VERTICAL),
     obstacles_(scroll::HORIZONTAL, 0.2)
@@ -154,9 +154,9 @@ void scene::resize(const double w, const double h)
         screen_h_
     );
 
-    width_.moveTo(150, 130);
-    height_.moveTo(150, 220);
-    algorithm_.moveTo(150, 310);
+    width_.resize(150, 130);
+    height_.resize(150, 220);
+    algorithm_.resize(150, 310);
 
     obstacles_.moveTo(150, 400, screen_w_-300, 5);
     quit_.resize(screen_w_-120, screen_h_-70, 100, 50);

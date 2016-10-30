@@ -2,7 +2,7 @@
 #include "../include/numericSelector.hpp"
 
 numericSelector::numericSelector(const std::string &text, ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR color, int min, int max, int val):
-    label_(text, img, color_, font_),
+    label_(text, img, color, font),
     show_(true),
     x_(.0),
     y_(.0),
@@ -24,15 +24,15 @@ numericSelector::numericSelector(const std::string &text, ALLEGRO_BITMAP *img, A
     mouse_over_(false),
     last_mouse_z_(.0)
 {
-    text_h_ = al_get_font_line_height(font_);
+    text_h_ = al_get_font_line_height(font);
     img_w_ = al_get_bitmap_width(arrow_image);
     img_h_ = al_get_bitmap_height(arrow_image);
     setFont(font);
     setColor(color);
 }
 
-numericSelector::numericSelector(ALLEGRO_BITMAP *img, ALLEGRO_FONT *font, ALLEGRO_COLOR color, int min, int max, int val):
-    numericSelector("", img, font, color, min, max, val)
+numericSelector::numericSelector(ALLEGRO_BITMAP *img, int min, int max, int val):
+    numericSelector("", img, nullptr,  al_map_rgb(0,0,0), min, max, val)
 {}
 
 numericSelector::numericSelector(const std::string &text, ALLEGRO_FONT *font, ALLEGRO_COLOR color, int min, int max, int val):
@@ -47,9 +47,6 @@ void numericSelector::resize(const double x, const double y, const double w, con
     double label_w = label_.getMinWidth();
     double min_w   = getMinWidth();
     double min_h   = getMinHeight();
-
-    min_w += 10; // Label <=> selector margin
-    min_w += 20; // Arrows margin
 
     x_ = x;
     y_ = y;
@@ -69,9 +66,13 @@ void numericSelector::resize(const double x, const double y, const double w, con
         default:        selector_img_y_ =    (h_   -img_h_)/2; selector_text_y_ =    (h_   -text_h_)/2; break;
     }
 
+    selector_x_      += x;
+    selector_img_y_  += y;
+    selector_text_y_ += y;
+
     label_.resize(x_,y_);
 }
-
+#include <iostream>
 void numericSelector::update()
 {
     if (!show_)
@@ -83,11 +84,11 @@ void numericSelector::update()
         return;
     }
 
-    double arrow_l_x = selector_x_+label_.getMinWidth()+10;
-    double arrow_r_x = selector_x_+getMinWidth() - (img_w_+10);
+    double arrow_l_x = selector_x_;
+    double arrow_r_x = selector_x_+getMinWidth() - (img_w_+arrows_margin) - label_.getMinWidth();
 
-    bool mouse_over_l = mouse.insideBox(arrow_l_x, y_, arrow_l_x+img_w_+10, y_+img_h_);
-    bool mouse_over_r = mouse.insideBox(arrow_r_x, y_, arrow_r_x+img_w_+10, y_+img_h_);
+    bool mouse_over_l = mouse.insideBox(arrow_l_x, y_, arrow_l_x+img_w_+arrows_margin, y_+img_h_);
+    bool mouse_over_r = mouse.insideBox(arrow_r_x, y_, arrow_r_x+img_w_+arrows_margin, y_+img_h_);
 
     mouse_over_ = mouse.insideBox(x_, y_, x_+w_, y_+h_);
 
@@ -129,11 +130,11 @@ void numericSelector::update()
     }
 
     // Mouse zoom
-    if (last_mouse_z_ && mouse.insideBox(arrow_l_x, y_, arrow_r_x+(img_w_+10), y_+30))
+    if (last_mouse_z_ && mouse.insideBox(arrow_l_x, y_, arrow_r_x+(img_w_+arrows_margin), y_+30))
         value_ += (mouse.getZ() - last_mouse_z_)*3;
 
-    if (value_ > max_) value_ = min_;
-    if (value_ < min_) value_ = max_;
+    if (value_ >= max_) value_ = min_;
+    if (value_ <  min_) value_ = max_-1;
 
     last_mouse_z_ = mouse.getZ();
 }
@@ -145,11 +146,11 @@ void numericSelector::draw()
     double text_w = al_get_text_width(font_, std::to_string(value_).c_str());
 
     label_.draw();
-    al_draw_bitmap(arrow_image, selector_x_+5, selector_img_y_, 0);
-    al_draw_bitmap(arrow_image, selector_x_+img_w_+15+text_w, selector_img_y_, 0);
+    al_draw_bitmap(arrow_image, selector_x_+arrows_margin/2, selector_img_y_, 0);
+    al_draw_bitmap(arrow_image, selector_x_+img_w_+text_w+arrows_margin*3/2, selector_img_y_, ALLEGRO_FLIP_HORIZONTAL);
 
     if (font_)
-        al_draw_text(font_, color_, selector_x_+text_w/2+img_w_+10, y_,ALLEGRO_ALIGN_CENTER, std::to_string(value_).c_str());
+        al_draw_text(font_, color_, selector_x_+img_w_+arrows_margin, y_,ALLEGRO_ALIGN_LEFT, std::to_string(value_).c_str());
 }
 
 int numericSelector::getValue() const
@@ -203,7 +204,7 @@ void numericSelector::setHorizontalTextAling(const dir h_aling)
 
 double numericSelector::getMinWidth() const
 {
-    return label_.getMinWidth() + img_w_*2 + al_get_text_width(font_, std::to_string(value_).c_str());
+    return label_.getMinWidth() + img_w_*2 + al_get_text_width(font_, std::to_string(value_).c_str()) + arrows_margin*2;
 }
 
 double numericSelector::getMinHeight() const

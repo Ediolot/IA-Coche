@@ -50,9 +50,9 @@ void label::resize(const double x, const double y, const double w, const double 
 
     switch (h_aling_)
     {
-        case dir::LEFT:  img_x_ = 0;                     text_x_ = img_x_ +img_w_;           break;
-        case dir::RIGHT: img_x_ = w_ - min_w;            text_x_ = img_x_ +img_w_;           break;
-        default:         img_x_ = (w_-text_w_-img_w_)/2; text_x_ = img_x_ +img_w_+text_w_/2; break;
+        case dir::LEFT:  img_x_ = 0;                     break;
+        case dir::RIGHT: img_x_ = w_ - min_w;            break;
+        default:         img_x_ = (w_-text_w_-img_w_)/2; break;
     }
 
     switch (v_aling_)
@@ -62,6 +62,7 @@ void label::resize(const double x, const double y, const double w, const double 
         default:        img_y_ =    (h_   -img_h_)/2; text_y_ =    (h_-   text_h_)/2; break;
     }
 
+    text_x_ = img_x_ +img_w_;
     img_x_  += x;
     img_y_  += y;
     text_x_ += x;
@@ -103,7 +104,7 @@ void label::draw()
     if (img_)
         al_draw_bitmap(img_, img_x_, img_y_, 0);
     if (font_)
-        al_draw_text(font_, color_, text_x_, text_y_, ALLEGRO_ALIGN_CENTER, text_.c_str());
+        al_draw_text(font_, color_, text_x_, text_y_, ALLEGRO_ALIGN_LEFT, text_.c_str());
 }
 
 bool label::mouseOver()

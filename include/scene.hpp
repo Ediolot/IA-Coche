@@ -5,10 +5,9 @@
 #include "common.hpp"
 #include "map.hpp"
 #include "button.hpp"
-#include "button_image.hpp"
 #include "scrollbar.hpp"
 #include "selector.hpp"
-#include "selector_numeric.hpp"
+#include "numericSelector.hpp"
 
 class scene {
 
@@ -41,8 +40,8 @@ class scene {
         selector algorithm_;
 
         // NUMERIC SELECTORS
-        selector_numeric width_;
-        selector_numeric height_;
+        numericSelector width_;
+        numericSelector height_;
 
         // SCROLLBARS
         scrollbar speed_;
