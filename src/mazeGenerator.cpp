@@ -25,6 +25,16 @@ double mazeGenerator::getObs() const
     return obs_;
 }
 
+uint mazeGenerator::randomRow() const
+{
+    return std::rand() % rows_;
+}
+
+uint mazeGenerator::randomCol() const
+{
+    return std::rand() % cols_;
+}
+
 const std::vector< std::vector<bool> >& mazeGenerator::randomize(const uint rows, const uint cols, const double obs, const uint seed)
 {
     rows_ = rows;

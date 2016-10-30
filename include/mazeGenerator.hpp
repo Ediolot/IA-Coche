@@ -28,6 +28,9 @@ class mazeGenerator {
 
         bool getPos(const uint row, const uint col) const;
         void show() const;
+
+        uint randomRow() const;
+        uint randomCol() const;
 };
 
 #endif

@@ -13,6 +13,8 @@ map::map(const uint rows, const uint cols, const double obstacles):
     rows_(0),
     cols_(0),
     obstacles_(0),
+    origin_(nullptr),
+    goal_(nullptr),
     cx_(0),
     cy_(0),
     width_(0),
@@ -34,6 +36,8 @@ map::~map()
 
 void map::rebuild(const uint rows, const uint cols, const double obstacles)
 {
+    if (!rows || !cols) return;
+
     rows_ = rows;
     cols_ = cols;
 
@@ -126,7 +130,18 @@ void map::generate(const double obstacles)
     generator_.randomize(rows_, cols_, obstacles);
 
     for (uint i=0; i<(rows_*cols_); ++i)
-        tiles_[i].setType(generator_.getPos(i/cols_, i%cols_) ? tileType::WATER : tileType::NEUTRAL);
+        tiles_[i].setType(generator_.getPos(i/cols_, i%cols_) ? tile::type::WALL : tile::type::NEUTRAL);
+
+    tile *t = &tiles_[generator_.randomRow()*cols_ + generator_.randomCol()];
+    t->setType(tile::type::ORIGIN);
+    t->containsPlayer(true);
+    origin_ = t;
+
+    while (t->containsPlayer())
+        t = &tiles_[generator_.randomRow()*cols_ + generator_.randomCol()];
+
+    t->setType(tile::type::CHEST);
+    goal_ = t;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -134,7 +149,7 @@ void map::generate(const double obstacles)
 
 void map::neutralizeAllTiles()
 {
-    for (tile &i : tiles_) i.setType(tileType::NEUTRAL);
+    for (tile &i : tiles_) i.setType(tile::type::NEUTRAL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,8 +184,27 @@ void map::update()
             int i = std::round((mouse.getY()-p_y)/(tile_size_*zoom_));
 
             tile *t;
-            if (i>=0 && j>=0 && (t = accessTile(i,j)))
-                t->setType(mouse.leftDown() ? tileType::WATER : tileType::NEUTRAL);
+            if (i>=0 && j>=0 && mouse.leftDown() && (t = accessTile(i,j)) && !t->containsPlayer())
+            {
+                if (keysPress[ALLEGRO_KEY_3] && !t->isOrigin())
+                {
+                    if (goal_) goal_->setType(tile::type::NEUTRAL);
+                    goal_ = t;
+                    goal_->setType(tile::type::CHEST);
+                }
+                else if (keysPress[ALLEGRO_KEY_4] && !t->isChest())
+                {
+                    if (origin_) origin_->setType(tile::type::NEUTRAL);
+                    origin_ = t;
+                    origin_->setType(tile::type::ORIGIN);
+                }
+                else if (!t->isOrigin() && !t->isChest())
+                {
+                         if (keysPress[ALLEGRO_KEY_1]) t->setType(tile::type::WALL);
+                    else if (keysPress[ALLEGRO_KEY_2]) t->setType(tile::type::MONSTER);
+                    else                               t->setType(tile::type::NEUTRAL);
+                }
+            }
         }
 
         if (keysPress[ALLEGRO_KEY_W]) inc_y_ += scrollSpeed/FPS;

@@ -38,13 +38,6 @@ enum dir {
     CENTER
 };
 
-/////////////// TILE TYPES //////////////
-
-enum tileType {
-    NEUTRAL,
-    WATER
-};
-
 ///////////// SCROLLBAR TYPE /////////////
 
 enum scroll {

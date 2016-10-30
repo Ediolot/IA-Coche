@@ -49,6 +49,9 @@ class map {
         uint cols_;
         double obstacles_;
 
+        tile *origin_;
+        tile *goal_;
+
         double cx_;
         double cy_;
         double width_;

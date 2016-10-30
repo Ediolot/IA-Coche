@@ -15,13 +15,24 @@
 
 class tile {
 
+    public:
+
+        enum type {
+            NEUTRAL,
+            WALL,
+            MONSTER,
+            CHEST,
+            ORIGIN
+        };
+
     private:
 
         std::vector<tile*> neighbors_;
         std::vector<tile*> adjacents_;
 
-        ALLEGRO_COLOR tile_color_;
-        tileType tile_type_;
+        tile::type tile_type_;
+
+        bool contains_player_;
 
     public:
 
@@ -40,8 +51,23 @@ class tile {
         // Check if is a border tile
         bool isBorder() const;
 
-        // Check if the tile's type is water
-        bool isWater() const;
+        // Check if the tile's type is wall
+        bool isWall() const;
+
+        // Check if the tile's type is monster
+        bool isMonster() const;
+
+        // Check if the tile's type is chest
+        bool isChest() const;
+
+        // Check if the tile's type is origin
+        bool isOrigin() const;
+
+        // Check if the tile contains the player
+        bool containsPlayer() const;
+
+        // Set if the tile contains the player
+        void containsPlayer(bool set);
 
         // Append the tile's vertices points to a vector
         void appendVertices(
@@ -52,7 +78,7 @@ class tile {
         ) const;
 
         // Change the tile color
-        void setType(const tileType type);
+        void setType(const tile::type type);
 };
 
 

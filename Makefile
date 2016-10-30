@@ -10,7 +10,7 @@
 # Compiler #
 CXX      = g++
 LFLAGS   = `pkg-config --libs --static $(ALLEGRO_LIBS)`
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -std=c++11 -g
 
 # Allegro libs #
 ALLEGRO_LIBS = \
