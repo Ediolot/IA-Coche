@@ -98,6 +98,8 @@ class map {
 
         void show(bool show = true);
         void hide();
+
+        void restartPlayer();
 };
 
 #endif

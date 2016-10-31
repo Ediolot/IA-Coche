@@ -209,7 +209,7 @@ void map::update()
                     goal_ = t;
                     goal_->setType(tile::type::CHEST);
                 }
-                else if (keysPress[ALLEGRO_KEY_4] && !t->isChest())
+                else if (keysPress[ALLEGRO_KEY_2] && !t->isChest())
                 {
                     if (origin_) origin_->setType(tile::type::NEUTRAL);
                     origin_ = t;
@@ -218,7 +218,10 @@ void map::update()
                 else if (!t->isOrigin() && !t->isChest())
                 {
                          if (keysPress[ALLEGRO_KEY_1]) t->setType(tile::type::WALL);
-                    else if (keysPress[ALLEGRO_KEY_2]) t->setRandomMonsterType();
+                    else if (keysPress[ALLEGRO_KEY_4]) t->setType(tile::type::MONSTER1);
+                    else if (keysPress[ALLEGRO_KEY_5]) t->setType(tile::type::MONSTER2);
+                    else if (keysPress[ALLEGRO_KEY_6]) t->setType(tile::type::MONSTER3);
+                    else if (keysPress[ALLEGRO_KEY_7]) t->setType(tile::type::MONSTER4);
                     else                               t->setType(tile::type::NEUTRAL);
                 }
             }
