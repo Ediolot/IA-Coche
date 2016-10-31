@@ -11,7 +11,7 @@ public:
   player(tile *position);
   virtual ~player();
   uint a_star_step();
-  void move();
+  void move(tile *next_pos);
 };
 
 /*
