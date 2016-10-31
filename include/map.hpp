@@ -68,7 +68,7 @@ class map {
 
         mazeGenerator generator_;
 
-        player p1_;
+        //player p1_;
 
     public:
 
