@@ -68,6 +68,8 @@ class map {
 
         mazeGenerator generator_;
 
+        player p1_;
+
     public:
 
         map();
