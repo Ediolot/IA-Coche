@@ -2,19 +2,19 @@
 
 player::player():
     pos_(nullptr)
-    {}
+{}
 
 player::player(tile* position):
     pos_(position)
-  {
+{
 
-  }
+}
 
-  player::~player(){}
+player::~player(){}
 
-  void player::set_player(tile* x){
-      pos_=x;
-  }
+void player::set_player(tile* x){
+    move(x);
+}
 
 uint player::a_star_step(){
     return 0;
@@ -22,13 +22,7 @@ uint player::a_star_step(){
 
 void player::move(tile *next_pos){
     tile *t = next_pos;
-    if(pos_->containsPlayer()==true){
-        if(next_pos->containsPlayer()==false){
-            pos_->containsPlayer(false);
-            pos_= next_pos;
-            pos_->containsPlayer(true);
-
-        }
-    }
-
+    pos_->containsPlayer(false);
+    next_pos->containsPlayer(true);
+    pos_=next_pos;
 }
