@@ -37,6 +37,7 @@
 #include "mouse.hpp"
 #include "mazeGenerator.hpp"
 #include "images.hpp"
+#include "player.hpp"
 
 class map {
 
@@ -68,7 +69,7 @@ class map {
 
         mazeGenerator generator_;
 
-        //player p1_;
+        player p1_;
 
     public:
 

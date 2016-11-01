@@ -1,9 +1,19 @@
 #include "../include/player.hpp"
 
+player::player():
+    pos_(nullptr)
+    {}
+
 player::player(tile* position):
-  pos_(position)
+    pos_(position)
   {
 
+  }
+
+  player::~player(){}
+
+  void player::set_player(tile* x){
+      pos_=x;
   }
 
 uint player::a_star_step(){

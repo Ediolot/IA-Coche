@@ -8,8 +8,10 @@ private:
   tile *pos_;
 
 public:
+  player();
   player(tile *position);
   virtual ~player();
+  void set_player(tile* x);
   uint a_star_step();
   void move(tile *next_pos);
 };
