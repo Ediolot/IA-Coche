@@ -47,7 +47,13 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
     zoom_ = 1;
 
     tiles_.clear();
-    tiles_.resize(rows*cols);
+    tiles_.reserve(rows*cols);
+
+    for (uint i=0; i<rows_; ++i)
+        for (uint j=0; j<cols_; ++j)
+            tiles_.push_back(tile(i, j));
+
+
     for (uint i=0; i<rows_; ++i)
         for (uint j=0; j<cols_; ++j)
         {
@@ -203,6 +209,7 @@ void map::update()
             tile *t;
             if (i>=0 && j>=0 && mouse.leftDown() && (t = accessTile(i,j)) && !t->containsPlayer())
             {
+                std::cout << "tile is: " << t->getX() << "," << t->getY() << std::endl;
                 if (keysPress[ALLEGRO_KEY_3] && !t->isOrigin())
                 {
                     if (goal_) goal_->setType(tile::type::NEUTRAL);

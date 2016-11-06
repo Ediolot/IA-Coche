@@ -38,9 +38,12 @@ class tile {
 
         bool contains_player_;
 
+        double x_; // Tile's position in relation with other tiles in the map
+        double y_;
+
     public:
 
-        tile();
+        tile(const double x = 0, const double y = 0);
         virtual ~tile();
 
         // Add a tile's friend
@@ -72,6 +75,12 @@ class tile {
 
         // Set if the tile contains the player
         void containsPlayer(bool set);
+
+        // Tile's x position in relation with the othter tiles of the map
+        uint getX() const;
+
+        // Tile's y position in relation with the othter tiles of the map
+        uint getY() const;
 
         // Append the tile's vertices points to a vector
         void appendVertices(
