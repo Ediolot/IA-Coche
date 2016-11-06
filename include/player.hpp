@@ -15,7 +15,7 @@ public:
   player(tile *position, tile *chest_);
   virtual ~player();
   void setPlayer(tile* x, tile *chest_ = nullptr);
-  uint AStarAtep();
+  uint AStarStep();
   void move(tile *next_pos);
 };
 

@@ -21,13 +21,18 @@ void player::setPlayer(tile* x, tile *chest){
     if (chest_) std::cout << "Chest at: " << chest_->getX() << "," << chest_->getY() << std::endl;
 }
 
-uint player::AStarAtep(){
+uint player::AStarStep(){
+    if (pos_->getFriend(dir::RIGHT)->isWall()) return 1;
+    move(pos_->getFriend(dir::RIGHT));
     return 0;
 } //Vicky
 
 void player::move(tile *next_pos){
     tile *t = next_pos;
-    pos_->containsPlayer(false);
-    next_pos->containsPlayer(true);
-    pos_=next_pos;
+    if (next_pos)
+    {
+        pos_->containsPlayer(false);
+        next_pos->containsPlayer(true);
+        pos_=next_pos;
+    }
 }
