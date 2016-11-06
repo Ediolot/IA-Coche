@@ -1,22 +1,27 @@
 #include "../include/player.hpp"
 
 player::player():
-    pos_(nullptr)
+    player(nullptr, nullptr)
 {}
 
-player::player(tile* position):
-    pos_(position)
+player::player(tile* position, tile *chest):
+    pos_(position),
+    chest_(chest)
 {
-
 }
 
 player::~player(){}
 
-void player::set_player(tile* x){
-    move(x);
+void player::setPlayer(tile* x, tile *chest){
+    if (chest) chest_ = chest;
+    pos_ = x;
+    move(pos_);
+
+    if (pos_)   std::cout << "Player at: " << pos_->getX() << "," << pos_->getY() << std::endl;
+    if (chest_) std::cout << "Chest at: " << chest_->getX() << "," << chest_->getY() << std::endl;
 }
 
-uint player::a_star_step(){
+uint player::AStarAtep(){
     return 0;
 } //Vicky
 

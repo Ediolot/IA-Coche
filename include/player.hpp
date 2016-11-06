@@ -1,18 +1,21 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 #include "tile.hpp"
+#include "common.hpp"
+#include <iostream> // TODO remove
 
 class player {
 
 private:
   tile *pos_;
+  tile *chest_;
 
 public:
   player();
-  player(tile *position);
+  player(tile *position, tile *chest_);
   virtual ~player();
-  void set_player(tile* x);
-  uint a_star_step();
+  void setPlayer(tile* x, tile *chest_ = nullptr);
+  uint AStarAtep();
   void move(tile *next_pos);
 };
 

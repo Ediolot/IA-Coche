@@ -156,6 +156,8 @@ void map::generate(const double obstacles)
 
     t->setType(tile::type::CHEST);
     goal_ = t;
+
+    p1_.setPlayer(origin_, goal_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
