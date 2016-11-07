@@ -70,6 +70,12 @@ class AStarTray {
             std::cout << "[" << gScore() << "," << hScore() << "]" << std::endl;
             return os;
         }
+
+        void paint() const
+        {
+            for (tile *t : tray_)
+                t->tint(al_map_rgb(255,180,180));
+        }
 };
 
 #endif

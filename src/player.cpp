@@ -35,6 +35,8 @@ void player::move(tile *next_pos)
 
 uint player::AStarStep()
 {
+    if (pos_==chest_) return 2; // Encontrado
+
     /* Open list: Todas las casillas que están siendo consideradas para encontrar el camino */
     /* Closed list: Todas las casillas que no hay que reconsiderar */
 
@@ -47,16 +49,17 @@ uint player::AStarStep()
         // Closed list vacío
     }
 
-    if (pos_==chest_) return 2; // Encontrado
-
     if (open_set_.empty()) return 1; // No hay solución
 
     AStarTray first = *open_set_.begin(); // Escoger la primera trayectoria (menor coste total)
+    move(first.getLast());
     open_set_.erase(open_set_.begin()); // Eliminar la trayectoria de la lista abierta
     insertInClosedSet(first); // Insertar la trayectoria en la lista cerrada, en caso de que ya exista una similar, eliminar la de mayor coste
 
-    move(first.getLast());
-
+    if (pos_==chest_) {
+        first.paint();
+        return 2;
+    }
 
     // Formar nuevas trayectorias
     std::vector<tile*> adyacents;
@@ -77,7 +80,6 @@ uint player::AStarStep()
 
 void player::insertInOpenSet(AStarTray &t)
 {
-    t.getLast()->tint(al_map_rgb(255,200,200));
     // Comprueba si existe una trayectoria que acaba en el mismo nodo
     for (std::multiset<AStarTray>::iterator it = open_set_.begin(); it != open_set_.end(); ++it)
     {
@@ -127,7 +129,6 @@ double player::findInClosedSet(const AStarTray &t) const
 
 void player::insertInClosedSet(AStarTray &t)
 {
-    t.getLast()->tint(al_map_rgb(200,255,200));
     // Comprueba que no exista ya una en el closed set
     for (std::multiset<AStarTray>::iterator it = closed_set_.begin(); it != closed_set_.end(); ++it)
     {

@@ -187,10 +187,15 @@ void map::resize(const double cx, const double cy, const double width, const dou
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::update()
+void map::updatePlayer()
 {
     p1_.AStarStep();
+}
 
+////////////////////////////////////////////////////////////////////////////////
+
+void map::update()
+{
     if (!show_)
     {
         last_mouse_z_ = mouse.getZ();

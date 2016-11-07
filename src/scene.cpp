@@ -114,6 +114,9 @@ void scene::update()
     if (tracking_.mouseClicked()) istracking_ = !istracking_;
     if (speed < 0.001           ) isplaying_  = false;
 
+    if (isplaying_ || step_.mouseClicked())
+        tile_map_.updatePlayer();
+
     obstacles_text_.setText(std::to_string(int(obstacles_.getValue()*100))+"% Obstacles");
     tracking_.setImg(istracking_   ? tracking_image : tracking_disabled_image);
     step_.setImg(    speed < 0.001 ? step_image     : step_disabled_image);
