@@ -35,16 +35,19 @@ class tile {
         std::vector<tile*> adjacents_;
 
         tile::type tile_type_;
+        ALLEGRO_COLOR tint_;
 
         bool contains_player_;
 
         double x_; // Tile's position in relation with other tiles in the map
-        double y_;
+        double y_; // TODO int en vez de double
 
     public:
 
         tile(const double x = 0, const double y = 0);
         virtual ~tile();
+
+        void tint(ALLEGRO_COLOR c);
 
         // Add a tile's friend
         void addFriend(tile *n, const dir direction);
@@ -77,10 +80,10 @@ class tile {
         void containsPlayer(bool set);
 
         // Tile's x position in relation with the othter tiles of the map
-        uint getX() const;
+        double getX() const;
 
         // Tile's y position in relation with the othter tiles of the map
-        uint getY() const;
+        double getY() const;
 
         // Append the tile's vertices points to a vector
         void appendVertices(

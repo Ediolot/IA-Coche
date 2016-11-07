@@ -189,7 +189,7 @@ void map::resize(const double cx, const double cy, const double width, const dou
 
 void map::update()
 {
-    std::cout << "AStarStep returned " << p1_.AStarStep() << std::endl;
+    p1_.AStarStep();
 
     if (!show_)
     {

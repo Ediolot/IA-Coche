@@ -6,6 +6,7 @@ tile::tile(const double x, const double y):
     neighbors_(4, nullptr),
     adjacents_(4, nullptr),
     tile_type_(tile::type::NEUTRAL),
+    tint_(al_map_rgb(255,255,255)),
     contains_player_(false),
     x_(x),
     y_(y)
@@ -68,14 +69,14 @@ bool tile::isAdjacentTo(const tile *n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-uint tile::getX() const
+double tile::getX() const
 {
     return x_;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-uint tile::getY() const
+double tile::getY() const
 {
     return y_;
 }
@@ -110,10 +111,10 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
     }
 
     ALLEGRO_VERTEX points[8] = {
-        {float(cx - width_2), float(cy - width_2), 0.f, texture_x   , texture_y   , al_map_rgb(255,255,255)},
-        {float(cx + width_2), float(cy - width_2), 0.f, texture_x+31, texture_y   , al_map_rgb(255,255,255)},
-        {float(cx + width_2), float(cy + width_2), 0.f, texture_x+31, texture_y+31, al_map_rgb(255,255,255)},
-        {float(cx - width_2), float(cy + width_2), 0.f, texture_x   , texture_y+31, al_map_rgb(255,255,255)}
+        {float(cx - width_2), float(cy - width_2), 0.f, texture_x   , texture_y   , tint_},
+        {float(cx + width_2), float(cy - width_2), 0.f, texture_x+31, texture_y   , tint_},
+        {float(cx + width_2), float(cy + width_2), 0.f, texture_x+31, texture_y+31, tint_},
+        {float(cx - width_2), float(cy + width_2), 0.f, texture_x   , texture_y+31, tint_}
     };
 
     v.push_back(points[3]);
@@ -129,6 +130,13 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
 void tile::setType(const tile::type type)
 {
     tile_type_ = type;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void tile::tint(ALLEGRO_COLOR c)
+{
+    tint_ = c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

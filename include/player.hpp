@@ -2,38 +2,45 @@
 #define PLAYER_HPP
 #include "tile.hpp"
 #include "common.hpp"
+#include "AStarTray.hpp"
 #include <iostream> // TODO remove
+#include <cmath>
+#include <set>
+#include <vector>
 
 class player {
 
-private:
-  tile *pos_;
-  tile *chest_;
+    private:
 
-public:
-  player();
-  player(tile *position, tile *chest_);
-  virtual ~player();
-  void setPlayer(tile* x, tile *chest_ = nullptr);
-  uint AStarStep();
-  void move(tile *next_pos);
+        tile *pos_;
+        tile *chest_;
+
+        bool AStar_init_;
+
+        std::multiset<AStarTray> open_set_;
+        std::multiset<AStarTray> closed_set_;
+
+    public:
+
+        player();
+        player(tile *position, tile *chest_);
+        virtual ~player();
+
+        void setPlayer(tile* x, tile *chest_ = nullptr);
+        void move(tile *next_pos);
+
+        uint AStarStep();
+        void resetAStar(); // TODO const ?
+
+    private:
+
+        void insertInClosedSet(AStarTray &t);
+        void insertInOpenSet(AStarTray &t);
+        double findInClosedSet(const AStarTray &t) const;
+        void deleteFromOpenSet(std::multiset<AStarTray>::iterator it);
 };
 
 /*
-# Para comprobar que es (ver tile.hpp)
-current_ ->isWall()
-current_->isMonster()
-
-# Cuidado si es nulo
-tile t* = current_->getFriend();
-t == nullptr
-
-# Mover al personaje
-tile t* = casilla a la que me quiero Mover
-current->containsPlayer(false);
-t->containsPlayer(true);
-current_ = t_;
-
 # Uint que devuevle:
     0 -> No ha acabado
     1 -> No hay solución
