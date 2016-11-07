@@ -10,45 +10,51 @@
 class AStarTray {
 
     private:
-        std::vector<tile*> tray_;
+        const AStarTray* tray_;
+        tile* current_;
         tile* objective_;
+
+        uint gScore_;
 
     public:
         AStarTray()
         {}
 
         AStarTray(tile *expand, tile* objective):
-            objective_(objective)
-        {
-            tray_.push_back(expand);
-        }
-
-        AStarTray(const AStarTray& t):
-            tray_(t.tray_),
-            objective_(t.objective_)
+            tray_(nullptr),
+            current_(expand),
+            objective_(objective),
+            gScore_(0)
         {}
 
-        AStarTray(const AStarTray& t, tile* expand):
-            tray_(t.tray_),
-            objective_(t.objective_)
-        {
-            tray_.push_back(expand);
-        }
+        AStarTray(const AStarTray* t):
+            tray_(t->tray_),
+            current_(t->current_),
+            objective_(t->objective_),
+            gScore_(t->gScore_)
+        {}
+
+        AStarTray(const AStarTray* t, tile* expand):
+            tray_(t),
+            current_(expand),
+            objective_(t.objective_),
+            gScore_(t.gScore_+1)
+        {}
 
         tile *getLast() const
         {
-            return tray_.back();
+            return current_;
         }
 
         double gScore() const
         {
-            return tray_.size();
+            return gScore_;
         }
 
         double hScore() const
         {
-            double dx = std::abs(objective_->getX() - tray_.back()->getX());
-            double dy = std::abs(objective_->getY() - tray_.back()->getY());
+            double dx = std::abs(objective_->getX() - current_->getX());
+            double dy = std::abs(objective_->getY() - current_->getY());
             return dx + dy;
         }
 
@@ -65,16 +71,15 @@ class AStarTray {
 
         std::ostream &print(std::ostream &os = std::cout) const
         {
-            for (tile* t : tray_)
-                std::cout << "(" << t->getX() << "," << t->getY() << ")";
-            std::cout << "[" << gScore() << "," << hScore() << "]" << std::endl;
+            // TODO
             return os;
         }
 
         void paint() const
         {
-            for (tile *t : tray_)
-                t->tint(al_map_rgb(255,180,180));
+            std::cout << current_->getX() << "," << current_->getY() << "Next: " << tray_ << std::endl;
+            current_->tint(al_map_rgb(255,0,255));
+            if (tray_) tray_->paint();
         }
 };
 
