@@ -3,6 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 scene::scene(const double screen_w, const double screen_h, const double map_separation):
+    mutex(al_create_mutex()),
+    cond(al_create_cond()),
+    ready (false),
     tile_map_(),
     map_separation_(map_separation),
     screen_w_(screen_w),
@@ -29,15 +32,20 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     speed_(scrollbar::type::VERTICAL),
     obstacles_(scrollbar::type::HORIZONTAL, 0.2)
 {
+    al_lock_mutex(mutex);
     resize(screen_w_, screen_h_);
     tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
     showMenu(show_menu_);
+    al_unlock_mutex(mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 scene::~scene()
-{}
+{
+    al_destroy_mutex(mutex);
+    al_destroy_cond(cond);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -105,19 +113,29 @@ void scene::update()
     speed_.update();
     tracking_.update();
     step_.update();
+    al_lock_mutex(mutex);
     tile_map_.update();
+    al_unlock_mutex(mutex);
 
+    al_lock_mutex(mutex);
     double speed = speed_.getValue();
+    al_unlock_mutex(mutex);
 
     if (quit_.mouseClicked()    ) quit = true;
-    if (restart_.mouseClicked() ) { tile_map_.resetPlayer(); isplaying_ = false; }
-    if (random_.mouseClicked()  ) tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
+    if (restart_.mouseClicked() ) {
+        al_lock_mutex(mutex);
+        tile_map_.resetPlayer();
+        al_unlock_mutex(mutex);
+        isplaying_ = false;
+    }
+    if (random_.mouseClicked()) {
+        al_lock_mutex(mutex);
+        tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
+        al_unlock_mutex(mutex);
+    }
     if (play_.mouseClicked()    ) isplaying_  = !isplaying_;
     if (tracking_.mouseClicked()) istracking_ = !istracking_;
     if (speed < 0.001           ) isplaying_  = false;
-
-    if (isplaying_ || step_.mouseClicked())
-        tile_map_.getPlayer().AStarStep();
 
     obstacles_text_.setText(std::to_string(int(obstacles_.getValue()*100))+"% Obstacles");
     tracking_.setImg(istracking_   ? tracking_image : tracking_disabled_image);
@@ -170,6 +188,20 @@ void scene::resize(const double w, const double h)
     play_.resize(screen_w_-45, screen_h_-120, 40, 40);
     restart_.resize(screen_w_-45, screen_h_-80 , 40, 40);
     random_.resize( screen_w_-45, screen_h_-40 , 40, 40);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void scene::updateAlgorithm()
+{
+    al_lock_mutex(mutex);
+    double speed = speed_.getValue();
+    if (isplaying_ || step_.mouseClicked())
+        tile_map_.getPlayer().AStarStep();
+    al_unlock_mutex(mutex);
+
+    double aux = 1 - speed;
+    al_rest(aux*aux*aux);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

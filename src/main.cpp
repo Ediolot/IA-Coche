@@ -16,6 +16,8 @@
 #include "../include/mouse.hpp"
 #include "../include/images.hpp"
 
+static void *Func_Thread(ALLEGRO_THREAD *thr, void *arg);
+
 ////////////////////// MAIN ///////////////////////
 int main(int argc, char *argv[])
 {
@@ -23,6 +25,8 @@ int main(int argc, char *argv[])
     ALLEGRO_DISPLAY     *display      = nullptr;
     ALLEGRO_EVENT_QUEUE *event_queue  = nullptr;
     ALLEGRO_TIMER       *redraw_timer = nullptr;
+
+    ALLEGRO_THREAD *thread_1 = NULL;
 
     bool redraw = true;
 
@@ -73,6 +77,22 @@ int main(int argc, char *argv[])
     // SET DISPLAY AS CURRENT BITMAP
     al_set_target_bitmap(al_get_backbuffer(display));
 
+    thread_1 = al_create_thread(Func_Thread, &main_scene);
+    al_start_thread(thread_1);
+
+    std::cout << "1" << std::endl;
+    al_lock_mutex(main_scene.mutex);
+    while (!main_scene.ready)
+      al_wait_cond(main_scene.cond, main_scene.mutex);
+     std::cout << "2" << std::endl;
+    al_unlock_mutex(main_scene.mutex);
+
+    std::cout << "3" << std::endl;
+    al_lock_mutex(main_scene.mutex);
+    main_scene.ready  = false;
+    std::cout << "4" << std::endl;
+    al_unlock_mutex(main_scene.mutex);
+
     // MAIN LOOP
     while (!quit)
     {
@@ -111,6 +131,7 @@ int main(int argc, char *argv[])
     }
 
     // CLEAN UP
+    al_destroy_thread(thread_1);
     al_destroy_timer(redraw_timer);
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
@@ -119,3 +140,22 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+static void *Func_Thread(ALLEGRO_THREAD *thr, void *arg)
+{
+    scene *data  = (scene*) arg;
+
+    al_lock_mutex(data->mutex);
+    data->ready = true;
+    al_broadcast_cond(data->cond);
+    al_unlock_mutex(data->mutex);
+
+    while(!al_get_thread_should_stop(thr)){
+
+        data->updateAlgorithm();
+
+    }
+
+
+    return NULL;
+ }

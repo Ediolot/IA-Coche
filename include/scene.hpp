@@ -13,6 +13,11 @@ class scene {
 
     const double default_animation_time_ = 0.2;
 
+    public: // Thread sync
+        ALLEGRO_MUTEX *mutex;
+        ALLEGRO_COND  *cond;
+        bool           ready;
+
     private:
 
         map tile_map_;          // Tiles map
@@ -63,6 +68,7 @@ class scene {
 
         void resize(const double w, const double h);
         void update();
+        void updateAlgorithm();
 
     private:
         void showMenu(bool show);
