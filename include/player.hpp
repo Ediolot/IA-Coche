@@ -30,7 +30,7 @@ class player {
         void move(tile *next_pos);
 
         uint AStarStep();
-        void resetAStar(); // TODO const ?
+        void resetAStar(tile *p, tile *t);
 
     private:
 

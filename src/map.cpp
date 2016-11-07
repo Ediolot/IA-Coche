@@ -157,7 +157,7 @@ void map::generate(const double obstacles)
     t->setType(tile::type::CHEST);
     goal_ = t;
 
-    p1_.setPlayer(origin_, goal_);
+    resetPlayer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -187,9 +187,18 @@ void map::resize(const double cx, const double cy, const double width, const dou
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::updatePlayer()
+player& map::getPlayer()
 {
-    p1_.AStarStep();
+    return p1_;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void map::resetPlayer()
+{
+    p1_.setPlayer(origin_, goal_);
+    p1_.resetAStar(origin_, goal_);
+    for (tile &i : tiles_) i.tint(al_map_rgb(255,255,255));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

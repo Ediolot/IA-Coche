@@ -79,6 +79,7 @@ void scene::showMenu(bool show)
     width_.show(show);
     height_.show(show);
     obstacles_text_.show(show);
+    restart_.show(!show);
     play_.show(!show);
     random_.show(!show);
     speed_.show(!show);
@@ -109,13 +110,14 @@ void scene::update()
     double speed = speed_.getValue();
 
     if (quit_.mouseClicked()    ) quit = true;
+    if (restart_.mouseClicked() ) { tile_map_.resetPlayer(); isplaying_ = false; }
     if (random_.mouseClicked()  ) tile_map_.rebuild(width_.getValue(), height_.getValue(), obstacles_.getValue());
     if (play_.mouseClicked()    ) isplaying_  = !isplaying_;
     if (tracking_.mouseClicked()) istracking_ = !istracking_;
     if (speed < 0.001           ) isplaying_  = false;
 
     if (isplaying_ || step_.mouseClicked())
-        tile_map_.updatePlayer();
+        tile_map_.getPlayer().AStarStep();
 
     obstacles_text_.setText(std::to_string(int(obstacles_.getValue()*100))+"% Obstacles");
     tracking_.setImg(istracking_   ? tracking_image : tracking_disabled_image);

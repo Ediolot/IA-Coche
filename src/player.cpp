@@ -16,8 +16,7 @@ player::~player()
 void player::setPlayer(tile* x, tile *chest)
 {
     if (chest) chest_ = chest;
-    pos_ = x;
-    move(pos_);
+    move(x);
 
     if (pos_)   std::cout << "Player at: " << pos_->getX() << "," << pos_->getY() << std::endl; // TODO remove
     if (chest_) std::cout << "Chest at: " << chest_->getX() << "," << chest_->getY() << std::endl;
@@ -27,7 +26,7 @@ void player::move(tile *next_pos)
 {
     if (next_pos)
     {
-        pos_->containsPlayer(false);
+        if (pos_) pos_->containsPlayer(false);
         next_pos->containsPlayer(true);
         pos_=next_pos;
     }
@@ -147,7 +146,11 @@ void player::insertInClosedSet(AStarTray &t)
     closed_set_.insert(t);
 }
 
-void player::resetAStar()
+void player::resetAStar(tile *p, tile *c)
 {
-    // TODO
+    chest_ = c;
+    pos_ = p;
+    AStar_init_ = false;
+    open_set_.clear();
+    closed_set_.clear();
 }

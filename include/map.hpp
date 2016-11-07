@@ -80,7 +80,8 @@ class map {
         void rebuild(const uint rows, const uint cols, const double obstacles);
 
         void draw();
-        void updatePlayer();
+        player& getPlayer();
+        void resetPlayer();
 
         // Generate map elements
         void generate(const double obstacles);
