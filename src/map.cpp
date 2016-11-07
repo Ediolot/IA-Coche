@@ -233,6 +233,7 @@ void map::update()
                     if (goal_) goal_->setType(tile::type::NEUTRAL);
                     goal_ = t;
                     goal_->setType(tile::type::CHEST);
+                    resetPlayer();
                 }
                 else if (keysPress[ALLEGRO_KEY_2] && !t->isChest())
                 {
