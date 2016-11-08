@@ -32,5 +32,6 @@ Makefile: Permite construir el programa usando make
 TODO: Archivo que contiene las tareas pendientes
 
 
+Tile set. Author: Neburov[http://opengameart.org/content/pixel-platformer-tile-set] License: CC0
 NOTA: La aplicación describe el problema de los caminos mínimos de un vehículo aútonomo mediante un simil con un
 juego.
