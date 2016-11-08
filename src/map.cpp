@@ -198,7 +198,9 @@ void map::resetPlayer()
 {
     p1_.setPlayer(origin_, goal_);
     p1_.resetAStar(origin_, goal_);
-    for (tile &i : tiles_) i.tint(al_map_rgb(255,255,255));
+    for (tile &i : tiles_) i.tint(al_map_rgb(150,150,150));
+    goal_->tint(al_map_rgb(255,255,255));
+    origin_->tint(al_map_rgb(255,255,255));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,10 @@ player::player(tile* position, tile *chest):
 {}
 
 player::~player()
-{}
+{
+    for (auto i : open_set_) delete i;
+    for (auto i : closed_set_) delete i;
+}
 
 void player::setPlayer(tile* x, tile *chest)
 {
@@ -43,20 +46,22 @@ uint player::AStarStep()
     {
         AStar_init_ = true;
 
-        AStarTray aux(pos_, chest_);
-        insertInOpenSet(aux); // Open list con la casilla raiz
+        insertInOpenSet(new AStarTray(pos_, chest_)); // Open list con la casilla raiz
         // Closed list vacío
     }
 
-    if (open_set_.empty()) return 1; // No hay solución
+    if (open_set_.empty()) {
+        std::cout << "AADSDA" << std::endl;
+        return 1; // No hay solución
+    }
 
-    AStarTray first = *open_set_.begin(); // Escoger la primera trayectoria (menor coste total)
-    move(first.getLast());
+    AStarTray* first = *open_set_.begin(); // Escoger la primera trayectoria (menor coste total)
+    move(first->getLast());
     open_set_.erase(open_set_.begin()); // Eliminar la trayectoria de la lista abierta
     insertInClosedSet(first); // Insertar la trayectoria en la lista cerrada, en caso de que ya exista una similar, eliminar la de mayor coste
 
     if (pos_==chest_) {
-        first.paint();
+        first->paint();
         return 2;
     }
 
@@ -70,29 +75,32 @@ uint player::AStarStep()
     for (tile* t : adyacents)
     {
         if (!t || t->isWall()) continue; // No es una casilla válida
-        AStarTray aux(first, t);
-        insertInOpenSet(aux); // Crea una trayectoria nueva hacia esa casilla y añádela al open set
+
+        insertInOpenSet(new AStarTray(first, t)); // Crea una trayectoria nueva hacia esa casilla y añádela al open set
+        t->tint(al_map_rgb(255,255,255));
     }
+
+    // TODO comprobar que se borran todas
 
     return 0;
 }
 
-void player::insertInOpenSet(AStarTray &t)
+void player::insertInOpenSet(AStarTray *t)
 {
     // Comprueba si existe una trayectoria que acaba en el mismo nodo
-    for (std::multiset<AStarTray>::iterator it = open_set_.begin(); it != open_set_.end(); ++it)
+    for (AStarTraySet_it it = open_set_.begin(); it != open_set_.end(); ++it)
     {
-        if (it->getLast() == t.getLast()) // Acaban en el mismo nodo
+        if ((*it)->getLast() == t->getLast()) // Acaban en el mismo nodo
         {
-            if (it->fScore() > t.fScore()) // Elimina la de mayor coste
+            if ((*it)->fScore() > t->fScore()) // Elimina la de mayor coste
             {
                 deleteFromOpenSet(it);
 
                 // La de mínimo coste es t. Elimínala (No la insertes) si existe una similar con menor coste en la lista cerrada
-                if (findInClosedSet(t) >= t.fScore())
+                if (findInClosedSet(t) >= t->fScore())
                     open_set_.insert(t);
             }
-            else if (findInClosedSet(*it) < it->fScore())
+            else if (findInClosedSet(*it) < (*it)->fScore())
             { // La de mínimo coste es it. Elimínala si existe una similar con menor coste en la lista cerrada
                 deleteFromOpenSet(it);
             }
@@ -104,9 +112,9 @@ void player::insertInOpenSet(AStarTray &t)
     open_set_.insert(t);
 }
 
-void player::deleteFromOpenSet(std::multiset<AStarTray>::iterator it)
+void player::deleteFromOpenSet(AStarTraySet_it it)
 {
-    AStarTray deleted = *it;
+    AStarTray* deleted = *it;
     open_set_.erase(it);
 
     double found_fScore = findInClosedSet(deleted);
@@ -114,31 +122,30 @@ void player::deleteFromOpenSet(std::multiset<AStarTray>::iterator it)
     // if (found_fScore == deleted.fScore()) Hacer nada, es igual
     // if (found_fScore < deleted.fScre()) No insertar
 
-    if (found_fScore > deleted.fScore())
+    if (found_fScore > deleted->fScore())
         insertInClosedSet(deleted);
 }
 
-double player::findInClosedSet(const AStarTray &t) const
+double player::findInClosedSet(const AStarTray *t) const
 {
-    for (const AStarTray &c : closed_set_)
-        if (c == t) return c.fScore();
+    for (const AStarTray *c : closed_set_)
+        if (*c == *t) return c->fScore();
 
-    return t.fScore();
+    return t->fScore();
 }
 
-void player::insertInClosedSet(AStarTray &t)
+void player::insertInClosedSet(AStarTray *t)
 {
     // Comprueba que no exista ya una en el closed set
-    for (std::multiset<AStarTray>::iterator it = closed_set_.begin(); it != closed_set_.end(); ++it)
+    for (AStarTraySet_it it = closed_set_.begin(); it != closed_set_.end(); ++it)
     {
-        if (*it == t) // Ya había una trayectoria igual
+        if (**it == *t) // Ya había una trayectoria igual
         {
-            if (it->fScore() > t.fScore()) // Elimina la de mayor coste
+            if ((*it)->fScore() > t->fScore()) // Elimina la de mayor coste
             {
                 closed_set_.erase(it);
-                closed_set_.insert(t);
+                break;
             }
-            return;
         }
     }
 

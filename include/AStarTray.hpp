@@ -37,8 +37,8 @@ class AStarTray {
         AStarTray(const AStarTray* t, tile* expand):
             tray_(t),
             current_(expand),
-            objective_(t.objective_),
-            gScore_(t.gScore_+1)
+            objective_(t->objective_),
+            gScore_(t->gScore_+1)
         {}
 
         tile *getLast() const
@@ -67,7 +67,12 @@ class AStarTray {
         { return fScore() < t2.fScore(); }
 
         bool operator==(const AStarTray& t2) const
-        { return tray_ == t2.tray_; }
+        {
+            //AStarTray* t1 = current_;
+            //AStarTray* t2 = t2current_;
+            std::cout << "USADO" << std::endl;
+            return current_ == t2.current_;
+        }
 
         std::ostream &print(std::ostream &os = std::cout) const
         {

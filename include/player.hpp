@@ -12,13 +12,21 @@ class player {
 
     private:
 
+        struct AStarTrayComp
+        {
+            bool operator()(const AStarTray* lhs, const AStarTray* rhs) const  { return *lhs < *rhs; }
+        };
+        typedef std::multiset<AStarTray*,AStarTrayComp> AStarTraySet;
+        typedef AStarTraySet::iterator AStarTraySet_it;
+        typedef AStarTraySet::const_iterator AStarTraySet_cit;
+
         tile *pos_;
         tile *chest_;
 
         bool AStar_init_;
 
-        std::multiset<AStarTray> open_set_;
-        std::multiset<AStarTray> closed_set_;
+        AStarTraySet open_set_;
+        AStarTraySet closed_set_;
 
     public:
 
@@ -34,10 +42,10 @@ class player {
 
     private:
 
-        void insertInClosedSet(AStarTray &t);
-        void insertInOpenSet(AStarTray &t);
-        double findInClosedSet(const AStarTray &t) const;
-        void deleteFromOpenSet(std::multiset<AStarTray>::iterator it);
+        void insertInClosedSet(AStarTray *t);
+        void insertInOpenSet(AStarTray *t);
+        double findInClosedSet(const AStarTray *t) const;
+        void deleteFromOpenSet(AStarTraySet_it it);
 };
 
 /*
