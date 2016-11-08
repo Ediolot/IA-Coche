@@ -80,17 +80,13 @@ int main(int argc, char *argv[])
     thread_1 = al_create_thread(Func_Thread, &main_scene);
     al_start_thread(thread_1);
 
-    std::cout << "1" << std::endl;
     al_lock_mutex(main_scene.mutex);
     while (!main_scene.ready)
       al_wait_cond(main_scene.cond, main_scene.mutex);
-     std::cout << "2" << std::endl;
     al_unlock_mutex(main_scene.mutex);
 
-    std::cout << "3" << std::endl;
     al_lock_mutex(main_scene.mutex);
     main_scene.ready  = false;
-    std::cout << "4" << std::endl;
     al_unlock_mutex(main_scene.mutex);
 
     // MAIN LOOP

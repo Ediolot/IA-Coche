@@ -68,9 +68,6 @@ class AStarTray {
 
         bool operator==(const AStarTray& t2) const
         {
-            //AStarTray* t1 = current_;
-            //AStarTray* t2 = t2current_;
-            std::cout << "USADO" << std::endl;
             return current_ == t2.current_;
         }
 
@@ -82,7 +79,6 @@ class AStarTray {
 
         void paint() const
         {
-            std::cout << current_->getX() << "," << current_->getY() << "Next: " << tray_ << std::endl;
             current_->tint(al_map_rgb(255,0,255));
             if (tray_) tray_->paint();
         }

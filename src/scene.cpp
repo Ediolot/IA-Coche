@@ -24,7 +24,7 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     quit_("QUIT", al_map_rgb(0,0,0), ubuntu_mono_font_40, 0.2),
     obstacles_text_("0% Obstacles", al_map_rgb(0,0,0), caviar_font_16),
 
-    algorithm_({"AAA", "BBBB", "CCCC"}, "Algorithm", ubuntu_mono_font_40, al_map_rgb(0,0,0)),
+    algorithm_({"A*"}, "Algorithm", ubuntu_mono_font_40, al_map_rgb(0,0,0)),
 
     width_( "Grid width ", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_W),
     height_("Grid height", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_H),
@@ -201,7 +201,7 @@ void scene::updateAlgorithm()
     al_unlock_mutex(mutex);
 
     double aux = 1 - speed;
-    al_rest(aux*aux*aux);
+    if (aux > 0.001) al_rest(aux*aux*aux);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
