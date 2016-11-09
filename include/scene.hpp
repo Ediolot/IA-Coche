@@ -51,6 +51,13 @@ class scene {
         numericSelector width_;
         numericSelector height_;
 
+        // BUG: No es posible crear dos label en la misma clase
+        // LABELS
+        label info_;
+        int fps_;
+        uint result_;
+        double time_;
+
         // SCROLLBARS
         scrollbar speed_;
         scrollbar obstacles_;
@@ -72,6 +79,7 @@ class scene {
 
     private:
         void showMenu(bool show);
+        void updateFPS();
 };
 
 #endif

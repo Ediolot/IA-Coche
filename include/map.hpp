@@ -99,7 +99,7 @@ class map {
         uint getNCols() const;
 
         void resize(const double cx, const double cy, const double width, const double height);
-        void update();
+        bool update();
 
         void show(bool show = true);
         void hide();

@@ -55,6 +55,8 @@ void label::resize(const double x, const double y, const double w, const double 
         default:         img_x_ = (w_-text_w_-img_w_)/2; break;
     }
 
+    if (!img_) img_x_ = 0;
+
     switch (v_aling_)
     {
         case dir::UP:   img_y_ =    (min_h-img_h_)/2; text_y_ =    (min_h-text_h_)/2; break;
@@ -62,11 +64,10 @@ void label::resize(const double x, const double y, const double w, const double 
         default:        img_y_ =    (h_   -img_h_)/2; text_y_ =    (h_-   text_h_)/2; break;
     }
 
-    text_x_ = img_x_ +img_w_;
     img_x_  += x;
     img_y_  += y;
-    text_x_ += x;
     text_y_ += y;
+    text_x_ = img_x_ + img_w_;
 }
 
 void label::update()

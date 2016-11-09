@@ -44,7 +44,7 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
 
     inc_x_ = 0;
     inc_y_ = 0;
-    zoom_ = 1;
+    zoom_ = 0.98;
 
     tiles_.clear();
     tiles_.reserve(rows*cols);
@@ -84,7 +84,7 @@ void map::draw()
     const double p_y = cy_-(cols_ - 1)*tile_size_*zoom_/2;
 
     // Reserve spaces for all the tiles in the vector
-    v.reserve(v.size() + 4*rows_*cols_);
+    v.reserve(6*rows_*cols_);
 
     for (uint i=0; i<rows_; ++i)
     {
@@ -206,13 +206,15 @@ void map::resetPlayer()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void map::update()
+bool map::update()
 {
     if (!show_)
     {
         last_mouse_z_ = mouse.getZ();
-        return;
+        return false;
     }
+
+    bool modified = false;
 
     if (mouse.insideBox(cx_-width_/2,cy_-height_/2,width_,height_))
     {
@@ -230,19 +232,20 @@ void map::update()
             tile *t;
             if (i>=0 && j>=0 && mouse.leftDown() && (t = accessTile(i,j)) && !t->containsPlayer())
             {
-                std::cout << "tile is: " << t->getX() << "," << t->getY() << std::endl;
                 if (keysPress[ALLEGRO_KEY_3] && !t->isOrigin())
                 {
                     if (goal_) goal_->setType(tile::type::NEUTRAL);
                     goal_ = t;
                     goal_->setType(tile::type::CHEST);
                     resetPlayer();
+                    modified = true;
                 }
                 else if (keysPress[ALLEGRO_KEY_2] && !t->isChest())
                 {
                     if (origin_) origin_->setType(tile::type::NEUTRAL);
                     origin_ = t;
                     origin_->setType(tile::type::ORIGIN);
+                    modified = true;
                 }
                 else if (!t->isOrigin() && !t->isChest())
                 {
@@ -253,6 +256,7 @@ void map::update()
                     else if (keysPress[ALLEGRO_KEY_7]) t->setType(tile::type::MONSTER4);
                     else                               t->setType(tile::type::NEUTRAL);
                 }
+                modified = true;
             }
         }
 
@@ -263,6 +267,7 @@ void map::update()
     }
 
     last_mouse_z_ = mouse.getZ();
+    return modified;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

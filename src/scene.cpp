@@ -29,6 +29,11 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     width_( "Grid width ", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_W),
     height_("Grid height", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_H),
 
+    info_("FPS: 0", al_map_rgb(0,0,0), caviar_font_16),
+    fps_(0),
+    result_(0),
+    time_(0),
+
     speed_(scrollbar::type::VERTICAL),
     obstacles_(scrollbar::type::HORIZONTAL, 0.2)
 {
@@ -54,13 +59,11 @@ void scene::draw()
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
-    // TEXT & DEBUG
-    displayFPS(caviar_font_16);
-
     if (!show_menu_)
     {
         tile_map_.draw();
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
+        al_draw_filled_rectangle(0, 0, screen_w_-60, 25, PURE_WHITE);
     }
 
     obstacles_.draw();
@@ -71,6 +74,7 @@ void scene::draw()
     obstacles_text_.draw();
     tracking_.draw();
     restart_.draw();
+    info_.draw();
     step_.draw();
     play_.draw();
     random_.draw();
@@ -92,14 +96,39 @@ void scene::showMenu(bool show)
     random_.show(!show);
     speed_.show(!show);
     tracking_.show(!show);
+    info_.show(!show);
     step_.show(!show);
     tile_map_.show(!show);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void scene::updateFPS()
+{
+    static uint iteration = 0;
+    static double elapsed = 0;
+    static double old_time = 0;
+
+    double new_time = al_get_time();
+
+    if (++iteration > 20)
+    {
+        fps_ = 20/elapsed;
+        iteration = 0;
+        elapsed = 0;
+    }
+    else
+        elapsed += (new_time - old_time);
+
+    old_time = new_time;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void scene::update()
 {
+    updateFPS();
+
     mouse.setShouldBeHand(false);
 
     obstacles_.update();
@@ -113,20 +142,29 @@ void scene::update()
     speed_.update();
     tracking_.update();
     step_.update();
-    al_lock_mutex(mutex);
-    tile_map_.update();
-    al_unlock_mutex(mutex);
 
+    char time_string[30];
+    char fps_string[5];
+    std::string search_state = result_==0 ? "Buscando camino..." : (result_==1 ? "No existe solución" : "Camino encontrado");
+    std::string state = isplaying_ ? "" : "(Pausa)";
+    snprintf(fps_string, sizeof(fps_string), "%2d", fps_);
+    snprintf(time_string, sizeof(time_string), "%.3f %s", (time_<1 ? time_*1000 : time_), (time_<1 ? " ms" : " s"));
+    info_.setText("FPS: " + std::string(fps_string) + "   " + search_state + " " + state + "  " + std::string(time_string));
+
+    double speed;
+    bool modified;
     al_lock_mutex(mutex);
-    double speed = speed_.getValue();
+    speed = speed_.getValue();
+    modified = tile_map_.update();
     al_unlock_mutex(mutex);
 
     if (quit_.mouseClicked()    ) quit = true;
-    if (restart_.mouseClicked() ) {
+    if (restart_.mouseClicked() || modified) {
         al_lock_mutex(mutex);
         tile_map_.resetPlayer();
         al_unlock_mutex(mutex);
-        isplaying_ = false;
+        time_ = 0;
+        //isplaying_ = false;
     }
     if (random_.mouseClicked()) {
         al_lock_mutex(mutex);
@@ -171,11 +209,12 @@ void scene::resize(const double w, const double h)
 
     tile_map_.resize(
         (screen_w_-60)/2.0,
-        screen_h_/2.0,
+        (screen_h_-25)/2.0+25,
         (screen_w_-60),
-        screen_h_
+        screen_h_-25
     );
 
+    info_.resize(20,2);
     width_.resize(150, 130);
     height_.resize(150, 220);
     algorithm_.resize(150, 310);
@@ -194,11 +233,23 @@ void scene::resize(const double w, const double h)
 
 void scene::updateAlgorithm()
 {
+    double speed;
+    double time_start;
+    bool execute;
+
     al_lock_mutex(mutex);
-    double speed = speed_.getValue();
-    if (isplaying_ || step_.mouseClicked())
-        tile_map_.getPlayer().AStarStep();
+
+    time_start = al_get_time();
+    speed      = speed_.getValue();
+    execute    = isplaying_ || step_.mouseClicked();
+
+    if (execute)
+        result_ = tile_map_.getPlayer().AStarStep();
+
     al_unlock_mutex(mutex);
+
+    if (execute && result_==0)
+        time_ += (al_get_time() - time_start);
 
     double aux = 1 - speed;
     if (aux > 0.001) al_rest(aux*aux*aux);

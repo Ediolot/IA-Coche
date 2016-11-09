@@ -20,9 +20,6 @@ void player::setPlayer(tile* x, tile *chest)
 {
     if (chest) chest_ = chest;
     move(x);
-
-    if (pos_)   std::cout << "Player at: " << pos_->getX() << "," << pos_->getY() << std::endl; // TODO remove
-    if (chest_) std::cout << "Chest at: " << chest_->getX() << "," << chest_->getY() << std::endl;
 }
 
 void player::move(tile *next_pos)
