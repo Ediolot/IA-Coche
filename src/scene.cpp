@@ -29,6 +29,11 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     width_( "Grid width ", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_W),
     height_("Grid height", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_H),
 
+    fps_label_("FPS: 0", al_map_rgb(0,0,0), caviar_font_16),
+    result_(0),
+    info_("Buscando camino...", al_map_rgb(0,0,0), caviar_font_16),
+    fps_(0),
+
     speed_(scrollbar::type::VERTICAL),
     obstacles_(scrollbar::type::HORIZONTAL, 0.2)
 {
@@ -54,13 +59,11 @@ void scene::draw()
     // CLEAR
     al_clear_to_color(BACKGROUND_COLOR);
 
-    // TEXT & DEBUG
-    displayFPS(caviar_font_16);
-
     if (!show_menu_)
     {
         tile_map_.draw();
         al_draw_filled_rectangle(screen_w_-60, 0, screen_w_, screen_h_, PURE_WHITE);
+        al_draw_filled_rectangle(0, 0, screen_w_-60, 25, PURE_WHITE);
     }
 
     obstacles_.draw();
@@ -71,6 +74,8 @@ void scene::draw()
     obstacles_text_.draw();
     tracking_.draw();
     restart_.draw();
+    fps_label_.draw();
+    info_.draw();
     step_.draw();
     play_.draw();
     random_.draw();
@@ -92,14 +97,40 @@ void scene::showMenu(bool show)
     random_.show(!show);
     speed_.show(!show);
     tracking_.show(!show);
+    fps_label_.show(!show);
+    info_.show(!show);
     step_.show(!show);
     tile_map_.show(!show);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void scene::updateFPS()
+{
+    static uint iteration = 0;
+    static double elapsed = 0;
+    static double old_time = 0;
+
+    double new_time = al_get_time();
+
+    if (++iteration > 20)
+    {
+        fps_ = 20/elapsed;
+        iteration = 0;
+        elapsed = 0;
+    }
+    else
+        elapsed += (new_time - old_time);
+
+    old_time = new_time;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void scene::update()
 {
+    updateFPS();
+
     mouse.setShouldBeHand(false);
 
     obstacles_.update();
@@ -113,12 +144,13 @@ void scene::update()
     speed_.update();
     tracking_.update();
     step_.update();
-    al_lock_mutex(mutex);
-    tile_map_.update();
-    al_unlock_mutex(mutex);
 
+    fps_label_.setText(std::string("FPS: "+std::to_string(fps_)).c_str());
+
+    double speed;
     al_lock_mutex(mutex);
-    double speed = speed_.getValue();
+    speed = speed_.getValue();
+    tile_map_.update();
     al_unlock_mutex(mutex);
 
     if (quit_.mouseClicked()    ) quit = true;
@@ -171,11 +203,13 @@ void scene::resize(const double w, const double h)
 
     tile_map_.resize(
         (screen_w_-60)/2.0,
-        screen_h_/2.0,
+        (screen_h_-25)/2.0+25,
         (screen_w_-60),
-        screen_h_
+        screen_h_-25
     );
 
+    info_.resize(80,2);
+    fps_label_.resize(10,2);
     width_.resize(150, 130);
     height_.resize(150, 220);
     algorithm_.resize(150, 310);
@@ -194,10 +228,11 @@ void scene::resize(const double w, const double h)
 
 void scene::updateAlgorithm()
 {
+    double speed;
     al_lock_mutex(mutex);
-    double speed = speed_.getValue();
+    speed = speed_.getValue();
     if (isplaying_ || step_.mouseClicked())
-        tile_map_.getPlayer().AStarStep();
+        result_ = tile_map_.getPlayer().AStarStep();
     al_unlock_mutex(mutex);
 
     double aux = 1 - speed;

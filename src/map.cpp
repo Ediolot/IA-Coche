@@ -44,7 +44,7 @@ void map::rebuild(const uint rows, const uint cols, const double obstacles)
 
     inc_x_ = 0;
     inc_y_ = 0;
-    zoom_ = 1;
+    zoom_ = 0.98;
 
     tiles_.clear();
     tiles_.reserve(rows*cols);
@@ -95,9 +95,10 @@ void map::draw()
             const double max_x = cx_ + width_ /2;
             const double max_y = cy_ + height_/2;
 
-            if ((x+tile_size_) >= 0     &&
-                (x-tile_size_) <= max_x &&
-                (y-tile_size_) <= max_y)
+            if ((x+tile_size_/2) >= 0     &&
+                (x-tile_size_/2) <= max_x &&
+                (y+tile_size_/2) >= 0     &&
+                (y-tile_size_/2) <= max_y)
 
                 tiles_[i*cols_+j].appendVertices(v, x, y, tile_size_*zoom_);
         }
