@@ -50,10 +50,8 @@ uint player::AStarStep()
         // Closed list vacío
     }
 
-    if (open_set_.empty()) {
-        std::cout << "AADSDA" << std::endl;
+    if (open_set_.empty())
         return 1; // No hay solución
-    }
 
     AStarTray* first = *open_set_.begin(); // Escoger la primera trayectoria (menor coste total)
     move(first->getLast());
@@ -74,10 +72,11 @@ uint player::AStarStep()
 
     for (tile* t : adyacents)
     {
+        if (t) t->tint(al_map_rgb(255,255,255));
+
         if (!t || t->isWall()) continue; // No es una casilla válida
 
         insertInOpenSet(new AStarTray(first, t)); // Crea una trayectoria nueva hacia esa casilla y añádela al open set
-        t->tint(al_map_rgb(255,255,255));
     }
 
     // TODO comprobar que se borran todas
@@ -87,7 +86,7 @@ uint player::AStarStep()
 
 void player::insertInOpenSet(AStarTray *t)
 {
-    // Comprueba si existe una trayectoria que acaba en el mismo nodo
+    // Comprueba si existe una trayectoria que acaba en el mismo nodo en open set
     for (AStarTraySet_it it = open_set_.begin(); it != open_set_.end(); ++it)
     {
         if ((*it)->getLast() == t->getLast()) // Acaban en el mismo nodo
@@ -105,6 +104,16 @@ void player::insertInOpenSet(AStarTray *t)
                 deleteFromOpenSet(it);
             }
             return;
+        }
+    }
+
+    // Comprueba si existe una trayectoria que acaba en el mismo nodo en closed set
+    for (AStarTraySet_it it = closed_set_.begin(); it != closed_set_.end(); ++it)
+    {
+        if ((*it)->getLast() == t->getLast()) // Acaban en el mismo nodo
+        {
+            if ((*it)->fScore() < t->fScore()) // La trayectoria de la lista cerrada tiene menor coste (No insertar)
+                return;
         }
     }
 
