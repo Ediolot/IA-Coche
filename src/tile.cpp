@@ -99,14 +99,14 @@ void tile::appendVertices(std::vector<ALLEGRO_VERTEX> &v, const double cx, const
     {
         switch (tile_type_)
         {
-            case tile::type::WALL:     texture_x =   0; texture_y =  0; break;
-            case tile::type::MONSTER1: texture_x =   0; texture_y = 64; break;
-            case tile::type::MONSTER2: texture_x =  32; texture_y = 64; break;
-            case tile::type::MONSTER3: texture_x =  64; texture_y = 64; break;
-            case tile::type::MONSTER4: texture_x =  96; texture_y = 64; break;
+            case tile::type::WALL:     texture_x =   0; texture_y =  1; break;
+            case tile::type::MONSTER1: texture_x =   0; texture_y = 65; break;
+            case tile::type::MONSTER2: texture_x =  32; texture_y = 65; break;
+            case tile::type::MONSTER3: texture_x =  64; texture_y = 65; break;
+            case tile::type::MONSTER4: texture_x =  96; texture_y = 65; break;
             case tile::type::CHEST:    texture_x =   0; texture_y = 96; break;
             case tile::type::ORIGIN:   texture_x =  33; texture_y = 32; break;
-            default:                   texture_x =  33; texture_y =  0; break;
+            default:                   texture_x =  33; texture_y =  1; break;
         }
     }
 

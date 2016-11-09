@@ -51,6 +51,12 @@ class scene {
         numericSelector width_;
         numericSelector height_;
 
+        // LABELS
+        label fps_label_;
+        uint result_;
+        label info_;
+        int fps_;
+
         // SCROLLBARS
         scrollbar speed_;
         scrollbar obstacles_;
@@ -72,6 +78,7 @@ class scene {
 
     private:
         void showMenu(bool show);
+        void updateFPS();
 };
 
 #endif
