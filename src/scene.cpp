@@ -29,10 +29,17 @@ scene::scene(const double screen_w, const double screen_h, const double map_sepa
     width_( "Grid width ", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_W),
     height_("Grid height", ubuntu_mono_font_40, al_map_rgb(0,0,0), 1, 250, STARTING_SIZE_H),
 
+<<<<<<< HEAD
     info_("FPS: 0", al_map_rgb(0,0,0), caviar_font_16),
     fps_(0),
     result_(0),
     time_(0),
+=======
+    fps_label_("FPS: 0", al_map_rgb(0,0,0), caviar_font_16),
+    result_(0),
+    info_("Buscando camino...", al_map_rgb(0,0,0), caviar_font_16),
+    fps_(0),
+>>>>>>> e617387924510b31714e3f47995e77005de53387
 
     speed_(scrollbar::type::VERTICAL),
     obstacles_(scrollbar::type::HORIZONTAL, 0.2)
@@ -74,6 +81,10 @@ void scene::draw()
     obstacles_text_.draw();
     tracking_.draw();
     restart_.draw();
+<<<<<<< HEAD
+=======
+    fps_label_.draw();
+>>>>>>> e617387924510b31714e3f47995e77005de53387
     info_.draw();
     step_.draw();
     play_.draw();
@@ -96,6 +107,10 @@ void scene::showMenu(bool show)
     random_.show(!show);
     speed_.show(!show);
     tracking_.show(!show);
+<<<<<<< HEAD
+=======
+    fps_label_.show(!show);
+>>>>>>> e617387924510b31714e3f47995e77005de53387
     info_.show(!show);
     step_.show(!show);
     tile_map_.show(!show);
@@ -143,6 +158,7 @@ void scene::update()
     tracking_.update();
     step_.update();
 
+<<<<<<< HEAD
     char time_string[30];
     char fps_string[5];
     std::string search_state = result_==0 ? "Buscando camino..." : (result_==1 ? "No existe solución" : "Camino encontrado");
@@ -156,6 +172,14 @@ void scene::update()
     al_lock_mutex(mutex);
     speed = speed_.getValue();
     modified = tile_map_.update();
+=======
+    fps_label_.setText(std::string("FPS: "+std::to_string(fps_)).c_str());
+
+    double speed;
+    al_lock_mutex(mutex);
+    speed = speed_.getValue();
+    tile_map_.update();
+>>>>>>> e617387924510b31714e3f47995e77005de53387
     al_unlock_mutex(mutex);
 
     if (quit_.mouseClicked()    ) quit = true;
@@ -214,7 +238,12 @@ void scene::resize(const double w, const double h)
         screen_h_-25
     );
 
+<<<<<<< HEAD
     info_.resize(20,2);
+=======
+    info_.resize(80,2);
+    fps_label_.resize(10,2);
+>>>>>>> e617387924510b31714e3f47995e77005de53387
     width_.resize(150, 130);
     height_.resize(150, 220);
     algorithm_.resize(150, 310);
@@ -234,6 +263,7 @@ void scene::resize(const double w, const double h)
 void scene::updateAlgorithm()
 {
     double speed;
+<<<<<<< HEAD
     double time_start;
     bool execute;
 
@@ -246,6 +276,12 @@ void scene::updateAlgorithm()
     if (execute)
         result_ = tile_map_.getPlayer().AStarStep();
 
+=======
+    al_lock_mutex(mutex);
+    speed = speed_.getValue();
+    if (isplaying_ || step_.mouseClicked())
+        result_ = tile_map_.getPlayer().AStarStep();
+>>>>>>> e617387924510b31714e3f47995e77005de53387
     al_unlock_mutex(mutex);
 
     if (execute && result_==0)
