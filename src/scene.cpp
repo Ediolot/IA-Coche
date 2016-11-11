@@ -231,6 +231,8 @@ void scene::resize(const double w, const double h)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <fstream>
+#include <iostream>
 void scene::updateAlgorithm()
 {
     double speed;
@@ -253,6 +255,107 @@ void scene::updateAlgorithm()
 
     double aux = 1 - speed;
     if (aux > 0.001) al_rest(aux*aux*aux);
+
+    //////////////////// TESTS
+    static std::ofstream output("output.txt");
+    const int max_sz = 200;
+    const int max_tests = 8;
+    const double max_obs = 0.8;
+
+    const int sz_steps = 10;
+    const int obs_steps = 16;
+
+    const int sz_inc = max_sz / sz_steps;
+    const double obs_inc = max_obs / obs_steps;
+
+    static int sz = 1;
+    static int obs = 0;
+    static int test = 0;
+
+    static bool reset = true;
+    static bool first = true;
+    static bool end = false;
+
+    typedef std::vector<double> tests_row;
+    typedef std::vector<tests_row> serie;
+    static std::vector<serie> series;
+
+    if (end)
+        return;
+    else
+        al_lock_mutex(mutex);
+
+    if (execute)
+    {
+        if (first)
+        {
+            first = false;
+
+            tests_row empty_row;
+            serie empty_serie;
+            empty_serie.push_back(empty_row);
+            series.push_back(empty_serie);
+        }
+        if (reset)
+        {
+            tile_map_.rebuild(sz * sz_inc, sz * sz_inc, obs*obs_inc);
+            tile_map_.rebuild(sz * sz_inc, sz * sz_inc, obs*obs_inc);
+            tile_map_.rebuild(sz * sz_inc, sz * sz_inc, obs*obs_inc);
+            tile_map_.rebuild(sz * sz_inc, sz * sz_inc, obs*obs_inc);
+            time_ = 0;
+            reset = false;
+        }
+        else if (result_!=0 && !end)
+        {
+            int max = obs==0 ? 0 : (obs==1 ? 3 : (obs==2 ? 5 : max_tests));
+            std::cout << "test: "   << max         << "/" << max_tests;
+            std::cout << "  size: " << sz*sz_inc   << "/" << max_sz;
+            std::cout << "  obs: "  << obs*obs_inc << "/" << max_obs;
+            std::cout << "  time: " << time_;
+            std::cout << "  found: " << (result_==2 ? "yes" : "no") << std::endl;
+
+            series[obs][sz-1].push_back(result_==2 ? time_ : -1);
+
+            reset = true;
+            if (++test > max)
+            {
+                test = 0;
+
+                tests_row empty_row;
+                series[obs].push_back(empty_row);
+
+                if (++sz*sz_inc > max_sz)
+                {
+
+                    sz = 1;
+                    end = ++obs*obs_inc > max_obs;
+                    if (!end)
+                    {
+                        tests_row empty_row;
+                        serie empty_serie;
+                        empty_serie.push_back(empty_row);
+                        series.push_back(empty_serie);
+                    }
+                    else
+                    {
+                        for (serie &s : series)
+                        {
+                            for (int sz_1 = 0; (sz_1*sz_inc) < max_sz; ++sz_1)
+                            {
+                                for (double t : s[sz_1]) output << (sz_1+1) * sz_inc << "," << t << "\n";
+                            }
+                            output << "\n";
+                            output << "\n";
+                            output << "\n";
+                        }
+                        output.close();
+                    }
+                }
+            }
+        }
+    }
+
+    al_unlock_mutex(mutex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

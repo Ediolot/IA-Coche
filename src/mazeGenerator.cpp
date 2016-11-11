@@ -41,7 +41,7 @@ const std::vector< std::vector<bool> >& mazeGenerator::randomize(const uint rows
     cols_ = cols;
     obs_  = obs;
 
-    std::srand(seed ? seed : time(NULL));
+    //std::srand(seed ? seed : time(NULL));
 
     maze_.clear();
     maze_.resize(rows, std::vector<bool>(cols, false));

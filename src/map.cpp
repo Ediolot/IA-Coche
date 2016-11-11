@@ -158,6 +158,16 @@ void map::generate(const double obstacles)
     t->setType(tile::type::CHEST);
     goal_ = t;
 
+    origin_->containsPlayer(false);
+    origin_->setType(tile::type::NEUTRAL);
+    origin_ = accessTile(0,0);
+    origin_->containsPlayer(true);
+    origin_->setType(tile::type::ORIGIN);
+
+    goal_->setType(tile::type::NEUTRAL);
+    goal_ = accessTile(rows_-1, cols_-1);
+    goal_->setType(tile::type::CHEST);
+
     resetPlayer();
 }
 
