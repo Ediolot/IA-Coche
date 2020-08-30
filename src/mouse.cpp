@@ -11,7 +11,9 @@ _mouse::_mouse():
     z_(0),
     cursor_(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT)
 {
-    al_set_system_mouse_cursor(al_get_current_display(), cursor_);
+    auto display = al_get_current_display();
+    if (display != nullptr)
+        al_set_system_mouse_cursor(al_get_current_display(), cursor_);
 }
 
 _mouse::~_mouse()
@@ -73,7 +75,9 @@ void _mouse::setCursor(const ALLEGRO_SYSTEM_MOUSE_CURSOR id)
     if (cursor_ == id) return;
 
     cursor_ = id;
-    al_set_system_mouse_cursor(al_get_current_display(), cursor_);
+    auto display = al_get_current_display();
+    if (display != nullptr)
+        al_set_system_mouse_cursor(al_get_current_display(), cursor_);
 }
 
 ALLEGRO_SYSTEM_MOUSE_CURSOR _mouse::getCursor() const

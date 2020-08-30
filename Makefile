@@ -9,16 +9,16 @@
 
 # Compiler #
 CXX      = g++
-LFLAGS   = `pkg-config --libs --static $(ALLEGRO_LIBS)`
+LFLAGS   = `pkg-config --libs $(ALLEGRO_LIBS)`
 CXXFLAGS = -Wall -std=c++11 -g
 
 # Allegro libs #
 ALLEGRO_LIBS = \
-	allegro-static-5 \
-	allegro_ttf-static-5 \
-	allegro_font-static-5 \
-	allegro_primitives-static-5 \
-	allegro_image-static-5
+	allegro-5 \
+	allegro_ttf-5 \
+	allegro_font-5 \
+	allegro_primitives-5 \
+	allegro_image-5
 
 # Directories #
 SRCDIR   = src
